@@ -3135,15 +3135,40 @@ bool EdbScanProc::InitRunAccessNew(EdbRunAccess &r, EdbID id, EdbPlateP &plate, 
 }
 
 //--------------------------------------------------------------------
-void EdbScanProc::LinkRunTest( EdbID id, EdbPlateP &plate, TEnv &cenv)
+void EdbScanProc::LinkRunTest( EdbID id, EdbPlateP &plate, TEnv &cenv, Int_t ix, Int_t iy)
 {
+  //which cell are we looking for? -1, no cell at all.
+
   EdbRunAccess r;
   r.eInvertSides=cenv.GetValue("fedra.link.read.InvertSides"      , 0);
   r.eHeaderCut = cenv.GetValue("fedra.link.read.HeaderCut"      , "1");
+
+  if (ix >= 0 && iy >= 0){
+
+    int ncellsX = cenv.GetValue("fedra.link.map.NX"      , 19);
+    int ncellsY = cenv.GetValue("fedra.link.map.NY"      , 19);
+
+    float xmin = cenv.GetValue("fedra.link.map.xmin"      , 0.);
+    float xmax = cenv.GetValue("fedra.link.map.xmax"      , 190000.);
+    float ymin = cenv.GetValue("fedra.link.map.ymin"      , 0.);
+    float ymax = cenv.GetValue("fedra.link.map.ymax"      , 190000.);
+
+    float overlap_fraction = cenv.GetValue("fedra.link.map.overlapfraction"      , 0.); //how much should they overlap (for each side)
+
+    printf("EdbScanProc::LinkRunTest ** processing cell %d %d\n", ix , iy);
+    EdbCell2 * emulsioncell = new EdbCell2();
+    Log(2,"LinkRunTest","cell layout, %d x cells from %f to %f, %d y cells from %f to %f",ncellsX, xmin, xmax, ncellsY, ymin, ymax );
+    emulsioncell->InitCell(ncellsX,xmin,xmax,ncellsY,ymin,ymax,1); //1 is the maximum number for cells. In this case I use the cells only to map positions
+    //setting header cut manually
+    r.eHeaderCut = Form("TMath::Abs(eXview-%f) < %f && TMath::Abs(eYview-%f) < %f",
+      emulsioncell->X(ix),emulsioncell->Xbin()*(1.+overlap_fraction)/2.,emulsioncell->Y(iy),emulsioncell->Ybin()*(1.+overlap_fraction)/2.);
+  }
+
   r.eHeaderCut.Print();
   r.eAFID           =  cenv.GetValue("fedra.link.AFID"      , 1);
   printf("EdbScanProc::LinkRunTest ** AFID=%d\n", r.eAFID);
   InitRunAccessNew(r,id,plate);
+  
   r.eWeightAlg  =  cenv.GetValue("fedra.link.read.WeightAlg"      , 0  );
   r.AddSegmentCut(1,cenv.GetValue("fedra.link.read.ICUT"      , "-1") );
   r.SetPixelCorrection( cenv.GetValue("fedra.link.PixelCorr"      , "0 1. 1.") );
@@ -3157,6 +3182,7 @@ void EdbScanProc::LinkRunTest( EdbID id, EdbPlateP &plate, TEnv &cenv)
 
   EdbLinking link;
   TString cpfile;
+
   MakeFileName(cpfile,id,"cp.root");
   link.InitOutputFile( cpfile );
 
@@ -3239,13 +3265,13 @@ void EdbScanProc::LinkRunNew( EdbID id, EdbPlateP &plate, TEnv &cenv)
 }
 
 //----------------------------------------------------------------
-void EdbScanProc::LinkSetNewTest(EdbScanSet &sc, TEnv &cenv )
+void EdbScanProc::LinkSetNewTest(EdbScanSet &sc, TEnv &cenv, Int_t ix, Int_t iy)
 {
   if(sc.eIDS.GetSize()<1) return;
   for(int i=0; i<sc.eIDS.GetSize(); i++) {
     EdbID *id = (EdbID *)(sc.eIDS.At(i));        if(!id)    continue;
     EdbPlateP *plate = sc.GetPlate(id->ePlate);  if(!plate) continue;
-    LinkRunTest(*id, *plate, cenv);
+    LinkRunTest(*id, *plate, cenv,ix,iy);
   }
 }
 

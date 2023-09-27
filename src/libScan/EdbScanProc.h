@@ -107,10 +107,10 @@ public:
   int     LinkSet(EdbScanSet &sc, int npre=3, int nfull=1, int correct_ang=1);
 
   void     GetPatternSide( EdbID id, int side, EdbLayer &la, const char *segcut, int afid, EdbPattern &p);
-  void     LinkRunTest(EdbID id, EdbPlateP &plate, TEnv &cenv);
+  void     LinkRunTest(EdbID id, EdbPlateP &plate, TEnv &cenv, Int_t ix = -1, Int_t iy = -1);
   void     LinkRunNew(EdbID id, EdbPlateP &plate, TEnv &cenv);
   void     LinkSetNew(EdbScanSet &sc, TEnv &cenv);
-  void     LinkSetNewTest(EdbScanSet &sc, TEnv &cenv);
+  void     LinkSetNewTest(EdbScanSet &sc, TEnv &cenv, Int_t ix = -1, Int_t iy = -1);
 
   //void     WriteSetGeom(EdbScanSet &sc);
   //void     ReadSetGeom(EdbScanSet &sc);
@@ -230,6 +230,6 @@ public:
   void    LogPrint(int brick, int level, const char *rout, const char *msgfmt, ...);
   void    Print();
   
-  ClassDef(EdbScanProc,1)  // scanned data processing
+  ClassDef(EdbScanProc,2)  // scanned data processing
 };
 #endif /* ROOT_EdbScanProc */

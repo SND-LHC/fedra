@@ -21,6 +21,8 @@ void print_help_message()
   cout<< "\t\t  -new  - new linking (renewed 06-04-11)\n";
   cout<< "\t\t  -view - check view overlaps\n";
   cout<< "\t\t  DEBUG - verbosity level: 0-print nothing, 1-errors only, 2-normal, 3-print all messages\n";
+  cout<< "\t\t  -ix   - x cell bin\n";
+  cout<< "\t\t  -iy   - y cell bin\n";
   cout<< "\nExample: \n";
   cout<< "\t  emlink -id=4554.10.1.0 -o=/scratch/BRICKS \n";
   cout<< "\n If the data location directory is not explicitly defined\n";
@@ -92,6 +94,7 @@ int main(int argc, char* argv[])
   bool      do_check_view   = false;
   Int_t     brick=0, plate=0, major=0, minor=0;
   Int_t     npre=0,  nfull=0;
+  Int_t	    ix = -1, iy = -1; //cell numbers
   Int_t     correct_ang=0;
 
   for(int i=1; i<argc; i++ ) {
@@ -139,6 +142,14 @@ int main(int argc, char* argv[])
       {
 	if(strlen(key)>3)	gEDBDEBUGLEVEL = atoi(key+3);
       }
+    else if(!strncmp(key,"-ix=",4))
+      {
+	if(strlen(key)>4)	ix = atoi(key+4);
+      }
+    else if(!strncmp(key,"-iy=",4))
+      {
+	if(strlen(key)>4)	iy = atoi(key+4);
+      }
   }
 
   if(!(do_id||do_set))   { print_help_message(); return 0; }
@@ -164,7 +175,8 @@ int main(int argc, char* argv[])
       EdbScanSet *ss = sproc.ReadScanSet(id0);
       if(ss) {
         EdbPlateP *plate = ss->GetPlate(id.ePlate);
-        if(plate) sproc.LinkRunTest(id, *plate, cenv);
+        printf("test0, %d, %d",ix,iy);
+        if(plate) sproc.LinkRunTest(id, *plate, cenv, ix, iy);
      }
     }
     else if(do_check_view) sproc.CheckViewOverlaps(id, cenv);
@@ -179,7 +191,7 @@ int main(int argc, char* argv[])
     EdbScanSet *ss = sproc.ReadScanSet(id);
     if(ss) {
       if(do_new) {
-        sproc.LinkSetNewTest(*ss, cenv);
+        sproc.LinkSetNewTest(*ss, cenv, ix, iy);
         sproc.MakeLinkSetSummary(id, reportfileformat);
       }
       else  if(npre+nfull>0)  sproc.LinkSet(*ss, npre, nfull, correct_ang);
