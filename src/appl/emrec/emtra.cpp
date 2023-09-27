@@ -84,6 +84,7 @@ int main(int argc, char* argv[])
   bool      do_VSB              = false;
   Int_t     pred_plate  = 0, to_plate=0;
   Int_t     brick=0, plate=0, major=0, minor=0;
+  Int_t	    ix = -1, iy = -1; //cell numbers
 
   for(int i=1; i<argc; i++ ) {
     char *key  = argv[i];
@@ -123,6 +124,14 @@ int main(int argc, char* argv[])
       {
 	if(strlen(key)>3)	gEDBDEBUGLEVEL = atoi(key+3);
       }
+    else if(!strncmp(key,"-ix=",4))
+      {
+	if(strlen(key)>4)	ix = atoi(key+4);
+      }
+    else if(!strncmp(key,"-iy=",4))
+      {
+	if(strlen(key)>4)	iy = atoi(key+4);
+      }
   }
 
   if(!do_set)   { print_help_message(); return 0; }
@@ -146,7 +155,7 @@ int main(int argc, char* argv[])
       {
           EdbScanTracking est;
           est.eSproc=&sproc;
-          est.TrackSetBT(id,cenv);
+          est.TrackSetBT(id,cenv,ix,iy);
       }
       else if(do_make_erase_file){
         MakeEraseFiles(id, cenv);

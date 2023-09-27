@@ -450,7 +450,7 @@ void EdbTrackAssembler::CombTracks( TObjArray &selected )
 }
 
 //--------------------------------------------------------------------------------------
-void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env)
+void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
 {
   
   // read scanset object
@@ -476,7 +476,7 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env)
     etra.eDZGapMax              = env.GetValue("fedra.track.DZGapMax"       ,  5000.   );
     etra.eProbMin               = env.GetValue("fedra.track.probmin"        ,  0.001   );
     bool        do_erase        = env.GetValue("fedra.track.erase"          ,  false   );
-    const char  *cut            = env.GetValue("fedra.readCPcut"            ,     "1"  );
+    TCut  cut            = env.GetValue("fedra.readCPcut"            ,     "1"  ); //changed from const char* to TCut used by ReadPatCPnopar
     bool        do_misalign     = env.GetValue("fedra.track.do_misalign"    ,      0   );
     int         npass           = env.GetValue("fedra.track.npass"          ,      1   );
     float       misalign_offset = env.GetValue("fedra.track.misalign_offset",    500.  );
@@ -488,6 +488,28 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env)
     etra.SetMomentum (momentum);
     
     etra.InitTrZMap(  env.GetValue("fedra.track.TrZmap", "2400 0 120000   2000 0 100000   30" ) );
+
+    //adding cell selection
+    if (ix >= 0 && iy >= 0){
+
+    int ncellsX = env.GetValue("fedra.track.map.NX"      , 19);
+    int ncellsY = env.GetValue("fedra.track.map.NY"      , 19);
+
+    float xmin = env.GetValue("fedra.track.map.xmin"      , 0.);
+    float xmax = env.GetValue("fedra.track.map.xmax"      , 190000.);
+    float ymin = env.GetValue("fedra.track.map.ymin"      , 0.);
+    float ymax = env.GetValue("fedra.track.map.ymax"      , 190000.);
+
+    float overlap_fraction = env.GetValue("fedra.track.map.overlapfraction"      , 0.); //how much should they overlap (for each side)
+
+    printf("EdbScanProc::TrackSetBT ** processing cell %d %d\n", ix , iy);
+    EdbCell2 * emulsioncell = new EdbCell2();
+    Log(2,"EdbScanProc::TrackSetBT","cell layout, %d x cells from %f to %f, %d y cells from %f to %f",ncellsX, xmin, xmax, ncellsY, ymin, ymax );
+    emulsioncell->InitCell(ncellsX,xmin,xmax,ncellsY,ymin,ymax,1); //1 is the maximum number for cells. In this case I use the cells only to map positions
+    //setting header cut manually
+    cut += Form("TMath::Abs(s.eX-%f) < %f && TMath::Abs(s.eY-%f) < %f",
+      emulsioncell->X(ix),emulsioncell->Xbin()*(1.+overlap_fraction)/2.,emulsioncell->Y(iy),emulsioncell->Ybin()*(1.+overlap_fraction)/2.);
+  }
   
     //EdbPattern p;
     
@@ -509,7 +531,10 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env)
       etra.eCollisionsRate=0;
       for(int i=0; i<npl; i++) {
         EdbID *id = ss->GetID(i);
-      
+        if (ix >= 0 && iy >= 0){  //we want (for now) to read the same couples for all cells
+          id->eMajor = 0;
+          id->eMinor = 0;
+        }
         EdbPlateP *plate = ss->GetPlate(id->ePlate);
       
         EdbPattern p;
