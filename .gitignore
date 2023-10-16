@@ -1,0 +1,6 @@
+setup_new.sh
+src/*
+bin/*
+include/*
+lib/*
+macros
