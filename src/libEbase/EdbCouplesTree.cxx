@@ -85,7 +85,8 @@ bool EdbCouplesTree::InitCouplesTree(const char *name, const char *fname, Option
     if (!f->IsOpen()) return 0;
     f->cd();
   }
-  if( (strcmp(mode,"READ")==0)||(strcmp(mode,"UPDATE")==0)) {
+  
+  if( (strcmp(mode,"READ")==0)) {
     eTree = (TTree*)gDirectory->Get(name);
     if(!eTree) {Log(1,"EdbCouplesTree::InitCouplesTree","ERROR: can not open tree %s",name); return 0;}
     
@@ -97,24 +98,40 @@ bool EdbCouplesTree::InitCouplesTree(const char *name, const char *fname, Option
     eTree->SetBranchAddress("s1." ,  &eS1);
     eTree->SetBranchAddress("s2." ,  &eS2);
     eTree->SetBranchAddress("s."  ,  &eS);
-  } else {
-    eTree = new TTree(name, "couples tree (s1:s2:s)");
-    eTree->SetMaxTreeSize(15000000000LL);   //set 15 Gb file size limit)
-
-    eTree->Branch("pid1",  &ePid1,"pid1/I");
-    eTree->Branch("pid2",  &ePid2,"pid2/I");
-    eTree->Branch("xv"  ,  &eXv,"xv/F");
-    eTree->Branch("yv"  ,  &eYv,"yv/F");
-    eTree->Branch("cp"  ,  &eCP,32000,99);
-    eTree->Branch("s1." ,  &eS1,32000,99);
-    eTree->Branch("s2." ,  &eS2,32000,99);
-    eTree->Branch("s."  ,  &eS,32000,99);
+    return 1;
+    if( (strcmp(mode,"UPDATE")==0) ) {
+      eTree = (TTree*)gDirectory->Get(name);
+      if(eTree) {
+	eTree->SetBranchAddress("pid1",  &ePid1);
+	eTree->SetBranchAddress("pid2",  &ePid2);
+	eTree->SetBranchAddress("xv"  ,  &eXv);
+	eTree->SetBranchAddress("yv"  ,  &eYv);
+	eTree->SetBranchAddress("cp"  ,  &eCP);
+	eTree->SetBranchAddress("s1." ,  &eS1);
+	eTree->SetBranchAddress("s2." ,  &eS2);
+	eTree->SetBranchAddress("s."  ,  &eS);
+	return 1;
+      }
+    }
   }
-
+  
+  Log(2,"EdbCouplesTree::InitCouplesTree","create new tree %s in %s",name, fname);
+  eTree = new TTree(name, "couples tree (s1:s2:s)");
+  eTree->SetMaxTreeSize(15000000000LL);   //set 15 Gb file size limit)
+  
+  eTree->Branch("pid1",  &ePid1,"pid1/I");
+  eTree->Branch("pid2",  &ePid2,"pid2/I");
+  eTree->Branch("xv"  ,  &eXv,"xv/F");
+  eTree->Branch("yv"  ,  &eYv,"yv/F");
+  eTree->Branch("cp"  ,  &eCP,32000,99);
+  eTree->Branch("s1." ,  &eS1,32000,99);
+  eTree->Branch("s2." ,  &eS2,32000,99);
+  eTree->Branch("s."  ,  &eS,32000,99);
+  
   return 1;
 }
 
-/*
+  /*
 //---------------------------------------------------------------------
 bool EdbCouplesTree::InitTreeNew(const char *name)
 {
