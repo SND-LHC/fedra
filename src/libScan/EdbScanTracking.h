@@ -56,6 +56,7 @@ class EdbTrackAssembler: public TObject {
   TH1F           *eHistNcnd;        // number of candidates after preliminary selection
   TH2F           *eHistXYseg;       // XY overlap of all segments (for showers tag)
   TH3F           *eHistXYPseg;      // XYP overlap of all segments (for showers tag)
+  TH3F           *eHistXYPsegNB;    // XYP overlap of all segments (for showers tag) No Beam
   TH2F           *eHistTXTYseg;     // TXTY overlap of all segments
  
  public:

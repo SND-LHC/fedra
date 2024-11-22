@@ -6,6 +6,7 @@
 #include <TEnv.h>
 #include <TChain.h>
 #include <TList.h>
+#include <TSystem.h>
 #include "EdbLog.h"
 #include "EdbRunAccess.h"
 #include "EdbLinking.h"
@@ -230,11 +231,17 @@ void AlignToBeam( EdbID id, TEnv &cenv )
     }    
   }
   mio.Close();
-  mio.Init( file.Data(), "UPDATE" );
-  mio.SaveCorrMap( id.ePlate, 1, *mapside1 );
-  mio.SaveCorrMap( id.ePlate, 2, *mapside2 );
-  mio.Close();
-  Log(1,"mosalignbeam","%s maps saved into %s",id.AsString(),file.Data());
+  if( !gSystem->AccessPathName(file.Data()) )
+  {
+    if( !gSystem->AccessPathName(file.Data(),kWritePermission ) )
+    {
+      mio.Init( file.Data(), "UPDATE" );
+      mio.SaveCorrMap( id.ePlate, 1, *mapside1 );
+      mio.SaveCorrMap( id.ePlate, 2, *mapside2 );
+      mio.Close();
+      Log(1,"mosalignbeam","%s maps saved into %s",id.AsString(),file.Data());
+    } else Log(1,"mosalignbeam","Error: file %s is not writable!",file.Data());
+  } else Log(1,"mosalignbeam","Error: file %s is not accessible!",file.Data());
 }
 
 //-----------------------------------------------------------------------

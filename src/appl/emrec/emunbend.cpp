@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------
 void print_help_message()
 {
-  cout<< "\nUsage: \n\t  emunbend -set=ID [ -alg3a -alg3 -alg5 -corraff -v=DEBUG] \n";
+  cout<< "\nUsage: \n\t  emunbend -set=ID [ -alg3a -alg3g -alg5g -corraff -v=DEBUG] \n";
   cout<< "\t  Unbend dataset and update set.root\n";
   cout<< "\t\t -alg3a      -  triplets simple (default) \n";
   cout<< "\t\t -alg3g      -  triplets generic \n";
@@ -67,17 +67,23 @@ int main(int argc, char *argv[])
     EdbScanProc sproc;
     sproc.eProcDirClient=outdir;
     EdbPVRec ali;
+    int ntrMin = cenv.GetValue("unbend.ntrMin"        , 100);
     const char *cut = cenv.GetValue("unbend.read_cut"        , "1");
-    sproc.ReadTracksTree( idset,ali, cut );
-    EdbScanSet *ss = sproc.ReadScanSet(idset);
-    EdbUnbender ub;
-    ub.do_save_hist = cenv.GetValue("unbend.save_hist"        , 0);
-    ub.do_save_tree = cenv.GetValue("unbend.save_tree"        , 0);
-
-    if     (do_3g) ub.Unbend3g(ali,*ss, cenv);
-    else if(do_5g) ub.Unbend5g(ali,*ss, cenv);
-    else           ub.Unbend3a(ali,*ss, cenv);
-
-    if(do_corraff) sproc.WriteScanSet(idset,*ss);
+    int ntr = sproc.ReadTracksTree( idset,ali, cut );
+    Log(1,"unbend","read %d tracks of set %s with cut %s",ntr,idset.AsString(),cut);
+    if(ntr<ntrMin) {
+      Log(1,"unbend","Warning: tracks not enough (%d < %d) - exit",ntr,ntrMin);
+    } else {
+      EdbScanSet *ss = sproc.ReadScanSet(idset);
+      EdbUnbender ub;
+      ub.do_save_hist = cenv.GetValue("unbend.save_hist"        , 0);
+      ub.do_save_tree = cenv.GetValue("unbend.save_tree"        , 0);
+      
+      if     (do_3g) ub.Unbend3g(ali,*ss, cenv);
+      else if(do_5g) ub.Unbend5g(ali,*ss, cenv);
+      else           ub.Unbend3a(ali,*ss, cenv);
+      
+      if(do_corraff) sproc.WriteScanSet(idset,*ss);
+    }
   }
 }

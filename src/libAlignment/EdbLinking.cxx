@@ -684,3 +684,15 @@ void EdbLinking::CloneCouplesTree( const char *ifile, const char *ofile, EdbAffi
   SaveCouplesTree(ofile);
 }
 
+//---------------------------------------------------------------------
+void EdbLinking::GetFillPattern(EdbPattern &p, int layer)
+{
+  int ncp = eSegCouples.GetEntries();
+  for(int i=0; i<ncp; i++) {
+    EdbSegCouple *sc = (EdbSegCouple*)(eSegCouples.At(i));
+    if     (layer==0) p.AddSegment(*(sc->eS));
+    else if(layer==1) p.AddSegment(*(sc->eS1));
+    else if(layer==2) p.AddSegment(*(sc->eS2));
+  }
+  Log(2,"EdbLinking::GetPattern","for layer %d with %d segments",layer,ncp);
+}

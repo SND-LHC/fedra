@@ -71,7 +71,8 @@ class EdbLinking : public EdbAlignmentV
   
   void     CloneCouplesTree( const char *ifile, const char *ofile, EdbAffine2D *aff=0, TCut *cut=0 );
   
-  void      SetApplyCorr(bool corr) {eCorr[0].eApplyCorr=corr;eCorr[1].eApplyCorr=corr;}
+  void     SetApplyCorr(bool corr) {eCorr[0].eApplyCorr=corr;eCorr[1].eApplyCorr=corr;}
+  void     GetFillPattern(EdbPattern &p, int layer=0);
   
   void ProduceReport();
 

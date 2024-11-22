@@ -196,7 +196,7 @@ class EdbPointsBox2D : public EdbPoint3D {
   virtual TH1F  *Yhist();
   virtual TH2F  *XYhist();
 
-  virtual void  DrawPoints(int style=23, int   col=4, float size=1.);
+  virtual void  DrawPoints(int style=23, int   col=4, float size=1., bool same=false);
 
   ClassDef(EdbPointsBox2D,2)  // collection of  2D points
 };

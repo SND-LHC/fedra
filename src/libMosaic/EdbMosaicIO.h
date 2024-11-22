@@ -33,6 +33,7 @@ class EdbMosaicIO : public TObject {
     EdbLayer *GetCorrMap( int plate, int side );
     
     char *FileName(int brick, int plate, int major, int minor, const char *pref="", const char *suff="");
+    const char *GetFileName() const { if(eFile) return eFile->GetName(); }
 
     void DrawFragment(EdbPattern &p);
     void Close()  { if(eFile) {eFile->Close(); eFile=0;} }

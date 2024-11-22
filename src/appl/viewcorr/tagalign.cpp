@@ -8,7 +8,7 @@
 using namespace std;
 using namespace TMath;
 
-void AlignNewNopar(EdbID id1, EdbID id2, TEnv &cenv, EdbAffine2D *aff, float dz, EdbScanProc &sproc);
+void AlignNewNopar(EdbID id1, EdbID id2, int side, TEnv &cenv, EdbAffine2D *aff, float dz, EdbScanProc &sproc);
 int  AlignID( EdbID id, TEnv &env );
 bool Align2Fragments( EdbPattern &p1, EdbPattern &p2, EdbLayer &l1);
 EdbPattern *GetPattern( EdbID id, int side );
@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
   bool      do_set      = false;
   EdbID     id;
   EdbID     ida, idb;
+  int       al_side     = 1; // 1, 2, 0-base
 
   for(int i=1; i<argc; i++ ) {
     char *key  = argv[i];
@@ -77,6 +78,10 @@ int main(int argc, char* argv[])
     else if(!strncmp(key,"-B=",3))
     {
       if(strlen(key)>3) if(idb.Set(key+3))   do_B=true;
+    }
+    else if(!strncmp(key,"-side=",6))
+    {
+      if(strlen(key)>6)	al_side = atoi(key+6);
     }
     else if(!strncmp(key,"-v=",3))
     {
@@ -113,7 +118,7 @@ int main(int argc, char* argv[])
       EdbAffine2D aff;
       float dz = 0;
       if(ss->GetAffP2P(ida.ePlate, idb.ePlate, aff))	  dz = ss->GetDZP2P(ida.ePlate, idb.ePlate);
-      AlignNewNopar(ida,idb,cenv,&aff, dz, sproc);
+      AlignNewNopar(ida,idb, al_side, cenv,&aff, dz, sproc);
     }
   }
   cenv.WriteFile("tagalign.save.rootrc");
@@ -167,7 +172,7 @@ bool Align2Fragments( EdbPattern &p1, EdbPattern &p2, EdbLayer &l1)
   av.eDPHI        = 0.02;
   av.eDoFine      = 1;
   av.eSaveCouples = 1;
-  av.SetSigma( 50, 0.007 );
+  av.SetSigma( 50, 0.1 );
   av.eDoublets[0] = av.eDoublets[1]=0.01;
   av.eDoublets[2] = av.eDoublets[3]=0.0001;
 
@@ -191,7 +196,7 @@ bool Align2Fragments( EdbPattern &p1, EdbPattern &p2, EdbLayer &l1)
 }
 
 //-------------------------------------------------------------------
-void AlignNewNopar(EdbID id1, EdbID id2, TEnv &cenv, EdbAffine2D *aff, float dz, EdbScanProc &sproc)
+void AlignNewNopar(EdbID id1, EdbID id2, int side, TEnv &cenv, EdbAffine2D *aff, float dz, EdbScanProc &sproc)
 {
   // Align 2 patterns. All necessary information should be in the envfile
   // Convension about Z(setted while process): the z of id2 is 0, the z of id1 is (-deltaZ) where
@@ -207,13 +212,14 @@ void AlignNewNopar(EdbID id1, EdbID id2, TEnv &cenv, EdbAffine2D *aff, float dz,
   av.eDPHI        = cenv.GetValue("fedra.align.DPHI"        , 0.008 );
   av.eSaveCouples = cenv.GetValue("fedra.align.SaveCouples" , 1);
 
-  EdbPattern *p1 = GetPattern(id1,1);
-  EdbPattern *p2 = GetPattern(id2,1);  
+  EdbPattern *p1 = GetPattern(id1,side);
+  EdbPattern *p2 = GetPattern(id2,side);
   if(aff) { aff->Print(); p1->Transform(aff);}
  
   TString alfile;  
   sproc.MakeAffName(alfile,id1,id2,"al.root");
   av.InitOutputFile( alfile );
+  printf("dz = %f \n",dz);
   av.Align( *p1, *p2 , dz);
   av.CloseOutputFile();
   sproc.UpdateAFFPar( id1, id2, av.eCorrL[0], aff );

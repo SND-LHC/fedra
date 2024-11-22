@@ -17,18 +17,19 @@
 //#include "EdbPlateAlignment.h"
 #include "EdbMosaic.h"
 #include "EdbMosaicIO.h"
+#include "EdbLinking.h"
 
 using namespace std;
 using namespace TMath;
 
 void DrawOut(const EdbPattern &ptag, EdbMosaicIO &omio);
-void FindPeaks(EdbH2 &h2p, EdbPattern &ptag, EdbMosaicIO &omio);
-void DrawEllipse(const EdbPattern &ptag, int col );
+void FindPeaks(EdbH2 &h2p, EdbPattern &ptag, int npmax, float minVol);
+void DrawEllipse(const EdbPattern &ptag, int col, float tsize );
 void DoubletsFilterOut(EdbPattern &p, EdbMosaicIO &omio);
-void Pat2H2( const EdbPattern &p, EdbH2 &h2p);
-void TagSide( EdbID id, int from, int nfrag, int side, TEnv &cenv, EdbMosaicIO &mio, EdbMosaicIO &omio );
+void Pat2H2( const EdbPattern &p, EdbH2 &h2p, float thetaMin, float thetaMax, float bin);
+void TagSide( EdbID id, EdbPattern &pat, int from, int nfrag, int side, TEnv &cenv, EdbMosaicIO &mio, EdbMosaicIO &omio );
+void Link( EdbID id, EdbPattern &p1, EdbPattern &p2, EdbPattern &p0);
 
-EdbPattern gPat;  // global tags pattern
 struct OutHist
 {
   TH2F *dblxy;
@@ -38,7 +39,7 @@ struct OutHist
   TH1F *spectrProc;     // after smooth and peaks erasing
   TH2F *xy;
 };
-OutHist gOH = {0,0,0,0};
+OutHist gOH = {0,0,0,0,0,0};
 
 bool do_save_gif=false;
 bool do_save_canvas=false;
@@ -64,12 +65,16 @@ void print_help_message()
 void set_default(TEnv &cenv)
 {
   // default parameters for showers tagging
-  cenv.SetValue("fedra.tag.save_gif"            ,  false   );   // save gif with plots
-  cenv.SetValue("fedra.tag.save_canvas"          ,  false   );   // save canvas objects into root file
+  cenv.SetValue("fedra.tag.save_gif"         ,  false   );   // save gif with plots
+  cenv.SetValue("fedra.tag.save_canvas"      ,  false   );   // save canvas objects into root file
 
-  cenv.SetValue("fedra.tag.RemoveDoublets"      , "1    2. .01   1");  //yes/no   dr  dt  checkview(0,1,2)
-  cenv.SetValue("fedra.tag.DumpDoubletsTree"    , false );
-  cenv.SetValue("fedra.tag.nPatMin"    , 1000 );
+  cenv.SetValue("fedra.tag.NPeaksMax"        , 40);                 // max number of peaks/fragment
+  cenv.SetValue("fedra.tag.MinPeakVolume"    , 50.);                // depends on the bin size
+  cenv.SetValue("fedra.tag.ThetaLimits"      , "0. 1.");            // use for tagging tracks in this limits
+  cenv.SetValue("fedra.tag.Bin"              , 100 );               // bin size
+  cenv.SetValue("fedra.tag.RemoveDoublets"   , "1    2. .01   1");  // yes/no   dr  dt  checkview(0,1,2)
+  cenv.SetValue("fedra.tag.DumpDoubletsTree" , false );
+  cenv.SetValue("fedra.tag.nPatMin"          , 1000 );              // min fragment to run tagging
 
   cenv.SetValue("mostag.outdir"          , "..");
   cenv.SetValue("mostag.env"             , "mostag.rootrc");
@@ -138,19 +143,51 @@ int main(int argc, char* argv[])
   
   if(do_single) 
   {
-     EdbMosaicIO mio;
-     mio.Init( Form("p%3.3d/%d.%d.%d.%d.mos.root",
-		 id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor) );
-  
-     EdbMosaicIO omio;
-     omio.Init( Form("p%3.3d/%d.%d.%d.%d.tag.root",
-		  id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor),"RECREATE");
-    TagSide(id, from_fragment, n_fragments, 1, cenv, mio,omio);
-    TagSide(id, from_fragment, n_fragments, 2, cenv, mio,omio);
+    EdbMosaicIO  mio;  //input
+    EdbMosaicIO omio;  //output
+    mio.Init( Form("p%3.3d/%d.%d.%d.%d.mos.root",
+		   id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor) );
+    omio.Init( Form("p%3.3d/%d.%d.%d.%d.tag.root",
+		    id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor),"RECREATE");
+    EdbPattern pat0,pat1,pat2;
+    TagSide(id, pat1, from_fragment, n_fragments, 1, cenv, mio,omio);
+    TagSide(id, pat2, from_fragment, n_fragments, 2, cenv, mio,omio);
+    Link(id, pat1, pat2, pat0);
+    omio.SaveFragmentObj( &pat1, id.ePlate, 1, 0, "gpat");
+    omio.SaveFragmentObj( &pat2, id.ePlate, 2, 0, "gpat");
+    omio.SaveFragmentObj( &pat0, id.ePlate, 0, 0, "gpat");
+    Log(1,"mostag","save %d + %d => %d to %s",pat1.N(), pat2.N(), pat0.N(), omio.GetFileName() );
   }
   
   cenv.WriteFile("mostag.save.rootrc");
   return 1;
+}
+
+void Link( EdbID id, EdbPattern &p1, EdbPattern &p2, EdbPattern &p0)
+{
+  EdbID idset=id; idset.ePlate=0;
+  EdbScanProc sproc;
+  sproc.eProcDirClient="..";
+  EdbScanSet *ss = sproc.ReadScanSet(idset);
+  EdbPlateP *plate = ss->GetPlate(id.ePlate);
+  plate->ResetCorr();
+  p1.SetZ( plate->GetLayer(1)->Z());
+  p2.SetZ( plate->GetLayer(2)->Z());
+  p1.SetSegmentsZ();
+  p2.SetSegmentsZ();
+  
+  TEnv cenv;
+  cenv.SetValue("fedra.link.Sigma0",  "100 100 0.1 0.1");
+  cenv.SetValue("fedra.link.shr.ThetaLimits", "0.  1.");
+  cenv.SetValue("fedra.link.DoCorrectAngles",      0);
+  cenv.SetValue("fedra.link.DoCorrectShrinkage",   0);
+
+  EdbLinking link;
+  link.InitOutputFile( Form("p%3.3d/%d.%d.%d.%d.%d.tag.cp.root",
+			    id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor, 0) );
+  link.Link( p1, p2, *(plate->GetLayer(2)), *(plate->GetLayer(1)), cenv );
+  link.GetFillPattern(p0);
+  link.CloseOutputFile();
 }
 
 
@@ -164,7 +201,7 @@ void DrawOut(const EdbPattern &p, EdbMosaicIO &omio)
   c->cd(1)->SetGrid();
   gOH.xy->Draw("colz");
   gStyle->SetOptStat("n");
-  DrawEllipse(p, 1);
+  DrawEllipse(p, kBlack, 0.02 );
 
   TVirtualPad *pad2 = c->cd(2);
   pad2->Divide(1,2);
@@ -183,12 +220,21 @@ void DrawOut(const EdbPattern &p, EdbMosaicIO &omio)
   gStyle->SetOptStat("n");
 
   if(do_save_canvas) omio.SaveFragmentObj( c, p.Plate(), p.Side(), p.ID(), "peaks");
-  if(do_save_gif) c->Print( omio.FileName( p.Brick(), p.Plate(), 0, 0, "", ".gif+30") );
+  if(do_save_gif) c->Print( omio.FileName( p.Brick(), p.Plate(), p.Side(), p.ID(), "", ".gif") );
   delete c;
 }
 
-void TagSide( EdbID id, int from, int nfrag, int side, TEnv &cenv, EdbMosaicIO &mio, EdbMosaicIO &omio )
+void TagSide( EdbID id, EdbPattern &pat, int from, int nfrag, int side, TEnv &cenv, EdbMosaicIO &mio, EdbMosaicIO &omio )
 {
+  float minVol = cenv.GetValue("fedra.tag.MinPeakVolume", 50.);
+  int   npmax  = cenv.GetValue("fedra.tag.NPeaksMax", 40);
+  float bin    = cenv.GetValue("fedra.tag.Bin" , 100);
+  float thetaMin=0, thetaMax=1;
+  const char *str = cenv.GetValue("fedra.tag.ThetaLimits" , "0.02 0.5");
+  if(str) sscanf(str,"%f %f", &thetaMin,&thetaMax);
+  Log(1,"TagSide","%d %d with bin= %.1f theta: (%.3f %.3f)  npmax=%d minVol=%.1f", 
+      nfrag, side, bin, thetaMin,thetaMax, npmax,minVol);
+  
   EdbScanProc sproc;
   sproc.eProcDirClient="..";
   
@@ -209,17 +255,19 @@ void TagSide( EdbID id, int from, int nfrag, int side, TEnv &cenv, EdbMosaicIO &
       DoubletsFilterOut(*p, omio);
       
       EdbH2 h2p;
-      Pat2H2(*p, h2p);
+      Pat2H2(*p, h2p, thetaMin,thetaMax,bin);
       //printf("Integral = %d \n",h2p.Integral());
       //gOH.xy = h2p.DrawH2("h","original mt");
       //omio.SaveFragmentObj( gOH.xy,  p->Plate(), p->Side(), p->ID(), "hxy");
 
       EdbPattern ptag;      ptag.SetScanID(id); ptag.SetSide(side); ptag.SetID(i);
 
-      FindPeaks(h2p,ptag, omio);
+      FindPeaks(h2p,ptag, npmax, minVol);
 
-      gPat.AddPattern(ptag);
+      pat.AddPattern(ptag);
+      Log(1,"TagSide","%d add fragment %d with %d peaks => %d", side, i, ptag.N(), pat.N() );
 
+      gOH.xy->SetTitle(Form("%s theta:[%.3f,%.3f] bin=%.0f",gOH.xy->GetTitle(),thetaMin,thetaMax,bin));
       DrawOut(ptag,omio);
       SafeDelete(gOH.xy);
       SafeDelete(gOH.spectrOriginal);
@@ -230,7 +278,6 @@ void TagSide( EdbID id, int from, int nfrag, int side, TEnv &cenv, EdbMosaicIO &
       delete p;      
     }
   }
-  omio.SaveFragmentObj( &gPat,	id.ePlate, side, 0, "gpat");
 }
 
 void DoubletsFilterOut(EdbPattern &p, EdbMosaicIO &omio)
@@ -259,9 +306,9 @@ void DoubletsFilterOut(EdbPattern &p, EdbMosaicIO &omio)
   //SafeDelete(htxty);
 }
 
-void Pat2H2( const EdbPattern &p, EdbH2 &h2p)
+void Pat2H2( const EdbPattern &p, EdbH2 &h2p, float thetaMin, float thetaMax, float bin)
 {
-  float xbin=50, ybin=50;
+  float xbin=bin, ybin=bin;
   float minx = p.Xmin();
   float maxx = p.Xmax();
   float miny = p.Ymin();
@@ -275,32 +322,35 @@ void Pat2H2( const EdbPattern &p, EdbH2 &h2p)
   for(int i=0; i<n; i++) 
   {
     EdbSegP *s = p.GetSegment(i);
-    if(s->Flag()>=0) 
-      if( abs(s->TX())<0.1 && abs(s->TY())<0.1 )
+    if(s->Flag()>=0) {
+      float t = Sqrt( s->TX()*s->TX() + s->TY()*s->TY() );
+      if( t>=thetaMin && t<=thetaMax )
 	h2p.Fill( s->X(),s->Y() );
+    }
   }
 }
 
-void FindPeaks(EdbH2 &h2p, EdbPattern &ptag, EdbMosaicIO &omio)
+void FindPeaks(EdbH2 &h2p, EdbPattern &ptag, int npmax, float minVol)
 {
-  int npmax=10;
   EdbPeak2 pf(h2p);
+  pf.InitPeaks(npmax);
   gOH.spectrOriginal = pf.DrawSpectrumN( Form("spO%d_%d_%d",ptag.Plate(), ptag.Side(), ptag.ID()),"original spectrum");
   pf.Smooth();
   gOH.xy     = pf.DrawH2N( Form("xy%d_%d_%d",ptag.Plate(), ptag.Side(), ptag.ID()),Form("plate:%d side:%d id:%d microtracks xy plot",ptag.Plate(), ptag.Side(), ptag.ID()));
   gOH.spectrSmooth = pf.DrawSpectrumN( Form("spS%d_%d_%d",ptag.Plate(), ptag.Side(), ptag.ID()),"smoothed spectrum");
 
   int ir[2] = {2,2};
-  pf.ProbPeaks(npmax);
-  pf.Print();
+  pf.ProbPeaks(npmax, ir);
+  //pf.Print();
   for(int i=0; i<npmax; i++) 
   {
-    ptag.AddSegment( i, pf.eXpeak[i], pf.eYpeak[i],0,0, pf.ePeak[i]-pf.eMean[i] );
+    //printf( "peaks: %d  %f %f \n",i, pf.ePeak[i], pf.eMean3[i] );
+    if( pf.ePeak[i] > minVol ) ptag.AddSegment( i, pf.eXpeak[i], pf.eYpeak[i],0,0, pf.ePeak[i] );
   }
   gOH.spectrProc = pf.DrawSpectrumN( Form("spP%d_%d_%d",ptag.Plate(), ptag.Side(), ptag.ID()),"processed spectrum");
 }
 
-void DrawEllipse(const EdbPattern &ptag, int col )
+void DrawEllipse(const EdbPattern &ptag, int col, float tsize )
 {
   int np = ptag.N();
   TText t(0,0,"a");
@@ -310,6 +360,8 @@ void DrawEllipse(const EdbPattern &ptag, int col )
     el->SetFillStyle(0);
     el->SetLineColor(col);
     el->Draw();
+    t.SetTextColor(col);
+    t.SetTextSize(tsize);
     t.DrawText(s->X(), s->Y()+300, Form("%d",i) );
   }
 }

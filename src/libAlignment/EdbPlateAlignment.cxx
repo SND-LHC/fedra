@@ -403,11 +403,13 @@ void EdbPlateAlignment::FineAl(EdbPattern &p1, EdbPattern &p2)
   TObjArray sel1,sel2;
   Ncoins(eDVsame, &eHxy, 0, &sel1, &sel2);
 
-  for(int i=0; i<3; i++) {
-    float dz = FineCorrZ(sel1,sel2);
-    eCorr[0].AddV(2,dz);
+  if( eDZ>0.0001 ) {
+    for(int i=0; i<3; i++) {
+      float dz = FineCorrZ(sel1,sel2);
+      eCorr[0].AddV(2,dz);
+    }
   }
-
+  
 //   for(int i=0; i<3; i++) {
 //     float dphi = FineCorrPhi(sel1,sel2);
 //     eCorr[0].AddV(6,dphi);

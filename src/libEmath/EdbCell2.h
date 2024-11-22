@@ -134,7 +134,7 @@ class EdbPeak2 : public EdbH2 {
   int     ProbPeaks(int npeak, int ir[2]);
   float   EstimatePeakVolume(int ipeak);
   float   EstimatePeakVolumeSafe(int ipeak);
-  float   EstimatePeakMeanPosition(int iv[2], int ir[2], float &x, float &y);
+  float   EstimatePeakMeanPosition(int iv[2], int ir[2], float &x, float &y, int mean=0);
   float   Xmean();
   float   Ymean();
   float   Peak(int i=0)  const { if(i>=0&&i<eNpeaks) return ePeak[i];  else return -1; }

@@ -251,7 +251,7 @@ TH2F *EdbPointsBox2D::XYhist()
 }
 
 //_____________________________________________________________________________
-void EdbPointsBox2D::DrawPoints( int   style, int   col, float size )
+void EdbPointsBox2D::DrawPoints( int   style, int   col, float size, bool same )
 {
   TGraph  *mark = new TGraph( N() );
 
@@ -265,7 +265,8 @@ void EdbPointsBox2D::DrawPoints( int   style, int   col, float size )
   mark->SetMarkerColor(col);
   mark->SetMarkerSize(size);
   mark->SetTitle("Points box");
-  mark->Draw("AP");
+  if(same) mark->Draw("P");
+  else     mark->Draw("AP");
 }
 
 //_____________________________________________________________________________

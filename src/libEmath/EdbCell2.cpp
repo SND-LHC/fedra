@@ -444,13 +444,15 @@ float EdbPeak2::ProbPeak(int iv[2], int ir[2])
   int   nbinPeak   = (2*ir[0]+1)*(2*ir[1]+1);
   float meanNeib   = 1.*(Integral(iv,ir) - npeak)/(nbinPeak-1);
   float meanNoPeak = 1.*(Integral() - Integral(iv,ir))/(Ncell()-nbinPeak);
+  float x,y;
+  float volume = EstimatePeakMeanPosition(iv, ir, x, y,meanNoPeak);  
   Log(3,"ProbPeak","found at (%3d %3d): %4d  %6.3f  %6.3f", iv[0],iv[1],npeak, meanNeib,meanNoPeak);
-  eXpeak[eNpeaks] = X(iv[0]);
-  eYpeak[eNpeaks] = Y(iv[1]);
-  ePeak[eNpeaks]  = npeak;
-  eMean3[eNpeaks] = meanNeib;
-  eMean[eNpeaks]  = meanNoPeak;
-  prob = npeak - meanNoPeak;                       // ToDo: this is not normalised value
+  eXpeak[eNpeaks] = x;
+  eYpeak[eNpeaks] = y;
+  ePeak[eNpeaks]  = volume/eNorm;
+  eMean3[eNpeaks] = meanNeib/eNorm;
+  eMean[eNpeaks]  = meanNoPeak/eNorm;
+  prob = (npeak - meanNoPeak)/eNorm;
   eNpeaks++;
   return prob;
 }
@@ -477,15 +479,16 @@ float EdbPeak2::FindPeak9( float &x, float &y)
 }
 
 //____________________________________________________________________________
-float EdbPeak2::EstimatePeakMeanPosition(int iv[2], int ir[2], float &x, float &y)
+float EdbPeak2::EstimatePeakMeanPosition(int iv[2], int ir[2], float &x, float &y, int mean )
 {
   double x0=0, y0=0, volume=0;
   for(int ix=iv[0]-ir[0]; ix<=iv[0]+ir[0]; ix++) 
     for(int iy=iv[1]-ir[1]; iy<=iv[1]+ir[1]; iy++) 
-      { 
-	x0     += Bin(ix,iy)*X(ix);
-	y0     += Bin(ix,iy)*Y(iy);
-	volume += Bin(ix,iy);
+      {
+	int bin = Bin(ix,iy)-mean;
+	x0     += bin*X(ix);
+	y0     += bin*Y(iy);
+	volume += bin;
       }
   if(volume>0) { x =  x0/volume;  y = y0/volume; }
   return volume;

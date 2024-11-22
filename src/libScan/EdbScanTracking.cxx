@@ -51,7 +51,8 @@ EdbTrackAssembler::~EdbTrackAssembler()
   eHistThetaBest = new TH1F("ThetaBest","angle theta for best selected candidate", 180,0,TMath::PiOver2());
   eHistThetaAll  = new TH1F("ThetaAll","angle theta for all candidates", 180,0,TMath::PiOver2());
   eHistXYseg=0;
-  eHistXYPseg=0;
+  eHistXYPseg=0;     // all segments
+  eHistXYPsegNB=0;   // no-beam (thetaMin=0.02, thetaMax=0.5)
   eHistTXTYseg=0;
 
     // for basetracks:
@@ -127,7 +128,9 @@ void EdbTrackAssembler::FillXYseg(EdbPattern &p)
     float dy= yma-ymi;
     float nx= 3*dx/50;  //TODO: bin size as a parameter?
     float ny= 3*dy/50;
-    eHistXYPseg = new TH3F("XYPseg", "XYP overlap all beam-like segments used for tracking", 
+    eHistXYPseg   = new TH3F("XYPseg", "XYP overlap all beam-like segments used for tracking", 
+			  nx,xmi-dx,xma+dx,ny,ymi-dy,yma+dy,60,0,60);
+    eHistXYPsegNB = new TH3F("XYPsegNB", "XYP out of beam", 
 			  nx,xmi-dx,xma+dx,ny,ymi-dy,yma+dy,60,0,60);
   }
   if(!eHistTXTYseg) 
@@ -139,6 +142,7 @@ void EdbTrackAssembler::FillXYseg(EdbPattern &p)
   int n=p.N();
   //TArrayF x(n),y(n);
   //int cnt=0;
+  float thetaMin=0.02, thetaMax=0.5;
   for(int i=0; i<n; i++)
   {
     EdbSegP *s = p.GetSegment(i);
@@ -147,6 +151,7 @@ void EdbTrackAssembler::FillXYseg(EdbPattern &p)
     {
       eHistXYseg->Fill(s->X(),s->Y());
       eHistXYPseg->Fill(s->X(),s->Y(),plate);
+      if(s->Theta()>=thetaMin&&s->Theta()<=thetaMax)   eHistXYPsegNB->Fill(s->X(),s->Y(),plate);
       //x[cnt++]=s->X();
       //y[cnt]  =s->Y(); 
     }
@@ -701,7 +706,7 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
 	  etra.FillTrZMap();
           etra.AddPattern(p);
 	}
-	if(do_shtag) etra.FillXYseg(p);
+	etra.FillXYseg(p);
       }
     }
     
@@ -736,7 +741,7 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
         } else cnt_badtrk++;
       }
     }
-    printf("\n segments all/attached: %d/%d     tracks selected/bad = %d/%d \n",
+    printf("\n segments all/attached: %d/%d     tracks selected/bad = %d/%d\n",
 	   all_volume_segments, cnt_attached_segments, selectedTracks.GetEntriesFast(), cnt_badtrk );
     EdbDataProc::MakeTracksTree( selectedTracks, 0., 0., Form("b%s.trk.root", idset.AsString()) );
     TFile f( Form("b%s.trk.root", idset.AsString()) ,"UPDATE");
@@ -755,6 +760,7 @@ void EdbScanTracking::SaveHist(EdbID idset, EdbTrackAssembler &etra)
   if(etra.eHistProbBest) etra.eHistProbBest->Write();
   if(etra.eHistXYseg)    etra.eHistXYseg->Write();
   if(etra.eHistXYPseg)   etra.eHistXYPseg->Write();
+  if(etra.eHistXYPsegNB) etra.eHistXYPsegNB->Write();
   if(etra.eHistTXTYseg)  etra.eHistTXTYseg->Write();
   TH1F *probrest = 0, *probPurity=0;
   if(etra.eHistProbAll&&etra.eHistProbBest) {
