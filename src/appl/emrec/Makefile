@@ -16,6 +16,7 @@ TARGET	=	$(BIN_DIR)/emlink$(ExeSuf)      \
 		$(BIN_DIR)/empred$(ExeSuf)    \
 		$(BIN_DIR)/emtrackan$(ExeSuf)  \
 		$(BIN_DIR)/emunbend$(ExeSuf)  \
+		$(BIN_DIR)/emvertex$(ExeSuf)  \
 		$(BIN_DIR)/emdbl_tb$(ExeSuf) 
 #		$(BIN_DIR)/emrawcorr$(ExeSuf)   
 #		$(BIN_DIR)/emtraceback$(ExeSuf) \

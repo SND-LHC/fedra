@@ -71,21 +71,24 @@ void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
 
   EdbViewMap vm;
   vm.ReadViewsHeaders(fin.Data(), cut);    // read headers from runfile, fill eViewHeaders
-  
-  FormFragments( fx,fy, vm.eViewHeaders );
-  
-  eID=id;
-  eMIO.Init( Form("p%3.3d/%d.%d.%d.%d.mos.root",
-		  id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor), 
-	     "RECREATE");
-  
-  AlignFragments();
-
-  if(eCorrMap[1]) eMIO.SaveCorrMap(id.ePlate, 1, *eCorrMap[1]);
-  if(eCorrMap[2]) eMIO.SaveCorrMap(id.ePlate, 2, *eCorrMap[2]);
-
-  if(eH_XY[1]) eMIO.SaveSideObj( eH_XY[1], id.ePlate, 1, "hxy_" );
-  if(eH_XY[2]) eMIO.SaveSideObj( eH_XY[2], id.ePlate, 2, "hxy_" );
+  int nh = vm.eViewHeaders.GetEntries();
+  Log(1,"EdbMosaicAl::ProcRun","%d headers selected by cut %s", nh, cut.GetTitle() );
+  if(nh>0) {
+    FormFragments( fx,fy, vm.eViewHeaders );
+    
+    eID=id;
+    eMIO.Init( Form("p%3.3d/%d.%d.%d.%d.mos.root",
+	       id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor), 
+	       "RECREATE");
+	       
+    AlignFragments();
+    
+    if(eCorrMap[1]) eMIO.SaveCorrMap(id.ePlate, 1, *eCorrMap[1]);
+    if(eCorrMap[2]) eMIO.SaveCorrMap(id.ePlate, 2, *eCorrMap[2]);
+    
+    if(eH_XY[1]) eMIO.SaveSideObj( eH_XY[1], id.ePlate, 1, "hxy_" );
+				  if(eH_XY[2]) eMIO.SaveSideObj( eH_XY[2], id.ePlate, 2, "hxy_" );
+  }
 }
 
 //-----------------------------------------------------------------------

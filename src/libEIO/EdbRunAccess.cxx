@@ -142,8 +142,12 @@ bool EdbRunAccess::InitRun(const char *runfile, bool do_update)
 
   int nn=0;
   if( eVP[1] && eVP[2] ) nn = eVP[1]->N()+eVP[2]->N();
-  if(nn != eRun->GetEntries()) if(FillVP()<1) return false;
-
+  if(nn != eRun->GetEntries()) 
+    if(FillVP()<1) 
+    {
+      Log(1,"EdbRunAccess::InitRun","no views accepted");
+      return false;
+    }
   eVP[1]->Transform(eLayers[1]->GetAffineXY());
   eVP[2]->Transform(eLayers[2]->GetAffineXY());
   eXmin = eVP[1]->Xmin();
@@ -182,6 +186,7 @@ void EdbRunAccess::GuessNviewsPerArea()
   eFirstArea=idmin;
   eLastArea=idmax;
   eNviewsPerArea=nviews/eNareas/2;
+  /*
   if( eNviewsPerArea*eNareas*2 != nviews ) 
   {                                           // try if value in run header is correct
     int nva=0;
@@ -191,6 +196,7 @@ void EdbRunAccess::GuessNviewsPerArea()
       if( nva>0 && nva*eNareas*2==nviews )    eNviewsPerArea=nva;
     }
   }
+  */
   if(eNviewsPerArea*eNareas*2 != nviews)
     Log(1,"EdbRunAccess::GuessNviewsPerArea","WARNING: eNviewsPerArea*eNareas*2 != nviews: %d*%d*2 != %d",
       eNviewsPerArea, eNareas, nviews );
@@ -896,7 +902,7 @@ int EdbRunAccess::FillVP()
   TEventList *lst = (TEventList*)(gDirectory->GetList()->FindObject("lst"));
   if(!lst) {Log(1,"EdbRunAccess::FillVP","ERROR!: events list (lst) did not found!"); return 0;}
   nentr =lst->GetN();
-
+  if(nentr<1) {Log(1,"EdbRunAccess::FillVP","%d views accepted by cut %s", nentr, eHeaderCut.GetTitle()); return 0;}
 
   if( eVP[1] ) delete  eVP[1];
   if( eVP[2] ) delete  eVP[2];

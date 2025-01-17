@@ -352,6 +352,28 @@ void EdbVertex::Print()
 	printf("****************************************************************************************\n");
 }
 //________________________________________________________________________
+void EdbVertex::PrintGeom()
+{
+  int ntr = N();
+  printf( "\n********************** Vertex %d  with flag %d   and %d tracks ****************************\n",
+	  ID(), Flag(), ntr );
+  printf( "Fit quality     : probability = %f    Chi2 = %f\n", V()->prob(), V()->chi2() );
+  printf( "Vertex Position : %12.2f %12.2f %12.2f \n", VX(), VY(), VZ() );
+  printf( "Track  Nseg     TX     TY           zmin          zmax        plmin     plmax        Impact\n");
+  for(int i=0; i<ntr; i++) {
+    EdbTrackP *tr = GetTrack(i);
+    int   nseg = tr->N();
+    float zmin=tr->GetSegment(0)->Z();
+    float zmax=tr->GetSegment(nseg-1)->Z();
+    int   plmin=tr->GetSegment(0)->ScanID().GetPlate();
+    int   plmax=tr->GetSegment(nseg-1)->ScanID().GetPlate();
+    printf("%4d  %4d  %7.3f %7.3f   %12.2f  %12.2f    %5d     %5d      %10.3f\n",
+    i, tr->N(), tr->TX(), tr->TY(), zmin, zmax, plmin, plmax, Impact(i) );
+  }
+  printf("********************************************************************************************\n");
+}
+
+//________________________________________________________________________
 void EdbVertex::AddVTA(EdbVTA *vta)
 {
   if(vta->Flag()!=2) eVTn.Add(vta);
@@ -1075,7 +1097,7 @@ int EdbVertexRec::FindVertex()
   TIndexCell starts,ends;              // "ist:entry"   "iend:entry"
   FillTracksStartEnd( starts, ends );
 
-  if(gEDBDEBUGLEVEL>1) printf("-----Search 2-track vertexes----------------------------\n");
+  if(gEDBDEBUGLEVEL>1) printf("-----Search 2-track vertices----------------------------\n");
 
   int nvtx   = 0;
 
@@ -1163,7 +1185,7 @@ int EdbVertexRec::LoopVertex( TIndexCell &list1, TIndexCell &list2,
   float z1, z2;
 
   //int ntot = nz1*nz2;
-  //printf("  2-track vertexes search in progress... %3d%%", 0);
+  //printf("  2-track vertices search in progress... %3d%%", 0);
 
   for(int iz1=0; iz1<nz1; iz1++)   {           // first z-group
     c1 = list1.At(iz1);
@@ -1643,8 +1665,8 @@ int EdbVertexRec::ProbVertexN_old()
   zpos = 0;
 
   nvtx = eVTX->GetEntriesFast();
-  printf("-----Merge 2-track vertex pairs to N-track vertexes-----\n");
-  printf("N-track vertexes search in progress... %3d%%", 0);
+  printf("-----Merge 2-track vertex pairs to N-track vertices-----\n");
+  printf("N-track vertices search in progress... %3d%%", 0);
 
   int nprint = (int)(0.05*(double)nvtx);
   if (nprint <= 0) nprint = 1;
@@ -1764,7 +1786,7 @@ int EdbVertexRec::ProbVertexN_old()
   printf("\b\b\b\b%3d%%\n",100);
 
   printf("  %6d 2-track vertex pairs with common track\n", ncombin);
-  printf("  %6d pairs when common track not yet attached\n  %6d N-track vertexes with Prob > %f\n",
+  printf("  %6d pairs when common track not yet attached\n  %6d N-track vertices with Prob > %f\n",
 	 ncombinv, nadd, eProbMin);
   printf("--------------------------------------------------------\n");
 
@@ -1797,10 +1819,10 @@ void EdbVertexRec::StatVertexN()
   }
   for (ntv = 0; ntv < 10; ntv++) {
     if (ntv < 9)
-      printf("%5d vertexes with number of tracks  = %2d was found\n",
+      printf("%5d vertices with number of tracks  = %2d was found\n",
 	     navtx[ntv], ntv+2);
     else
-      printf("%5d vertexes with number of tracks >= %2d was found\n",
+      printf("%5d vertices with number of tracks >= %2d was found\n",
 	     navtx[ntv], ntv+2);
   }
 }
@@ -2218,7 +2240,7 @@ int EdbVertexRec::VertexTuning(int seltype)
   double v1chiorig = 0., v1distorig = 0.;
   double v2chiorig = 0., v2distorig = 0., crit = 0., critorig = 0.;
 
-  for (iv=0; iv<nvt; iv++) {  // loop on all vertexes
+  for (iv=0; iv<nvt; iv++) {  // loop on all vertices
     v1 = GetVertex(iv);
     if (v1)
     {
@@ -2425,7 +2447,7 @@ int EdbVertexRec::VertexTuning(int seltype)
 	      } // loop on neighbor
 	    } // neighbor exist
     } // good v1
-  } // loop on vertexes
+  } // loop on vertices
 
   nvt = eVTX->GetEntriesFast();
 

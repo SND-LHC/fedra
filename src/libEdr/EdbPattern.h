@@ -184,7 +184,7 @@ class EdbTrackP : public EdbSegP {
   
   Double_t  GetBTEfficiency();
 
-  Float_t    Wgrains() const;
+  Float_t  Wgrains() const;
   Int_t	   GetSegmentsFlag( int &nseg ) const;
   Int_t	   GetSegmentsAid( int &nseg ) const;
   Int_t	   GetSegmentsMCTrack( int &nseg ) const;
@@ -248,6 +248,7 @@ class EdbTrackP : public EdbSegP {
   int   RemoveAliasSegments();
   int   CheckMaxGap();
   int   CheckAliasSegments();
+  int   SetSegmentsP(float p) {for(int i=0; i<N(); i++) GetSegment(i)->SetP(p); return N();}
   int   SetSegmentsTrack(int id) {for(int i=0; i<N(); i++) GetSegment(i)->SetTrack(id); return N();}
   int   SetSegmentsTrack() {return SetSegmentsTrack(ID());}
   int   FitTrackKFS( bool zmax=false, float X0=5810., int design = 0 );

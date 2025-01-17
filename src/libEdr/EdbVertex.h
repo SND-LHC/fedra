@@ -103,6 +103,7 @@ class EdbVertex: public TObject {
   void       RemoveVTA(EdbVTA *vta);
   void       ResetTracks();
   void       Print();
+  void       PrintGeom();
   Int_t      Compare(const TObject *o) const;
   Bool_t     EstimateVertexMath( float& xv, float& yv, float& zv, float& d );
   void       Edb2Vt(const EdbTrackP& tr, VERTEX::Track& t, float X0 = 0., float m = 0.139 );

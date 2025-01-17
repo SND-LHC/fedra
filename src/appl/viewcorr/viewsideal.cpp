@@ -54,6 +54,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.vsa.sigmaR"         , 0.5 );
   cenv.SetValue("fedra.vsa.sigmaT"         , 0.005 );
   cenv.SetValue("fedra.vsa.ICUT"      , "-1     -500. 500.   -500.   500.    -1.   1.      -1.   1.       8.  50.");
+  cenv.SetValue("fedra.vsa.XCUT"      , "-1     -300. 300.   -200.   200.    -1.   1.      -1.   1.       0.  0.");
   cenv.SetValue("fedra.vsa.DoFine"      ,  1    );
   cenv.SetValue("fedra.vsa.SaveCouples" ,  1    );
   
@@ -107,6 +108,8 @@ int main(int argc, char* argv[])
   printf("\n----------------------------------------------------------------------------\n");
   printf("viewsideal  %s\n"      ,id.AsString()	   );
   printf(  "----------------------------------------------------------------------------\n\n");
+  printf("fedra.vsa.ImageCorrSide1: %s\n", cenv.GetValue("fedra.vsa.ImageCorrSide1","") );
+  printf("fedra.vsa.ImageCorrSide2: %s\n", cenv.GetValue("fedra.vsa.ImageCorrSide2","") );
   
   if(do_single) 
   {

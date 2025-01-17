@@ -1117,6 +1117,7 @@ int EdbTrackP::EstimatePositionAt( Float_t z, EdbSegP &ss )
   ss.SetX( s1->X() + dz*dx0/dz0 );
   ss.SetY( s1->Y() + dz*dy0/dz0 );
   ss.SetZ( z );
+  ss.SetDZ( dz );           // keep dz distance
   ss.SetTX( dx0/dz0 );
   ss.SetTY( dy0/dz0 );
   return 1;

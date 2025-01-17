@@ -2762,7 +2762,7 @@ int EdbDataProc::ReadVertexTree( EdbVertexRec &vertexrec, const char     *fname,
        s1f = (EdbSegP*)(segf->At(itotalseg));
        pat = ali->GetPattern( s1->PID() );
        if(!pat) { 
-	      Log(1,"EdbDataProc::ReadVertexTree","WARNING: no pattern with pid %d: creating new one!",s1->PID()); 
+	      Log(3,"EdbDataProc::ReadVertexTree","WARNING: no pattern with pid %d: creating new one!",s1->PID()); 
 	      pat = new EdbPattern( 0., 0., s1->Z() );
 	      pat->SetID(s1->PID());
 	      pat->SetScanID(s1->ScanID());
@@ -2930,9 +2930,7 @@ int EdbDataProc::MakeTracksTree(TObjArray &trarr, float xv, float yv, const char
 
 //---------------------------------------------------------------------------
 int EdbDataProc::ReadTracksTree( EdbPVRec &ali,
-				 const char     *fname,
-				 //				 int      nsegMin,
-				 //				 float    probMin,
+				 const char *fname,
 				 const char *rcut )
 {
   TFile *f = TFile::Open(fname);
@@ -2985,7 +2983,7 @@ int EdbDataProc::ReadTracksTree( EdbPVRec &ali,
       s1f = (EdbSegP*)(segf->At(i));
       pat = ali.GetPattern( s1->PID() );
       if(!pat) { 
-	Log(1,"EdbDataProc::ReadTracksTree","WARNING: no pattern with pid %d: creating new one!",s1->PID()); 
+	Log(3,"EdbDataProc::ReadTracksTree","WARNING: no pattern with pid %d: creating new one!",s1->PID()); 
 	pat = new EdbPattern( 0., 0., s1->Z() );
 	pat->SetID(s1->PID());
 	pat->SetScanID(s1->ScanID());

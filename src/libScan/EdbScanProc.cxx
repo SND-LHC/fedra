@@ -652,7 +652,7 @@ int EdbScanProc::ReadTracksTree(const char *name, EdbPVRec &ali, TCut cut)
 {
   int n=0;
   EdbDataProc dproc;
-  n = dproc.ReadTracksTree(ali, name, cut);
+  n = dproc.ReadTracksTree(ali, name, cut.GetTitle());
   return n;
 }
 
@@ -3159,20 +3159,15 @@ bool EdbScanProc::InitRunAccessNew(EdbRunAccess &r, EdbID id, EdbPlateP &plate, 
   //             r.AddSegmentCut(...) , etc
   TString runfile;
   MakeFileName(runfile,id,"raw.root");
-  if( !r.InitRun(runfile, do_update) )
-    {     
-      LogPrint(id.eBrick,1,"InitRunAccess","ERROR open file %s !!!",runfile.Data());
-      return false;
-    } 
-    else
-      LogPrint(id.eBrick,2,"InitRunAccess"," %s with %d views",runfile.Data(), r.GetRun()->GetEntries() );
-  r.GetLayer(2)->Copy( *(plate.GetLayer(1)) );
-  r.GetLayer(1)->Copy( *(plate.GetLayer(2)) );
-  r.GetLayer(0)->Copy( *((EdbLayer*)(&plate)) );
-  //r.GetLayer(2)->Print();
-  //r.GetLayer(1)->Print();
-  //r.GetLayer(0)->Print();
-  return true;
+  if( r.InitRun(runfile, do_update) )
+  {
+    LogPrint(id.eBrick,2,"InitRunAccess"," %s with %d views",runfile.Data(), r.GetRun()->GetEntries() );
+    r.GetLayer(2)->Copy( *(plate.GetLayer(1)) );
+    r.GetLayer(1)->Copy( *(plate.GetLayer(2)) );
+    r.GetLayer(0)->Copy( *((EdbLayer*)(&plate)) );
+    return true;
+  }
+  return false;
 }
 
 //--------------------------------------------------------------------
