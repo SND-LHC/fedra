@@ -103,7 +103,7 @@ void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env )
     v = (EdbVertex *)(evr->eVTX->At(i));
     varr->Add(v);
     v->PrintGeom();
-    v->SaveGeom();
+//    v->SaveGeom();
     for(int j=0; j<v->N(); j++) {
       EdbTrackP *t = v->GetTrack(j);
       tarr->Add( t );
