@@ -706,7 +706,7 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
 	  etra.FillTrZMap();
           etra.AddPattern(p);
 	}
-	etra.FillXYseg(p);
+	if(do_shtag) etra.FillXYseg(p);
       }
     }
     
