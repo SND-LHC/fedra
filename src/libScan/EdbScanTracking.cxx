@@ -591,6 +591,7 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
     etra.eDRmax                 = env.GetValue("fedra.track.DRmax"          ,    45.   );
     etra.eDZGapMax              = env.GetValue("fedra.track.DZGapMax"       ,  5000.   );
     etra.eProbMin               = env.GetValue("fedra.track.probmin"        ,  0.001   );
+    bool        do_track        = env.GetValue("fedra.track.track"          ,  true    );
     bool        do_erase        = env.GetValue("fedra.track.erase"          ,  false   );
     bool        do_shtag        = env.GetValue("fedra.track.do_shtag"       ,  false   );  // no tracking only shower tag info
     TCut  cut            = env.GetValue("fedra.readCPcut"            ,     "1"  ); //changed from const char* to TCut used by ReadPatCPnopar
@@ -702,9 +703,10 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
           if( i==1 ) etra.CheckPatternAlignment(p,*plate,1);
           if( i>1  ) etra.CheckPatternAlignment(p,*plate,1);
         }
-        if(!do_shtag) {
+        if(do_track) 
+	{
 	  etra.FillTrZMap();
-          etra.AddPattern(p);
+	  etra.AddPattern(p);
 	}
 	if(do_shtag) etra.FillXYseg(p);
       }

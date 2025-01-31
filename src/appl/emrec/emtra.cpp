@@ -57,6 +57,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.track.do_use_mcs", 0 );
   cenv.SetValue("fedra.track.RadX0"     , 5810.);
 
+  cenv.SetValue("fedra.track.do_track"       , true  );
   cenv.SetValue("fedra.track.do_shtag"       , false );
   cenv.SetValue("fedra.track.erase"          , false );
   cenv.SetValue("fedra.track.do_realign"     , 0 );
