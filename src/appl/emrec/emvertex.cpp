@@ -241,7 +241,7 @@ void ReadVertex(EdbID id, TEnv &env)
       vtr->SetScanCond( new EdbScanCond(gCond) );
       gSproc.ReadTracksTree( idset,*vtr, cuttr);
       AddCompatibleTracks( *vtr, gAli , v_out);  // assign to the vertices of gAli additional tracks from vtr if any
-      EdbDataProc::MakeVertexTree(v_out,"flag0.vtx.root");
+      EdbDataProc::MakeVertexTree(&v_out,"flag0.vtx.root");
     }
   }
 }
@@ -334,8 +334,7 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out)
       }
       }
     if (!flag1) {
-      v_out.AddVertex(v);
-    }
+      v_out.Add(v);
     }
   }
 }
