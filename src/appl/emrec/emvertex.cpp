@@ -229,7 +229,7 @@ void ReadVertex(EdbID id, TEnv &env)
   gEVR.eQualityMode= env.GetValue("emvertex.vtx.QualityMode"   , 0);  // (0:=Prob/(sigVX^2+sigVY^2); 1:= inverse average track-vertex distance)
   TCut cutvtx      = env.GetValue("emvertex.vtx.cutvtx"        , "(flag==0||flag==3)&&n>4");
 
-  TObjArray* v_out = new TObjArray();
+  TObjArray v_out;
   
   EdbDataProc *dproc = new EdbDataProc();
   TString name;
@@ -244,7 +244,7 @@ void ReadVertex(EdbID id, TEnv &env)
       vtr->SetScanCond( new EdbScanCond(gCond) );
       gSproc.ReadTracksTree( idset,*vtr, cuttr);
       AddCompatibleTracks( *vtr, gAli , v_out);  // assign to the vertices of gAli additional tracks from vtr if any
-      EdbDataProc::MakeVertexTree(&v_out,"flag0.vtx.root");
+      EdbDataProc::MakeVertexTree(v_out,"flag0.vtx.root");
     }
   }
 }
@@ -326,10 +326,18 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out)
   for(int iv=0; iv<nvtx; iv++)
   {
     bool flag1 = false;
+    std::vector<int> trackids;
     EdbVertex *v = v_vtx.GetVertex(iv);
+    for(int i=0; i<v->N(); i++){
+      EdbTrackP *t = (EdbTrackP*)v->GetTrack(i);
+      int trid = t->ID();
+      trackids.push_back(trid);
+    }
     for(int it=0; it<ntr; it++) 
     {
       EdbTrackP *t = v_trk.GetTrack(it);
+      int trid = t->ID();
+      if (std::find(trackids.begin(), trackids.end(), trid)!=trackids.end()) continue;
       if( IsCompatible(*v,*t) ) {
       flag1 = true;
       t->SetFlag(999999);
