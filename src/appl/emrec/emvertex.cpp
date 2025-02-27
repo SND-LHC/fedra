@@ -26,7 +26,7 @@ void ReadVertex(EdbID id,TEnv &env);
 void MakeScanCondBT(EdbScanCond &cond, TEnv &env);
 void SetTracksErrors(TObjArray &tracks, EdbScanCond &cond, float p, float m);
 void do_vertex(TEnv &env);
-void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx);
+void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out);
 bool IsCompatible(EdbVertex &v, EdbTrackP &t);
 void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env );
 
