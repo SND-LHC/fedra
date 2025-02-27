@@ -229,6 +229,8 @@ void ReadVertex(EdbID id, TEnv &env)
   gEVR.eQualityMode= env.GetValue("emvertex.vtx.QualityMode"   , 0);  // (0:=Prob/(sigVX^2+sigVY^2); 1:= inverse average track-vertex distance)
   TCut cutvtx      = env.GetValue("emvertex.vtx.cutvtx"        , "(flag==0||flag==3)&&n>4");
 
+  TObjArray* v_out = new TObjArray();
+  
   EdbDataProc *dproc = new EdbDataProc();
   TString name;
   gSproc.MakeFileName(name,id,"vtx.root",false);
@@ -241,7 +243,8 @@ void ReadVertex(EdbID id, TEnv &env)
       EdbPVRec *vtr = new EdbPVRec();
       vtr->SetScanCond( new EdbScanCond(gCond) );
       gSproc.ReadTracksTree( idset,*vtr, cuttr);
-      AddCompatibleTracks( *vtr, gAli );  // assign to the vertices of gAli additional tracks from vtr if any
+      AddCompatibleTracks( *vtr, gAli , v_out);  // assign to the vertices of gAli additional tracks from vtr if any
+      EdbDataProc::MakeVertexTree(v_out,"flag0.vtx.root");
     }
   }
 }
@@ -315,21 +318,27 @@ void MakeScanCondBT(EdbScanCond &cond, TEnv &env)
   cond.SetName("SND_basetrack");
 }
 
-void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx)
+void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out)
 {
   int ntr  = v_trk.Ntracks();
   int nvtx = v_vtx.Nvtx();
   Log(1,"AddCompatibleTracks", "%d tracks, %d vertex", ntr,nvtx );
   for(int iv=0; iv<nvtx; iv++)
   {
+    bool flag1 = false;
     EdbVertex *v = v_vtx.GetVertex(iv);
     for(int it=0; it<ntr; it++) 
     {
       EdbTrackP *t = v_trk.GetTrack(it);
       if( IsCompatible(*v,*t) ) {
-	t->SetFlag(999999);
-	v_vtx.AddTrack(t);
+      flag1 = true;
+      t->SetFlag(999999);
+      v_vtx.AddTrack(t);
       }
+      }
+    if (!flag1) {
+      v_out.AddVertex(v);
+    }
     }
   }
 }
