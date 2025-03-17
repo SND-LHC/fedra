@@ -26,8 +26,8 @@ void ReadVertex(EdbID id,TEnv &env);
 void MakeScanCondBT(EdbScanCond &cond, TEnv &env);
 void SetTracksErrors(TObjArray &tracks, EdbScanCond &cond, float p, float m);
 void do_vertex(TEnv &env);
-void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz);
-bool IsCompatible(EdbVertex &v, EdbTrackP &t, float *r2, float *dz);
+void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz);
+bool IsCompatible(TEnv &env, EdbVertex &v, EdbTrackP &t, float *r2, float *dz);
 void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env );
 
 //----------------------------------------------------------------------------------------
@@ -68,6 +68,9 @@ void set_default(TEnv &env)
   env.SetValue("emvertex.trfit.doit"     ,  1 );
   env.SetValue("emvertex.trfit.P"        , 10 );
   env.SetValue("emvertex.trfit.M"        ,  0.139);
+  env.SetValue("emvertex.trfit.r2max", 5. );
+  env.SetValue("emvertex.trfit.dzmax", 4000. );
+
   env.SetValue("emvertex.bt.Sigma0", "0.2 0.2 0.002 0.002" );
   env.SetValue("emvertex.bt.Degrad", 5. );
 }
@@ -245,7 +248,7 @@ void ReadVertex(EdbID id, TEnv &env)
       gSproc.ReadTracksTree( idset,*vtr, cuttr);
       TH1F *h_r2 = new TH1F("h_r2", "h_r2", 50,0,5);
       TH1F *h_dz = new TH1F("h_dz", "h_dz", 400,0,4000);
-      AddCompatibleTracks( *vtr, gAli , v_out, h_r2, h_dz);  // assign to the vertices of gAli additional tracks from vtr if any
+      AddCompatibleTracks(env, *vtr, gAli , v_out, h_r2, h_dz);  // assign to the vertices of gAli additional tracks from vtr if any
       EdbDataProc::MakeVertexTree(v_out,"flag0.vtx.root");
     }
   }
@@ -320,7 +323,7 @@ void MakeScanCondBT(EdbScanCond &cond, TEnv &env)
   cond.SetName("SND_basetrack");
 }
 
-void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz)
+void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz)
 {
   int ntr  = v_trk.Ntracks();
   int nvtx = v_vtx.Nvtx();
@@ -330,35 +333,39 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1
     bool flag1 = false;
     std::vector<int> trackids;
     EdbVertex *v = v_vtx.GetVertex(iv);
+    Log(1,"AddCompatibleTracks","Looking for parent tracks of vtx: %i\n",v->ID());
     for(int i=0; i<v->N(); i++){
       EdbTrackP *t = (EdbTrackP*)v->GetTrack(i);
       int trid = t->ID();
       trackids.push_back(trid);
     }
     EdbTrackP *t_chosen = 0;
-    float r2, dz, r2max; r2max=1e9f;
+    float r2, dz, r2max, dzmax; r2max=dzmax=1e9f;
     for(int it=0; it<ntr; it++) 
     {
       EdbTrackP *t = v_trk.GetTrack(it);
       int trid = t->ID();
       if (std::find(trackids.begin(), trackids.end(), trid)!=trackids.end()) continue;
-      if( IsCompatible(*v,*t, &r2, &dz) ) {
+      if( IsCompatible(env, *v,*t, &r2, &dz) ) {
         flag1 = true;
         t->SetFlag(999999);
-        if( r2 < r2max ) { t_chosen=t; }
+        if( r2 < r2max ) { r2max=r2; dzmax=dz; t_chosen=t; }
+        // v_vtx.AddTrack(t);
       }
     }
-    h_r2->Fill(r2);
-    h_dz->Fill(dz);
-    v_vtx.AddTrack(t_chosen);
-    Log(1,"AddCompatibleTracks","Closest track found at r2=%.4f dz=%.2f\n",r2,dz);
-    if (!flag1) {
+    if (flag1){
+      h_r2->Fill(r2);
+      h_dz->Fill(dz);
+      v_vtx.AddTrack(t_chosen);
+      Log(1,"AddCompatibleTracks","Closest track found at r2=%.4f dz=%.2f\n",r2max,dzmax);
+    }
+    else {
       v_out.Add(v);
     }
   }
 }
 
-bool IsCompatible(EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
+bool IsCompatible(TEnv &env, EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
 {
   EdbSegP ss;
   EdbSegP *tst = t.GetSegmentFirst();
@@ -369,7 +376,9 @@ bool IsCompatible(EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
   float dy=ss.Y()-v.VY();
   *r2 = Sqrt(dx*dx+dy*dy);
   *dz = Abs(ss.DZ());
-  if(*r2<5&&*dz<4000) { printf("r2=%.4f dz=%.2f\n",*r2,ss.DZ()); return true;}
+  float r2max      = env.GetValue("emvertex.trfit.r2max"        , 5. );
+  float dzmax      = env.GetValue("emvertex.trfit.dzmax"        , 4000. );
+  if(*r2<r2max&&*dz<dzmax) { printf("r2=%.4f dz=%.2f\n",*r2,ss.DZ()); return true;}
   return false;
 }
 
