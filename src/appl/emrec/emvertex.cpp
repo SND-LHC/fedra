@@ -27,7 +27,7 @@ void MakeScanCondBT(EdbScanCond &cond, TEnv &env);
 void SetTracksErrors(TObjArray &tracks, EdbScanCond &cond, float p, float m);
 void do_vertex(TEnv &env);
 void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz);
-bool IsCompatible(EdbVertex &v, EdbTrackP &t);
+bool IsCompatible(EdbVertex &v, EdbTrackP &t, float *r2, float *dz);
 void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env );
 
 //----------------------------------------------------------------------------------------
@@ -336,21 +336,22 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1
       trackids.push_back(trid);
     }
     EdbTrackP *t_chosen = 0;
-    float dr2 = 1e9f;
+    float r2, dz, r2max; r2max=1e9f;
     for(int it=0; it<ntr; it++) 
     {
       EdbTrackP *t = v_trk.GetTrack(it);
       int trid = t->ID();
       if (std::find(trackids.begin(), trackids.end(), trid)!=trackids.end()) continue;
       if( IsCompatible(*v,*t, &r2, &dz) ) {
-      flag1 = true;
-      t->SetFlag(999999);
-      if( r2 < dr2 ) { t_chosen=t; }
+        flag1 = true;
+        t->SetFlag(999999);
+        if( r2 < r2max ) { t_chosen=t; }
       }
     }
     h_r2->Fill(r2);
     h_dz->Fill(dz);
-    v_vtx.AddTrack(t);
+    v_vtx.AddTrack(t_chosen);
+    Log(1,"AddCompatibleTracks","Closest track found at r2=%.4f dz=%.2f\n",r2,dz);
     if (!flag1) {
       v_out.Add(v);
     }
@@ -360,8 +361,8 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1
 bool IsCompatible(EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
 {
   EdbSegP ss;
-  EdbSegP tst = t.GetSegmentFirst();
-  float tz = tst.Z();
+  EdbSegP *tst = t.GetSegmentFirst();
+  float tz = tst->Z();
   if (tz > v.VZ()) return false;   //only tracks starting upstream of the vtx
   t.EstimatePositionAt(v.VZ(),ss);
   float dx=ss.X()-v.VX();
