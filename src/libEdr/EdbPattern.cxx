@@ -1096,7 +1096,7 @@ int EdbTrackP::EstimatePositionAt( Float_t z, EdbSegP &ss )
   // TODO: dz=0: mean?
   if( N()<2 ) return 0;
   EdbSegP *s1=0,*s2=0;
-  float   dz1,dz2;   dz1=dz2=kMaxInt;
+  float   dz1,dz2;   dz1=dz2=1e9f; //kMaxInt into float;
   for(int i=0; i<N(); i++)
   {
     EdbSegP *s = GetSegment(i);
@@ -1114,12 +1114,14 @@ int EdbTrackP::EstimatePositionAt( Float_t z, EdbSegP &ss )
   float dx0 = s2->X()-s1->X();
   float dy0 = s2->Y()-s1->Y();
   float dz  = z-s1->Z();
-  ss.SetX( s1->X() + dz*dx0/dz0 );
-  ss.SetY( s1->Y() + dz*dy0/dz0 );
+  float tx = dx0/dz0;
+  float ty = dy0/dz0;
+  ss.SetX( s1->X() + dz*tx );
+  ss.SetY( s1->Y() + dz*ty );
   ss.SetZ( z );
   ss.SetDZ( dz );           // keep dz distance
-  ss.SetTX( dx0/dz0 );
-  ss.SetTY( dy0/dz0 );
+  ss.SetTX( tx );
+  ss.SetTY( ty );
   return 1;
 }
 

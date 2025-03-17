@@ -26,7 +26,7 @@ void ReadVertex(EdbID id,TEnv &env);
 void MakeScanCondBT(EdbScanCond &cond, TEnv &env);
 void SetTracksErrors(TObjArray &tracks, EdbScanCond &cond, float p, float m);
 void do_vertex(TEnv &env);
-void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out);
+void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz);
 bool IsCompatible(EdbVertex &v, EdbTrackP &t);
 void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env );
 
@@ -243,7 +243,9 @@ void ReadVertex(EdbID id, TEnv &env)
       EdbPVRec *vtr = new EdbPVRec();
       vtr->SetScanCond( new EdbScanCond(gCond) );
       gSproc.ReadTracksTree( idset,*vtr, cuttr);
-      AddCompatibleTracks( *vtr, gAli , v_out);  // assign to the vertices of gAli additional tracks from vtr if any
+      TH1F *h_r2 = new TH1F("h_r2", "h_r2", 50,0,5);
+      TH1F *h_dz = new TH1F("h_dz", "h_dz", 400,0,4000);
+      AddCompatibleTracks( *vtr, gAli , v_out, h_r2, h_dz);  // assign to the vertices of gAli additional tracks from vtr if any
       EdbDataProc::MakeVertexTree(v_out,"flag0.vtx.root");
     }
   }
@@ -318,7 +320,7 @@ void MakeScanCondBT(EdbScanCond &cond, TEnv &env)
   cond.SetName("SND_basetrack");
 }
 
-void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out)
+void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TH1F* h_r2, TH1F* h_dz)
 {
   int ntr  = v_trk.Ntracks();
   int nvtx = v_vtx.Nvtx();
@@ -333,32 +335,40 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out)
       int trid = t->ID();
       trackids.push_back(trid);
     }
+    EdbTrackP *t_chosen = 0;
+    float dr2 = 1e9f;
     for(int it=0; it<ntr; it++) 
     {
       EdbTrackP *t = v_trk.GetTrack(it);
       int trid = t->ID();
       if (std::find(trackids.begin(), trackids.end(), trid)!=trackids.end()) continue;
-      if( IsCompatible(*v,*t) ) {
+      if( IsCompatible(*v,*t, &r2, &dz) ) {
       flag1 = true;
       t->SetFlag(999999);
-      v_vtx.AddTrack(t);
+      if( r2 < dr2 ) { t_chosen=t; }
       }
-      }
+    }
+    h_r2->Fill(r2);
+    h_dz->Fill(dz);
+    v_vtx.AddTrack(t);
     if (!flag1) {
       v_out.Add(v);
     }
   }
 }
 
-bool IsCompatible(EdbVertex &v, EdbTrackP &t)
+bool IsCompatible(EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
 {
   EdbSegP ss;
+  EdbSegP tst = t.GetSegmentFirst();
+  float tz = tst.Z();
+  if (tz > v.VZ()) return false;   //only tracks starting upstream of the vtx
   t.EstimatePositionAt(v.VZ(),ss);
   float dx=ss.X()-v.VX();
   float dy=ss.Y()-v.VY();
-  float r2 = Sqrt(dx*dx+dy*dy);
-  float dz = Abs(ss.DZ());
-  if(r2<5&&dz<4000) { printf("r2=%.4f dz=%.2f\n",r2,ss.DZ()); return true;}
+  *r2 = Sqrt(dx*dx+dy*dy);
+  *dz = Abs(ss.DZ());
+  if(*r2<5&&*dz<4000) { printf("r2=%.4f dz=%.2f\n",*r2,ss.DZ()); return true;}
   return false;
 }
 
