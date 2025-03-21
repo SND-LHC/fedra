@@ -29,6 +29,7 @@ void do_vertex(TEnv &env);
 void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray &v_out, TObjArray &v_out2, TNtuple* outTree);
 bool IsCompatible(TEnv &env, EdbVertex &v, EdbTrackP &t, float *r2, float *dz);
 void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env );
+float distance(const EdbTrackP& t, const EdbVertex& v);
 
 //----------------------------------------------------------------------------------------
 void print_help_message()
@@ -70,6 +71,7 @@ void set_default(TEnv &env)
   env.SetValue("emvertex.trfit.M"        ,  0.139);
   env.SetValue("emvertex.trfit.r2max", 5. );
   env.SetValue("emvertex.trfit.dzmax", 4000. );
+  env.SetValue("emvertex.trfit.impmax", 5. );
 
   env.SetValue("emvertex.bt.Sigma0", "0.2 0.2 0.002 0.002" );
   env.SetValue("emvertex.bt.Degrad", 5. );
@@ -260,6 +262,8 @@ void ReadVertex(EdbID id, TEnv &env)
       outTree->Write();
       outFile->Write();
       outFile->Close();
+      delete outTree;
+      delete outFile;
     }
   }
 }
@@ -350,7 +354,7 @@ void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray 
       trackids.push_back(trid);
     }
     EdbTrackP *t_chosen = 0;
-    float r2, dz, r2max, dzmax; r2max=dzmax=1e9f;
+    float r2, dz, imp, imp2, r2max, dzmax, impmax, impmax2; r2max=dzmax=impmax=impmax2=1e9f;
     int founds=0;
     for(int it=0; it<ntr; it++) 
     {
@@ -360,15 +364,15 @@ void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray 
       if( IsCompatible(env, *v,*t, &r2, &dz) ) {
         flag1 = true;
         t->SetFlag(999999);
-        if( r2 < r2max ) { r2max=r2; dzmax=dz; t_chosen=t; }
+        if( r2 < r2max ) { r2max=r2; dzmax=dz; impmax=imp; impmax2=imp2; t_chosen=t; }
         // v_vtx.AddTrack(t);
         founds++;
-        outTree->Fill(0, 1, v->ID(), t->ID() ,t->N(), t->Npl(), t->TX(), t->TY(), t->GetSegmentFirst()->Plate(), t->GetSegmentLast()->Plate(), r2, dz);
+        outTree->Fill(0, 1, v->ID(), t->ID() ,t->N(), t->Npl(), t->TX(), t->TY(), t->GetSegmentFirst()->Plate(), t->GetSegmentLast()->Plate(), r2, dz, imp, imp2);
       }
     }
     if (flag1){
       v_vtx.AddTrack(t_chosen);
-      outTree->Fill(1, founds, v->ID(), t_chosen->ID(), t_chosen->N(), t_chosen->Npl(), t_chosen->TX(), t_chosen->TY(), t_chosen->GetSegmentFirst()->Plate(), t_chosen->GetSegmentLast()->Plate(), r2max, dzmax);
+      outTree->Fill(1, founds, v->ID(), t_chosen->ID(), t_chosen->N(), t_chosen->Npl(), t_chosen->TX(), t_chosen->TY(), t_chosen->GetSegmentFirst()->Plate(), t_chosen->GetSegmentLast()->Plate(), r2max, dzmax, impmax, impmax2);
       Log(1,"AddCompatibleTracks","Closest track found at r2=%.4f dz=%.2f\n",r2max,dzmax);
       v_out2.Add(v);
     }
@@ -378,7 +382,7 @@ void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray 
   }
 }
 
-bool IsCompatible(TEnv &env, EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
+bool IsCompatible(TEnv &env, EdbVertex &v, EdbTrackP &t, float *r2, float *dz, float *imp, float *imp2)
 {
   EdbSegP ss;
   EdbSegP *tst = t.GetSegmentFirst();
@@ -388,10 +392,13 @@ bool IsCompatible(TEnv &env, EdbVertex &v, EdbTrackP &t, float *r2, float *dz)
   float dx=ss.X()-v.VX();
   float dy=ss.Y()-v.VY();
   *r2 = Sqrt(dx*dx+dy*dy);
-  *dz = Abs(ss.DZ());
+  *dz = ss.DZ();
+  *imp = distance(t, v);
+  *imp2 = distance(ss, v);
   float r2max      = env.GetValue("emvertex.trfit.r2max"        , 5. );
   float dzmax      = env.GetValue("emvertex.trfit.dzmax"        , 4000. );
-  if(*r2<r2max&&*dz<dzmax) { printf("r2=%.4f dz=%.2f\n",*r2,ss.DZ()); return true;}
+  float impmax      = env.GetValue("emvertex.trfit.impmax"        , 5. );
+  if(*r2<r2max&&*dz<Abs(dzmax)) { printf("r2=%.4f dz=%.2f\n",*r2,ss.DZ()); return true;}
   return false;
 }
 
@@ -412,4 +419,15 @@ void SetTracksErrors(TObjArray &tracks, EdbScanCond &cond, float p, float m)
      }
      t->FitTrackKFS();
   }
+}
+
+float distance(const EdbTrackP& t, const EdbVertex& v) {
+  float dx = v.VX() - t.X();
+  float dy = v.VY() - t.Y();
+  float dz = v.VZ() - t.Z();
+  float tx = t.TX();
+  float ty = t.TY();
+  float nom = std::pow((dx*ty - dy*tx),2) + std::pow((dy - dz*ty),2) + std::pow((dz*tx - dx),2);
+  float denom = std::pow((tx),2) + std::pow((ty),2) + 1.;
+return sqrt(nom/denom);
 }
