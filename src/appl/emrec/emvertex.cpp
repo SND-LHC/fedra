@@ -377,7 +377,6 @@ void AddCompatibleTracks(TEnv &env, EdbPVRec &v_trk, EdbPVRec &v_vtx, TObjArray 
     else {
       v_out.Add(v);
     }
-    else { v_out2.Add(v);}
   }
 }
 
