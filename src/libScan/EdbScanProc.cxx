@@ -319,9 +319,10 @@ void EdbScanProc::MakeEraseFile(EdbID id,  EdbPattern &pat)
   for(int i=0; i<pat.N(); i++) mask.SetAt(pat.GetSegment(i)->Vid(1),1);
   TString str;
   MakeFileName(str,id,"er.root");
-  TFile f(str.Data(),"RECREATE");
-  mask.Write("mask");
-  f.Close();
+  
+  std::unique_ptr<TFile> f(TFile::Open(str.Data(),"RECREATE"));
+  if (!f || f->IsZombie())  Log(1,"EdbScanProc::MakeEraseFile","ERROR! can not open file %s", str.Data());
+  else                      mask.Write("mask");
 }
 
 //----------------------------------------------------------------
@@ -707,12 +708,10 @@ EdbMask *EdbScanProc::ReadEraseMask(EdbID id)
   MakeFileName(str,id,"er.root");
   Log(3,"EdbScanProc::ReadEraseMask"," %s",str.Data());
   if( gSystem->AccessPathName(str, kReadPermission) ) return 0;  //can not access file!
-  TFile f(str.Data());
-  if(!f.IsOpen()) return 0;
-
   EdbMask *m = 0;
-  f.GetObject("mask",m);
-  f.Close();
+  std::unique_ptr<TFile> f(TFile::Open(str.Data()));
+  if (!f || f->IsZombie())  Log(1,"EdbScanProc::ReadEraseFile","ERROR! can not open file %s", str.Data());
+  else      m = dynamic_cast<EdbMask*>(f->Get("mask"));
   return m;
 }
 
@@ -1519,6 +1518,32 @@ EdbScanSet *EdbScanProc::ReadScanSetGlobal( EdbID id, bool x_marks )
 }
 
 //----------------------------------------------------------------
+EdbScanSet *EdbScanProc::ReadScanSet(EdbID id) 
+{
+  TString name;
+  MakeFileName(name, id, "set.root", false);
+  Log(3, "ReadScanSet", "Attempting to read from %s", name.Data());
+  std::unique_ptr<TFile> f(TFile::Open(name.Data()));
+  if (!f || !f->IsOpen() || f->IsZombie()) {
+    Log(1, "ReadScanSet", "Failed to open file: %s", name.Data());
+    return 0;
+  }
+  TObject *ss = f->Get("set");
+  if (!ss) {
+    Log(1, "ReadScanSet", "Object 'set' not found in file: %s", name.Data());
+    return 0;
+  }
+  EdbScanSet *result = dynamic_cast<EdbScanSet*>(ss);
+  if (!result) {
+    Log(1, "ReadScanSet", "Object 'set' is not of type EdbScanSet in file: %s", name.Data());
+    return 0;
+  }
+  Log(2, "ReadScanSet", "Successfully read EdbScanSet from %s", name.Data());
+  return result;
+}
+
+/*
+//----------------------------------------------------------------
 EdbScanSet *EdbScanProc::ReadScanSet(EdbID id)
 {
   TString name;
@@ -1530,6 +1555,7 @@ EdbScanSet *EdbScanProc::ReadScanSet(EdbID id)
   if(ss) return (EdbScanSet *)ss;
   else   return 0;
 }
+*/
 
 //----------------------------------------------------------------
 int EdbScanProc::WritePatTXT(EdbPattern &pred, int id[4], const char *suffix, int flag)
@@ -1752,10 +1778,11 @@ int EdbScanProc::ReadPatRoot(EdbPattern &pred, int id[4], const char *suffix, in
     return 0;
   }
 
-  TFile f(str.Data());
   EdbPattern *p=0;
-  f.GetObject("pat",p);
-  if (!p) {f.Close(); return 0;}
+  std::unique_ptr<TFile> f(TFile::Open(str.Data()));
+  if (!f || f->IsZombie())  { Log(1,"EdbScanProc::ReadPatRoot","ERROR! can not open file %s", str.Data()); return 0;}
+  else  p = dynamic_cast<EdbPattern*>(f->Get("pat"));
+  if (!p) return 0;
   for(int i=0; i<p->N(); i++) {
     EdbSegP *s = p->GetSegment(i);
     if (flag > -1  && flag != s->Flag()) continue;
@@ -1765,8 +1792,7 @@ int EdbScanProc::ReadPatRoot(EdbPattern &pred, int id[4], const char *suffix, in
   }
   EdbID sid(id[0],id[1],id[2],id[3]);
   pred.SetSegmentsScanID(sid);
-  f.Close();
-  p->Delete();
+  SafeDelete(p);
   LogPrint(id[0],2,"ReadPatRoot","%s with %d predictions with flag: %d", str.Data(),n,flag);
   return n;
 }
@@ -3142,10 +3168,14 @@ void EdbScanProc::GetPatternSide( EdbID id, int side, EdbLayer &la, const char *
 bool EdbScanProc::InitRunAccessNew(EdbRunAccess &r, EdbID idset, int idplate, bool do_update)
 {
   EdbScanSet  *set = ReadScanSet(idset);
-  EdbPlateP *plate = set->GetPlate(idplate);
-  if(!plate) return 0;
-  EdbID id = idset; id.ePlate = idplate;
-  return InitRunAccessNew(r, id, *plate, do_update);
+  if(set) {
+    EdbPlateP *plate = set->GetPlate(idplate);
+    if(plate) {
+      EdbID id = idset; id.ePlate = idplate;
+      return InitRunAccessNew(r, id, *plate, do_update);
+    }
+  }
+  return false;
 }
 
 //--------------------------------------------------------------------
