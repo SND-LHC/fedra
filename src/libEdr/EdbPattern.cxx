@@ -1609,7 +1609,44 @@ float EdbPattern::Xmean()
   s /= n;
   return (float)s;
 }
-
+/*
+//______________________________________________________________________________
+float EdbPattern::Xmin() const // reload virtual function
+{
+  int n=N(); if(n<1) return 0;
+  float v0=GetSegment(0)->eX;
+  if(n>1) for(int i=1; i<n; i++) { float v=GetSegment(i)->eX; 
+    if(v>kMinInt) v0=(v<v0)?v:v0; }                               // hack to exclude the infinity values (to check in viewsideal!)
+  return v0;
+}
+//______________________________________________________________________________
+float EdbPattern::Xmax() const // reload virtual function
+{
+  int n=N(); if(n<1) return 0;
+  float v0=GetSegment(0)->eX;
+  if(n>1) for(int i=1; i<n; i++) { float v=GetSegment(i)->eX; 
+    if(v<kMaxInt)  v0=(v>v0)?v:v0; }
+  return v0;
+}
+//______________________________________________________________________________
+float EdbPattern::Ymin() const // reload virtual function
+{
+  int n=N(); if(n<1) return 0;
+  float v0=GetSegment(0)->eY;
+  if(n>1) for(int i=1; i<n; i++) { float v=GetSegment(i)->eY; 
+    if(v>kMinInt)  v0=(v<v0)?v:v0; }
+  return v0;
+}
+//______________________________________________________________________________
+float EdbPattern::Ymax() const // reload virtual function
+{
+  int n=N(); if(n<1) return 0;
+  float v0=GetSegment(0)->eY;
+  if(n>1) for(int i=1; i<n; i++) { float v=GetSegment(i)->eY; 
+    if(v<kMaxInt) v0=(v>v0)?v:v0; }
+  return v0;
+}
+*/
 //______________________________________________________________________________
 float EdbPattern::Ymean()
 {

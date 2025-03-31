@@ -330,6 +330,10 @@ class EdbPattern : public EdbSegmentsBox {
   EdbSegP    *FindSegment(int id);
   float      Xmean();
   float      Ymean();
+//  float      Xmin() const;
+//  float      Xmax() const;
+//  float      Ymin() const;
+//  float      Ymax() const;
 
   EdbID      ScanID() const {return eScanID;}
   Int_t      Plate() const {return eScanID.ePlate;}
