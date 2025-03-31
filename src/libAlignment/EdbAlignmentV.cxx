@@ -41,6 +41,8 @@ void EdbAlignmentV::InitOutputFile(const char *file, const char *option)
 {
   CloseOutputFile();
   eOutputFile = TFile::Open(file,option);
+  if (!eOutputFile || !eOutputFile->IsOpen() || eOutputFile->IsZombie()) 
+    Log(1, "EdbAlignmentV::InitOutputFile", "Failed open file: %s", file);
 }
 
 //---------------------------------------------------------------------
@@ -1116,14 +1118,54 @@ void EdbAlignmentV::Corr2Aff(EdbLayer &layer)
 //---------------------------------------------------------------------
 float  EdbAlignmentV::Xmin(int side,EdbPattern &p)
 {
-  int n=p.N();  float xmin = 0;
-  for(int i=0; i<n; i++) {
-     EdbSegP *s = p.GetSegment(i);
-     float x=X(side,*s);
-     if(!i) xmin=x;     else if( x<xmin) xmin=x;
-  }
-  return xmin;
+  int n=p.N();  float xmin = kMaxInt;
+  if(n>0)
+    for(int i=0; i<n; i++) {
+      EdbSegP *s = p.GetSegment(i);
+      float x=X(side,*s);
+      if(x>kMinInt) xmin=(x<xmin)?x:xmin;
+    }
+    return xmin;
 }
+//---------------------------------------------------------------------
+float  EdbAlignmentV::Xmax(int side,EdbPattern &p)
+{
+  int n=p.N();  float xmax = kMinInt;
+  if(n>0)
+    for(int i=0; i<n; i++) {
+      EdbSegP *s = p.GetSegment(i);
+      float x=X(side,*s);
+      if(x<kMaxInt) xmax=(x>xmax)?x:xmax;
+    }
+    return xmax;
+}
+//---------------------------------------------------------------------
+float  EdbAlignmentV::Ymin(int side,EdbPattern &p)
+{
+  int n=p.N();  float ymin = kMaxInt;
+  if(n>0)
+    for(int i=0; i<n; i++) {
+      EdbSegP *s = p.GetSegment(i);
+      float y=Y(side,*s);
+      if(y>kMinInt) ymin=(y<ymin)?y:ymin;
+    }
+    return ymin;
+}
+//---------------------------------------------------------------------
+float  EdbAlignmentV::Ymax(int side,EdbPattern &p)
+{
+  int n=p.N();  float ymax = kMinInt;
+  if(n>0)
+    for(int i=0; i<n; i++) {
+      EdbSegP *s = p.GetSegment(i);
+      float y=Y(side,*s);
+      if(y<kMaxInt) ymax=(y>ymax)?y:ymax;
+    }
+    return ymax;
+}
+
+
+/*
 //---------------------------------------------------------------------
 float  EdbAlignmentV::Xmax(int side,EdbPattern &p)
 {
@@ -1157,6 +1199,7 @@ float  EdbAlignmentV::Ymax(int side,EdbPattern &p)
   }
   return ymax;
 }
+*/
 
 //---------------------------------------------------------------------
 float  EdbAlignmentV::Xmin(int side,TObjArray &p)

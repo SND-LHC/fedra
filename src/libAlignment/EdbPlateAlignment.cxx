@@ -589,10 +589,10 @@ void EdbPlateAlignment::SlowAlignXY(EdbPattern &pat1, EdbPattern &pat2, EdbH2 &h
   point **p1 = new point*[n1];
   point **p2 = new point*[n2];
  
+  std::unique_ptr<TFile> f(TFile::Open(name,"RECREATE"));
+  if (!f || f->IsZombie())  Log(1,"EdbPlateAlignment::SlowAlignXY","ERROR! can not open file %s", name);
 
-  TFile f( Form("%s.root",name),"RECREATE");
-  TNtuple *ntpeak = new TNtuple("ntpeak","","phi:dx:dy:peak");
-  
+  TNtuple *ntpeak = new TNtuple("ntpeak","","phi:dx:dy:peak");  
   for(int i=0; i<n1; i++)     p1[i] = new point;
   for(int i=0; i<n2; i++)     p2[i] = new point;
   
@@ -629,7 +629,6 @@ void EdbPlateAlignment::SlowAlignXY(EdbPattern &pat1, EdbPattern &pat2, EdbH2 &h
   }
   hphi.Write("hphi");
   ntpeak->Write();
-  f.Close();
 }
 
 //---------------------------------------------------------------------
