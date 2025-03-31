@@ -35,9 +35,11 @@ void print_help_message()
 {
   cout<< "\n Vertex reconstruction in the volume. Input *.trk.root, output *.vtx.root\n";
   
-  cout<< "\nUsage: \n\t  emvertex -set=ID [-display -v=DEBUG] \n";
-  cout<< "\t\t  display- start interactive event display \n";
-  cout<< "\t\t  DEBUG - verbosity level: 0-print nothing, 1-errors only, 2-normal, 3-print all messages\n";
+  cout<< "\nUsage: \n\t  emvertex -set=ID [-v=DEBUG] \n";
+  cout<< "\n\t  emvertex -set=ID [-r -display -v=DEBUG]  \n";
+  cout<< "\t\t  r       - read found vertices from *.vtx.root\n";
+  cout<< "\t\t  display - start interactive event display\n";
+  cout<< "\t\t  DEBUG   - verbosity level: 0-print nothing, 1-errors only, 2-normal, 3-print all messages\n";
   
   cout<< "\n If the parameters file (vertex.rootrc) is not presented - the default \n";
   cout<< " parameters are used. After the execution them will be saved into vertex.save.rootrc\n";
@@ -58,15 +60,16 @@ void set_default(TEnv &env)
   env.SetValue("emvertex.vtx.cutvtx"        , "(flag==0||flag==3)&&n>4");
   env.SetValue("emvertex.vtx.cuttr"         , "nseg>4&&npl<50");
 
-  env.SetValue("emvertex.addtr.doit"         ,  0 );
-  env.SetValue("emvertex.addtr.cuttr"        , "1");
+  env.SetValue("emvertex.addtr.doit"        ,  0 );
+  env.SetValue("emvertex.addtr.cuttr"       , "1");
+
+  env.SetValue("emvertex.edd.ajustseg"      ,  0);
 
   env.SetValue("emvertex.trfit.doit"     ,  1 );
   env.SetValue("emvertex.trfit.P"        , 10 );
   env.SetValue("emvertex.trfit.M"        ,  0.139);
   env.SetValue("emvertex.bt.Sigma0", "0.2 0.2 0.002 0.002" );
   env.SetValue("emvertex.bt.Degrad", 5. );
-
 }
 
 //---------------------------------------------------------------------
@@ -81,7 +84,7 @@ void AjustSegmentsDisplay( TObjArray &tarr )
     {
       EdbSegP *s=t->GetSegment(j);
       s->SetDZ(300);
-      s->SetW(30);
+      s->SetW(10);
     }    
   } 
 }
@@ -133,11 +136,11 @@ void Display( const char *dsname,  EdbVertexRec *evr, TEnv &env )
   printf("%d vertex to display\n", varr->GetEntries() );
   //ds->SetArrSegG( tsegG );
   //printf("%d primary tracks to display\n", tsegG->GetEntries() );
-  ds->SetDrawTracks(14);
-  ds->SetDrawVertex(1);
+  ds->SetDrawTracks(env.GetValue("emvertex.edd.DrawTracks"     ,  14));
+  ds->SetDrawVertex(env.GetValue("emvertex.edd.DrawVertex"     ,  1));
   //   //ds->SetView(90,180,90);
   
-  ds->GuessRange(10000,2000,30000);
+  ds->GuessRange(2000,2000,30000);
   ds->SetStyle(1);
   ds->Draw();
   

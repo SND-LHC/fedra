@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
   bool      do_A        = false;
   bool      do_B        = false;
   bool      do_set      = false;
+  bool      do_flip     = false;
   EdbID     id;
   EdbID     ida, idb;
   int       al_side     = 1; // 1, 2, 0-base
@@ -86,6 +87,10 @@ int main(int argc, char* argv[])
     else if(!strncmp(key,"-v=",3))
     {
       if(strlen(key)>3)	gEDBDEBUGLEVEL = atoi(key+3);
+    }
+    else if(!strncmp(key,"-flip",5))
+    {
+      do_flip=true;
     }
   }
 
