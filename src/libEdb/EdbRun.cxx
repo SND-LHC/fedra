@@ -177,29 +177,32 @@ void EdbRun::SelectOpenMode( const char *fname, const char *status )
 //______________________________________________________________________________
 void EdbRun::Open( const char *fname )
 {
-  Log(3,"EdbRun::Open","Open an existing file %s", fname);
-  eFile = new TFile(fname);
-  if(!eFile) return;
-  eTree = (TTree*)eFile->Get("Views");
-  eViewMerge = (TTree*)eFile->Get("ViewMerge");
-  eViewAlign = (TTree*)eFile->Get("ViewAlign");
-  eFrameAlign = (TTree*)eFile->Get("FrameAlign");
-  ePinViews = (TTree*)eFile->Get("PinViews");
-  if(!eTree) {
-    Log(1,"EdbRun::Open","ERROR: %s has no Views tree",fname);
+  Log(3,"EdbRun::Open","Open an existing file %s for reading", fname);
+  eFile = TFile::Open(fname,"READ");
+  if (!eFile || eFile->IsZombie()) {
+    Log(1, "EdbRun::OpenUpdate", "ERROR! Failed to open file: %s", fname);
+    SafeDelete(eFile);
     return;
   }
+  
+  eTree = dynamic_cast<TTree*>(eFile->Get("Views"));
+  if (!eTree) {
+    Log(1, "EdbRun::OpenUpdate", "ERROR! 'Views' tree not found in file: %s", fname);
+    SafeDelete(eFile);
+    return;
+  }
+  eViewMerge  = dynamic_cast<TTree*>(eFile->Get("ViewMerge"));
+  eViewAlign  = dynamic_cast<TTree*>(eFile->Get("ViewAlign"));
+  eFrameAlign = dynamic_cast<TTree*>(eFile->Get("FrameAlign"));
+  ePinViews   = dynamic_cast<TTree*>(eFile->Get("PinViews"));
 
   SetView();
-
   SafeDelete(eHeader);
-  eHeader = (EdbRunHeader*)eFile->Get("RunHeader");
-
+  eHeader = dynamic_cast<EdbRunHeader*>(eFile->Get("RunHeader"));  
   SafeDelete(ePredictions);
-  ePredictions = (EdbPredictionsBox*)eFile->Get("Predictions");
-
+  ePredictions = dynamic_cast<EdbPredictionsBox*>(eFile->Get("Predictions"));
   SafeDelete(eMarks);
-  eMarks = (EdbMarksSet*)eFile->Get("Marks");
+  eMarks = dynamic_cast<EdbMarksSet*>(eFile->Get("Marks"));
 
   if(gEDBDEBUGLEVEL>2) Print();
 }
@@ -208,64 +211,88 @@ void EdbRun::Open( const char *fname )
 void EdbRun::OpenUpdate( const char *fname )
 {
   Log(3,"EdbRun::OpenUpdate","Open an existing file for update %s", fname);
-  eFile = new TFile(fname,"UPDATE");
-
-  eTree = (TTree*)eFile->Get("Views");
+  eFile = TFile::Open(fname,"UPDATE");
+  if (!eFile || eFile->IsZombie()) {
+    Log(1, "EdbRun::OpenUpdate", "ERROR! Failed to open file: %s", fname);
+    SafeDelete(eFile);
+    return;
+  }
+  
+  eTree = dynamic_cast<TTree*>(eFile->Get("Views"));
+  if (!eTree) {
+    Log(1, "EdbRun::OpenUpdate", "ERROR! 'Views' tree not found in file: %s", fname);
+    SafeDelete(eFile);
+    return;
+  }
   SetView();
   
-  eViewMerge  = (TTree*)eFile->Get("ViewMerge");
-  eViewAlign  = (TTree*)eFile->Get("ViewAlign");
-  eFrameAlign = (TTree*)eFile->Get("FrameAlign");
-  ePinViews   = (TTree*)eFile->Get("PinViews");
+  eViewMerge  = dynamic_cast<TTree*>(eFile->Get("ViewMerge"));
+  eViewAlign  = dynamic_cast<TTree*>(eFile->Get("ViewAlign"));
+  eFrameAlign = dynamic_cast<TTree*>(eFile->Get("FrameAlign"));
+  ePinViews   = dynamic_cast<TTree*>(eFile->Get("PinViews"));
   eViewAlign->SetBranchAddress("alpar",&eVA);
   eViewMerge->SetBranchAddress("alpar",&eVM);
   eFrameAlign->SetBranchAddress("alpar",&eFA);
   ePinViews->SetBranchAddress("pin",&ePVH);
-
+  
   SafeDelete(eHeader);
-  eHeader = (EdbRunHeader*)eFile->Get("RunHeader");
-
+  eHeader = dynamic_cast<EdbRunHeader*>(eFile->Get("RunHeader"));  
   SafeDelete(ePredictions);
-  ePredictions = (EdbPredictionsBox*)eFile->Get("Predictions");
-
+  ePredictions = dynamic_cast<EdbPredictionsBox*>(eFile->Get("Predictions"));
   SafeDelete(eMarks);
-  eMarks = (EdbMarksSet*)eFile->Get("Marks");
-
+  eMarks = dynamic_cast<EdbMarksSet*>(eFile->Get("Marks"));
+  
   if(gEDBDEBUGLEVEL>2) Print();
 }
 
 //______________________________________________________________________________
-void EdbRun::Create( const char *fname )
+void EdbRun::Create(const char *fname) 
 {
-  if(!ePredictions) ePredictions   = new EdbPredictionsBox();
-  if(!eMarks)       eMarks         = new EdbMarksSet();
+  // Check if the file already exists
+  if (!gSystem->AccessPathName(fname, kFileExists)) {
+    Log(2, "EdbRun::Create", "WARNING: File %s already exists!", fname);
+    return;
+  }    
+  // Check if the directory exists and is writable
+  TString dirPath = gSystem->DirName(fname);
+  if (gSystem->AccessPathName(dirPath, kFileExists)) {
+    Log(1, "EdbRun::Create", "ERROR! Directory does not exist: %s", dirPath.Data());
+    return;
+  }
+  // Create the file (handles remote paths)
+  eFile = TFile::Open(fname, "RECREATE");
+  if (!eFile || eFile->IsZombie()) {
+    Log(1, "EdbRun::Create", "ERROR! Failed to open file: %s (IsZomby)", fname);
+    return;
+  }
+  // Initialize predictions and marks
+  if (!ePredictions) ePredictions = new EdbPredictionsBox();
+  if (!eMarks) eMarks = new EdbMarksSet();
 
-  if( !gSystem->AccessPathName(fname, kFileExists) )
-    Log(2,"EdbRun::Create","WARNING : file %s already exists!", fname);
-
-  Log(2,"EdbRun::Create","Open new file %s", fname);
-  eFile = new TFile(fname,"RECREATE");
-
-  eFile->SetCompressionLevel(2);
-
-  eTree = new TTree("Views","Scanning Viewes data");
-  eTree->SetAutoSave(-100000000);                     // autosave each 100Mb
-  eTree->SetMaxTreeSize(64000000000LL);               // set 64 Gb file size limit
-  Log(3,"EdbRun::Create","set maxtreesize as: %lld",eTree->GetMaxTreeSize());
- 
-  TClonesArray     *eClusters = eView->GetClusters();
-  TClonesArray     *eSegments = eView->GetSegments();
-  TClonesArray     *eTracks   = eView->GetTracks();
-  TClonesArray     *eFrames   = eView->GetFrames();
+  eFile->SetCompressionLevel(2);  
+  // Create the tree
+  eTree = new TTree("Views", "Scanning Views data");
+  eTree->SetAutoSave(-100000000);  // Autosave each 100MB
+  eTree->SetMaxTreeSize(64000000000LL);  // Set 64GB file size limit
+  Log(3, "EdbRun::Create", "Set max tree size as: %lld", eTree->GetMaxTreeSize());
+  
+  // Create branches
+  TClonesArray *eClusters = eView->GetClusters();
+  TClonesArray *eSegments = eView->GetSegments();
+  TClonesArray *eTracks = eView->GetTracks();
+  TClonesArray *eFrames = eView->GetFrames();
+  
   int savelevel = gErrorIgnoreLevel;
   gErrorIgnoreLevel = kError;
-  eTree->Branch( "clusters", &eClusters);
-  eTree->Branch( "segments", &eSegments);
-  eTree->Branch( "tracks",   &eTracks);
-  eTree->Branch( "frames",   &eFrames);
+  eTree->Branch("clusters", &eClusters);
+  eTree->Branch("segments", &eSegments);
+  eTree->Branch("tracks",   &eTracks);
+  eTree->Branch("frames",   &eFrames);
   eTree->Branch("headers", "EdbViewHeader", eView->GetHeaderAddr());
   gErrorIgnoreLevel = savelevel;
+  
   SetView();
+  Log(2, "EdbRun::Create", "Successfully created file: %s", fname);
 }
 
 //______________________________________________________________________________
