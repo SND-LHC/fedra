@@ -124,7 +124,6 @@ bool EdbRunAccess::InitRun(const char *runfile, bool do_update)
   if(eAFID==11) {
     eRun->GetMarks()->Print();
     if(eRun->GetMarks()) eAffStage2Abs = eRun->GetMarks()->Stage2Abs();
-    //if(eRun->GetMarks()) eAffStage2Abs = eRun->GetMarks()->Abs2Stage();
     if(eAffStage2Abs) eAffStage2Abs->Print();
     else Log(1,"EdbRunAccess::InitRun","ERROR! Stage2Abs do not available (eAFID=11)");
   }
@@ -208,9 +207,9 @@ void EdbRunAccess::ReadVAfile()
   int k = eRunFileName.Length();
   TString s(eRunFileName.Data(),k-4); s+="va.root";
   Log( 2,"EdbRunAccess::ReadVAfile","Get view corrections from %s",s.Data() );
-  TFile  f( s.Data() );
-  eViewCorr = (TObjArray*)f.Get("viewcorr");
-  f.Close();
+  std::unique_ptr<TFile> f(TFile::Open(s.Data(),"READ"));
+  if (!f || f->IsZombie())  Log(1,"EdbRunAccess::ReadVAfile","ERROR! can not open file %s",s.Data());
+  else                      eViewCorr = (TObjArray*)f->Get("viewcorr");
 }
 
 ///_________________________________________________________________________
@@ -853,7 +852,6 @@ void EdbRunAccess::CheckViewStep(int ud)
   if(ud<0 || ud>2)                        return;
   EdbPattern *pat=GetVP(ud);    if(!pat)  return;
 
-  //TFile f("test.root","RECREATE");
   TH1F hx("viewXstep","viewXstep",3000,200,500);
   TH1F hy("viewYstep","viewYstep",3000,200,500);
   int n=pat->N();               if(n<2)   return;
@@ -1455,7 +1453,7 @@ void EdbRunAccess::FillDZMaps()
   eGraphZ[2]  = new TGraph2D("graphZ3","graphZ3",cnt2,x2,y2,z3);
   eGraphZ[3]  = new TGraph2D("graphZ4","graphZ4",cnt2,x2,y2,z4);
 
-  TFile f("dz.root","RECREATE");
-  for(int i=0; i<4; i++) if( eGraphZ[i] ) eGraphZ[i]->Write();
-  f.Close();
+  std::unique_ptr<TFile> f(TFile::Open("dz.root","RECREATE"));
+  if (!f || f->IsZombie())  Log(1,"EdbRunAccess::FillDZMaps","ERROR! can not open file dz.root");
+  else                      for(int i=0; i<4; i++) if( eGraphZ[i] ) eGraphZ[i]->Write();
 }
