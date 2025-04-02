@@ -23,6 +23,10 @@ EdbVertexRec gEVR;
 EdbVertexRec rfEVR;
 
 bool do_vtxrefit = false;
+float tr_pfit = 1000;
+float tr_mfit = 0.14;
+int last_trkID = -1;
+
 
 void VertexRec(EdbID id, TEnv &cenv);
 void ReadVertex(EdbID id,TEnv &env);
@@ -244,7 +248,11 @@ void ReadVertex(EdbID id, TEnv &env)
 
   float r2max      = env.GetValue("emvertex.trfit.r2max"        , 5. );
   float dzmax      = env.GetValue("emvertex.trfit.dzmax"        , 4000. );
-  
+  TEnv trenv("trenv");
+  trenv.ReadFile("track.rootrc", kEnvLocal);
+  tr_pfit   = trenv.GetValue("fedra.track.momentum"     , 1000);
+  tr_mfit   = trenv.GetValue("fedra.track.mass"     , 0.14);
+
   TObjArray v_out;
   TObjArray v_out2;
   
@@ -347,13 +355,20 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, float r2max, float dz
 {
   int ntr  = v_trk.Ntracks();
   int nvtx = v_vtx.Nvtx();
+  rfEVR.SetPVRec(&v_vtx);
   Log(1,"AddCompatibleTracks", "%d tracks, %d vertex", ntr,nvtx );
+  if (do_vtxrefit){
+    TFile *trk_f = TFile::Open(Form("b%06d.0.0.0.trk.root", idset.eBrick));
+    TTree *trackstree = (TTree*) trk_f->Get("tracks");
+    last_trkID = trackstree->GetEntries() - 1;
+    trk_f->Close();
+  }
   for(int iv=0; iv<nvtx; iv++)
   {
+    EdbVertex *v = v_vtx.GetVertex(iv);
+    if (v->Flag()==1) {rfEVR.AddVertex(v); continue;}
     bool flag1 = false;
     std::vector<int> trackids;
-    EdbVertex *v = v_vtx.GetVertex(iv);
-
     Log(1,"AddCompatibleTracks","Looking for parent tracks of vtx: %i\n",v->ID());
     for(int i=0; i<v->N(); i++){
       EdbTrackP *t = (EdbTrackP*)v->GetTrack(i);
@@ -361,7 +376,9 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, float r2max, float dz
       trackids.push_back(trid);
     }
     EdbTrackP *t_chosen = 0;
-    float r2, dz, r2max, dzmax; r2max=dzmax=1e9f;
+    float r2, dz;
+    float r2_ini = r2max;
+    float dz_ini = dzmax;
     int founds=0;
     for(int it=0; it<ntr; it++) 
     {
@@ -371,7 +388,7 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, float r2max, float dz
       if( IsCompatible(*v, *t, r2max, dzmax, &r2, &dz) ) {
         flag1 = true;
         t->SetFlag(999999);
-        if( r2 < r2max ) { r2max=r2; dzmax=dz; t_chosen=t; }
+        if( r2 < r2_ini ) { r2_ini=r2; dz_ini=dz; t_chosen=t; }
         // v_vtx.AddTrack(t);
         founds++;
         outTree->Fill(0, 1, v->ID(), t->ID() ,t->N(), t->Npl(), t->TX(), t->TY(), t->GetSegmentFirst()->Plate(), t->GetSegmentLast()->Plate(), r2, dz);
@@ -380,21 +397,20 @@ void AddCompatibleTracks(EdbPVRec &v_trk, EdbPVRec &v_vtx, float r2max, float dz
     if (flag1){
       v_vtx.AddTrack(t_chosen);
       outTree->Fill(1, founds, v->ID(), t_chosen->ID(), t_chosen->N(), t_chosen->Npl(), t_chosen->TX(), t_chosen->TY(), t_chosen->GetSegmentFirst()->Plate(), t_chosen->GetSegmentLast()->Plate(), r2max, dzmax);
-      Log(2,"AddCompatibleTracks","Closest track found at r2=%.4f dz=%.2f\n",r2max,dzmax);
+      Log(2,"AddCompatibleTracks","Closest track found at r2=%.4f dz=%.2f\n",r2_ini,dz_ini);
       v_out2.Add(v);
       if (do_vtxrefit)
       {
         Log(2,"AddCompatibleTracks","Executing VTA on vertex vID=%d",v->ID());
-        rfEVR.SetPVRec(&v_vtx);
 	      ExecuteVTA(v, t_chosen);
       }
     }
     else 
     {
-	    
       if (do_vtxrefit) {rfEVR.AddVertex(v); cout << "Adding vertex " << v->ID() << " with flag " << v->Flag() << endl;}
       v_out.Add(v);
     }
+    //r2max = r2_ini; dzmax = dz_ini;
   }
   if (do_vtxrefit)
   {
@@ -417,7 +433,7 @@ bool IsCompatible(EdbVertex &v, EdbTrackP &t, float r2max, float dzmax, float *r
   *dz = ss.DZ();
 
   if(*r2<r2max&&*dz<Abs(dzmax)) {
-    Log(2,"IsCompatible","r2=%.4f dz=%.2f\n",*r2,ss.DZ());
+    Log(3,"IsCompatible","r2=%.4f dz=%.2f\n",*r2,ss.DZ());
     return true;
   }
   return false;
@@ -425,10 +441,6 @@ bool IsCompatible(EdbVertex &v, EdbTrackP &t, float r2max, float dzmax, float *r
 
 void SplitTrack(EdbTrackP *t, EdbTrackP *&t_in, EdbTrackP *&t_out, Int_t zsplit)
 {
-  TEnv trenv("trenv");
-  trenv.ReadFile("track.rootrc", kEnvLocal);
-  float tr_pfit   = trenv.GetValue("fedra.track.momentum"     , 1000);
-  float tr_mfit   = trenv.GetValue("fedra.track.mass"     , 0.14);
   EdbSegP *sbest = (EdbSegP *) t->GetSegmentWithClosestZ(zsplit, 3000);
   if  (!sbest) {Log(1, "EdbTrackP::GetSegmentWithClosestZ", "closest segment not found!"); return;}
   Int_t cutplate = -1;
@@ -443,13 +455,14 @@ void SplitTrack(EdbTrackP *t, EdbTrackP *&t_in, EdbTrackP *&t_out, Int_t zsplit)
   SetSegmentsP(t_in, tr_pfit);
   t_in->SetM(tr_mfit);
   t_in->SetNpl();
-  t_in->SetID(t->ID());
+  t_in->SetID(last_trkID+1);
   t_in->FitTrackKFS();
   SetSegmentsP(t_out, tr_pfit);
   t_out->SetM(tr_mfit);
   t_out->SetNpl();
-  t_out->SetID(t->ID()*10);
+  t_out->SetID(last_trkID+2);
   t_out->FitTrackKFS();
+  last_trkID+=2;
 }
 void ExecuteVTA(EdbVertex *vtx, EdbTrackP *track)
 {
@@ -463,10 +476,10 @@ void ExecuteVTA(EdbVertex *vtx, EdbTrackP *track)
   SplitTrack(track, intrack, outtrack, vtx->VZ());
   vta = rfEVR.AddTrack(*vtx_new, intrack, false);
   vta = rfEVR.AddTrack(*vtx_new, outtrack, true);
-  //vtx_new->EstimateVertexFlag();
+  vtx_new->SetFlag(1);
   vtx_new->SetID(vtx->ID());
-  cout << "Estimated vertex flag for vtx_new ID: " << vtx_new->ID() << " " <<  vtx_new->Flag() << " " << vtx_new->EstimateVertexFlag() << endl;
   rfEVR.AddVertex(vtx_new);
+  Log(2, "SplitTrack", "Track, attached to vertex vID=%d, trid=%d splitted in trid=%d (in) and in trid=%d (out)", vtx->ID(), track->ID(), intrack->ID(), outtrack->ID());
 }
 
 //-----------------------------------------------------------------------------
