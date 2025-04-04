@@ -30,6 +30,7 @@ R__LOAD_LIBRARY(libShowRec.so); // developement version
 R__LOAD_LIBRARY(libEmr.so);
 R__LOAD_LIBRARY(libEDA.so);
 R__LOAD_LIBRARY(libMosaic.so);
+R__LOAD_LIBRARY(libERootTools.so);
 
 void rootlogon()
 {

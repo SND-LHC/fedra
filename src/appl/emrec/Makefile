@@ -17,7 +17,9 @@ TARGET	=	$(BIN_DIR)/emlink$(ExeSuf)      \
 		$(BIN_DIR)/emtrackan$(ExeSuf)  \
 		$(BIN_DIR)/emunbend$(ExeSuf)  \
 		$(BIN_DIR)/emvertex$(ExeSuf)  \
+		$(BIN_DIR)/emthickness$(ExeSuf) \
 		$(BIN_DIR)/emdbl_tb$(ExeSuf) 
+#		$(BIN_DIR)/emdbl_tb$(ExeSuf) 
 #		$(BIN_DIR)/emrawcorr$(ExeSuf)   
 #		$(BIN_DIR)/emtraceback$(ExeSuf) \
 #		$(BIN_DIR)/emtrfind$(ExeSuf)
@@ -25,9 +27,9 @@ TARGET	=	$(BIN_DIR)/emlink$(ExeSuf)      \
 
 
 
-ROOTLIBS      += -lMLP
+ROOTLIBS      += -lMLP -lSpectrum
 ##PROJECT_LIBS += -L$(FEDRA_ROOT)/lib -lScan -lEdb -lEbase -lEmath -lEphys -lvt -lEdr -lScan -lEdr -lEIO -lEMC -lAlignment -lDataConversion -lShower -lTreePlayer
-PROJECT_LIBS += $(GLIBS) -L$(FEDRA_ROOT)/lib -lScan -lEdb -lEbase -lEmath -lEphys -lvt -lEdr -lScan -lEdr -lEIO -lEMC -lAlignment -lDataConversion -lEdd -lTreePlayer -lScan -lEdb -lEbase -lEmath -lEphys -lvt -lEdr -lScan -lEdr -lEIO -lEMC -lAlignment -lDataConversion -lEdd -lTreePlayer $(ROOTLIBS) $(GLIBS)
+PROJECT_LIBS += $(GLIBS) -L$(FEDRA_ROOT)/lib -lERootTools -lScan -lEdb -lEbase -lEmath -lEphys -lvt -lEdr -lScan -lEdr -lEIO -lEMC -lAlignment -lDataConversion -lEdd -lTreePlayer -lScan -lEdb -lEbase -lEmath -lEphys -lvt -lEdr -lScan -lEdr -lEIO -lEMC -lAlignment -lDataConversion -lEdd -lTreePlayer $(ROOTLIBS) $(GLIBS)
 
 #------------------------------------------------------------------------------
 include ../../config/TargetsDef.mk
