@@ -25,9 +25,10 @@ void TuneShrinkage( EdbPattern &p1, EdbPattern &p2, EdbLayer &l1, EdbLayer &l2, 
 void print_help_message()
 {
   cout<< "\nUsage: \n";
-  cout<< "\t  mosalignbeam  -id=ID  [-from=frag0 -nfrag=N  -merge -v=DEBUG] \n";
+  cout<< "\t  mosalignbeam  -id=ID   [-from=frag0 -nfrag=N  -merge -v=DEBUG] \n";
+  cout<< "\t  mosalignbeam  -set=ID  [-from=frag0 -nfrag=N  -merge -v=DEBUG] \n";
 
-  cout<< "\t\t  ID    - id of the raw.root file formed as BRICK.PLATE.MAJOR.MINOR \n";
+  cout<< "\t\t  ID    - id of the data piece or data set formed as BRICK.PLATE.MAJOR.MINOR \n";
   cout<< "\t\t  frag0 - the first fragment (default: 0) \n";
   cout<< "\t\t  N     - number of fragments to be processed (default: upto 1000000, stop at first empty) \n";
   cout<< "\t\t  merge - merge all fragments into one cp file \n";
@@ -160,7 +161,18 @@ int main(int argc, char* argv[])
   {
     AlignToBeam(id, cenv);
   }
-
+  else if(do_set)
+  {
+    EdbScanSet *ss = sproc.ReadScanSet(id);
+    if(ss) {
+      int n = ss->eIDS.GetSize();
+      for(int i=0; i<n; i++) {
+	EdbID *id_pl   = ss->GetID(i);
+	if(id_pl) AlignToBeam(*id_pl, cenv);
+      }
+    }
+  }
+  
   cenv.WriteFile("mosalignbeam.save.rootrc");
   return 1;
 }

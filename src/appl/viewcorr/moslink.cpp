@@ -23,9 +23,10 @@ void AlignWithBeam( const float beam[4],
 void print_help_message()
 {
   cout<< "\nUsage: \n";
-  cout<< "\t  moslink  -id=ID  [-from=frag0 -nfrag=N  -merge -v=DEBUG] \n";
+  cout<< "\t  moslink  -id=ID   [-from=frag0 -nfrag=N  -merge -v=DEBUG] \n";
+  cout<< "\t  moslink  -set=ID  [-from=frag0 -nfrag=N  -merge -v=DEBUG] \n";
 
-  cout<< "\t\t  ID    - id of the raw.root file formed as BRICK.PLATE.MAJOR.MINOR \n";
+  cout<< "\t\t  ID    - id of the data piece or data set formed as BRICK.PLATE.MAJOR.MINOR \n";
   cout<< "\t\t  frag0 - the first fragment (default: 0) \n";
   cout<< "\t\t  N     - number of fragments to be processed (default: upto 1000000, stop at first empty) \n";
   cout<< "\t\t  merge - merge all fragments into one cp file \n";
@@ -149,13 +150,25 @@ int main(int argc, char* argv[])
   printf(  "----------------------------------------------------------------------------\n\n");
 
 
-  if(do_single&&do_merge) 
+  if(do_single) 
   {
-    MergePlate( id, from_fragment, n_fragments );
+    if(do_merge) MergePlate( id, from_fragment, n_fragments );
+    else         LinkPlate(  id, from_fragment, n_fragments, cenv);
   }
-  else if(do_single&&(!do_merge)) 
+  else if(do_set)
   {
-    LinkPlate(id, from_fragment, n_fragments, cenv);
+    EdbScanSet *ss = sproc.ReadScanSet(id);
+    if(ss) {
+      int n = ss->eIDS.GetSize();
+      for(int i=0; i<n; i++) {
+	EdbID *id_pl   = ss->GetID(i);
+	if(id_pl) 
+	{
+	  if(do_merge) MergePlate( id, from_fragment, n_fragments );
+	  else         LinkPlate(  id, from_fragment, n_fragments, cenv);
+	}
+      }
+    }
   }
 
   cenv.WriteFile("moslink.save.rootrc");
