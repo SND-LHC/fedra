@@ -17,7 +17,6 @@
 #include <TCut.h>
 #include <TText.h>
 #include <TPaveText.h>
-#include <TSpectrum.h>
 #include "ERTools.h"
 #include "EdbLog.h"
 
@@ -251,7 +250,10 @@ void make_canvas(const char *nameo="ccc")
   header->Draw();
   header->cd();  
   TPaveText *tp = new TPaveText(0.01,0.01,0.99,0.99, "NDC");
-  tp->AddText( Form("%s     created     %s",RES.filename.c_str(), RES.file_creation_date.AsString() ) );
+  tp->AddText( Form("%s  of  %s   %.1f GB",
+		    RES.filename.c_str(), 
+		    RES.file_creation_date.AsString(), 
+		    RES.file_size/1024./1024./1024. ) );
   tp->AddText( Form("Xrange:  %.1f   %.1f     Yrange:  %.1f   %.1f     Step:  %.1f   %.1f   ScanTime: %.2f h",
 		    B.xmin, B.xmax, B.ymin, B.ymax, B.xbin, B.ybin, RES.scan_time/60./60.) );
   tp->AddText( Form(
