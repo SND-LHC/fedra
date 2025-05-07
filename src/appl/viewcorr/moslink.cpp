@@ -164,8 +164,8 @@ int main(int argc, char* argv[])
 	EdbID *id_pl   = ss->GetID(i);
 	if(id_pl) 
 	{
-	  if(do_merge) MergePlate( id, from_fragment, n_fragments );
-	  else         LinkPlate(  id, from_fragment, n_fragments, cenv);
+	  if(do_merge) MergePlate( *id_pl, from_fragment, n_fragments );
+	  else         LinkPlate(  *id_pl, from_fragment, n_fragments, cenv);
 	}
       }
     }
