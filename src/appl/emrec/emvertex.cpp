@@ -537,7 +537,7 @@ void ExecuteVTA(EdbVertex *vtx, EdbTrackP *track)
   else {Log(2, "ExecuteVTA", "Track, attached to vertex vID=%d, trid=%d splitted in trid=%d", vtx->ID(), track->ID(), intrack->ID());}
   rfEVR.ePVR->AddTrack(intrack);
   if (outtrack->N()) rfEVR.ePVR->AddTrack(outtrack);
-  SafeDelete(vta_in);
+  //SafeDelete(vta_in);
   //SafeDelete(vta_out);
 }
 
