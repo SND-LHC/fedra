@@ -74,27 +74,34 @@ EdbTrackAssembler::~EdbTrackAssembler()
 }
   
   //--------------------------------------------------------------------------------------
-void EdbTrackAssembler::CheckPatternAlignment(EdbPattern &p, EdbPlateP &plate,  int nsegmin)
+void EdbTrackAssembler::CheckPatternAlignment(EdbPattern &p, EdbPlateP &plate,  int nsegmin, EdbAffine2D &acorr)
 {
-  Log(0,"EdbTrackAssembler::CheckPatternAlignment","");
+  Log(0,"EdbTrackAssembler::CheckPatternAlignment","%s with %d segments",p.ScanID().AsString(),p.N());
   
-  ExtrapolateTracksToZ( p.Z(), nsegmin);
+  if(eDoUseMCS==3)     ExtrapolateTracksToZ_mcs3( p.Z(), nsegmin);
+  else                 ExtrapolateTracksToZ( p.Z(), nsegmin);
   int ntr = eTrZ.GetEntriesFast();
   EdbPattern ptr( 0, 0, p.Z(), ntr ); 
   for(int i=0; i<ntr; i++) ptr.AddSegment( *((EdbSegP*)(eTrZ.UncheckedAt(i))) );
     
   EdbPlateAlignment al;
-  al.SetSigma( 2.5, 0.003 );
-  al.eOffsetMax = 500.;
+  al.InitOutputFile(Form("%s_real.root",p.ScanID().AsString()));
+  al.SetSigma( 1.5, 0.003 );
+  al.eOffsetMax = 100.;
   al.eDZ        = 0;
   al.eDPHI      = 0.00;
-  al.SetDoublets(0.5,0.5,0.001,0.001);
+  al.SetDoublets(0.3,0.3,0.001,0.001);
     //al.eDoCoarse=1;
+
+  p.Transform(&acorr);
+  plate.GetAffineXY()->Transform(&acorr);
+
   al.Align(ptr,p,0);
   
   EdbAffine2D *aff = al.eCorrL[0].GetAffineXY();
   aff->Invert();
   aff->Print();
+  acorr.Transform(aff);
   p.Transform(aff);
   plate.GetAffineXY()->Transform(aff);
   
@@ -217,8 +224,9 @@ EdbTrackP *EdbTrackAssembler::AddSegment(EdbSegP &s)
 {
   TObjArray trsel;
   float v[2] = { s.X(), s.Y() };
-  int nsel =  eTrZMap.SelectObjectsC( v, eDRmax+50 , trsel );
-  Log(3,"EdbTrackAssembler::AddSegment", "nsel = %d",nsel);
+  int nsel =  eTrZMap.SelectObjectsC( v, eDRmax, trsel );
+//  int nsel =  eTrZMap.SelectObjectsC( v, eDRmax+50 , trsel );
+  Log(4,"EdbTrackAssembler::AddSegment", "nsel = %d",nsel);
   if(!nsel) { 
     return 0;  }
     float prob, probmax = eProbMin;
@@ -227,7 +235,7 @@ EdbTrackP *EdbTrackAssembler::AddSegment(EdbSegP &s)
     for(int i=0; i<nsel; i++) {
       EdbSegP *ss = (EdbSegP*)(trsel.At(i));
       prob = ProbSeg( *ss, s );
-      Log(3,"EdbTrackAssembler::AddSegment", "prob(probmin) = %f (%f) ",prob, eProbMin);
+      Log(4,"EdbTrackAssembler::AddSegment", "prob(probmin) = %f (%f) ",prob, eProbMin);
       if(prob<eProbMin) continue;
       ncnd++;
       if(eHistProbAll) eHistProbAll->Fill(prob);
@@ -348,19 +356,41 @@ float EdbTrackAssembler::ProbSeg( EdbSegP &s1, EdbSegP &s2 )
 //--------------------------------------------------------------------------------------
 EdbTrackP *EdbTrackAssembler::AddSegmentAsTrack(EdbSegP &s)
 {
-  //if(s.W()<16    )  return 0;
-  //if(s.Chi2()>2.5)  return 0;
   EdbTrackP *t = new EdbTrackP( eSegments.AddSegment(s), 0.139);    // EdbTrackAssembler is owner of segments
   s.SetTrack(0);
   eTracks.Add(t);
-    //EdbSegP ss;
-    //t->MakePredictionTo(eZ,ss);
-    //eTrZ.AddSegment(ss);
   return t;
 }
   
-  //--------------------------------------------------------------------------------------
-  void EdbTrackAssembler::ExtrapolateTracksToZ(float z, int nsegmin)
+//--------------------------------------------------------------------------------------
+void EdbTrackAssembler::ExtrapolateTracksToZ_mcs3(float z, int nsegmin)
+{
+  eTrZ.Clear();
+  eTrZMap.CleanCells();
+    
+  eZ=z;
+  int n=eTracks.GetEntriesFast();
+  for(int i=0; i<n; i++) {
+    EdbTrackP *t = (EdbTrackP*)(eTracks.At(i));
+    t->EstimatePositionAt(eZ,*t); //use angles if 1 seg, overwise use coordinates, t->DZ() - is gap
+  }
+
+  float gap=1600;
+  for(int i=0; i<n; i++)
+  {
+    EdbTrackP *t = (EdbTrackP*)(eTracks.At(i));
+    if( Abs(t->DZ()) > 3*gap                     ) continue;
+    //if( Abs(t->DZ()) > 2*gap && t->N()<nsegmin+2 ) continue;
+    //if( Abs(t->DZ()) >   gap && t->N()<nsegmin+1 ) continue;
+    if( t->N()<nsegmin                           ) continue;
+    eTrZ.Add(t);
+  }
+  Log(2,"EdbTrackAssembler::ExtrapolateTracksToZ_mcs3","at z = %f nsegmin=%d  %d => %d",
+      z,nsegmin, n, eTrZ.GetEntriesFast() );
+}
+
+//--------------------------------------------------------------------------------------
+void EdbTrackAssembler::ExtrapolateTracksToZ(float z, int nsegmin)
 {
   eTrZ.Clear();
   eTrZMap.CleanCells();
@@ -372,24 +402,13 @@ EdbTrackP *EdbTrackAssembler::AddSegmentAsTrack(EdbSegP &s)
       
     if( t->N() < nsegmin )      continue;
     if( !AcceptDZGap(*t, z) )   continue;
-    if(eDoUseMCS==3) 
-    {
-      if(t->N()<2) t->MakePredictionTo(eZ,*t);   // propagation with angle
-      else t->EstimatePositionAt(eZ,*t);         // propagation with coordinates
-    } 
-    else
-    {
-      t->MakePredictionTo(eZ,*t); // keep the same behaviour as before: propagation with angle
-    }
+    t->MakePredictionTo(eZ,*t); // keep the same behaviour as before: propagation with angle
     eTrZ.Add(t);
   }
-    
-    //FillTrZMap();
-    //if(gEDBDEBUGLEVEL>2) eTrZMap.PrintStat();
 }
   
-  //--------------------------------------------------------------------------------------
-  bool EdbTrackAssembler::AcceptDZGap(EdbTrackP &t, float z)
+//--------------------------------------------------------------------------------------
+bool EdbTrackAssembler::AcceptDZGap(EdbTrackP &t, float z)
 {
   float z1 = t.GetSegmentFirst()->Z();
   float z2 = t.GetSegmentLast()->Z();
@@ -397,15 +416,18 @@ EdbTrackP *EdbTrackAssembler::AddSegmentAsTrack(EdbSegP &s)
   return true;
 }
   
-  //--------------------------------------------------------------------------------------
-  void EdbTrackAssembler::FillTrZMap()
+//--------------------------------------------------------------------------------------
+void EdbTrackAssembler::FillTrZMap()
 {
   int n=eTrZ.GetEntriesFast();
-  Log(2,"EdbTrackAssembler::FillTrZMap", "with %d tracks",n);
+  Log(3,"EdbTrackAssembler::FillTrZMap", "with %d tracks",n);
   for(int i=0; i<n; i++) {
     EdbSegP *s = (EdbSegP*)(eTrZ.At(i));
     eTrZMap.AddObject( s->X(), s->Y(), s );
   }
+  int nfill = eTrZMap.Integral();
+  Log(3,"EdbTrackAssembler::FillTrZMap", "integral = %d", nfill );
+  if( nfill != n) Log(1,"EdbTrackAssembler::FillTrZMap", "Warning! cell overflow: n = %d  nfill = %d", n, nfill);
 }
   
   //--------------------------------------------------------------------------------------
@@ -652,6 +674,7 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
     for(int ipass=0; ipass<npass; ipass++) {
       if(gEDBDEBUGLEVEL>1) printf("\n\n*************** ipass=%d ************\n",ipass);
       etra.eCollisionsRate=0;
+      EdbAffine2D acorr;
       for(int i=0; i<npl; i++) {
         EdbID *id = ss->GetID(i);
         if (ix >= 0 && iy >= 0){  //we want (for now) to read the same couples for all cells
@@ -688,23 +711,28 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
         }
 
         if(ePRC.doXY ) p.RemovePosMargins( ePRC.x0, ePRC.y0, ePRC.dx,  ePRC.dy  );
-        if(ePRC.doAng) p.RemoveAngMargins( ePRC.tx, ePRC.ty, ePRC.dtx, ePRC.dty );
+	if(ePRC.doAng) p.RemoveAngMargins( ePRC.tx, ePRC.ty, ePRC.dtx, ePRC.dty );
 	// TODO doZ
-      
-        if(do_misalign) {
-          p.Transform(&misalign[i]);
-          Log(2,"EdbScanTracking::TrackSetBT","apply misalignment of %f",misalign_offset);
-        //misalign[i].Print();
-        }
-  
-        if(i>0) etra.ExtrapolateTracksToZ(p.Z());
-        if(eDoRealign) 
-        {
-          if( i==1 ) etra.CheckPatternAlignment(p,*plate,1);
-          if( i>1  ) etra.CheckPatternAlignment(p,*plate,1);
-        }
-        if(do_track) 
+	
+	if(do_misalign) {
+	  p.Transform(&misalign[i]);
+	  Log(2,"EdbScanTracking::TrackSetBT","apply misalignment of %f",misalign_offset);
+	}
+	
+	if(eDoRealign) 
 	{
+	  if( i>=1  )  etra.CheckPatternAlignment(p,*plate, 0, acorr);
+//	  if( i>=1  )  etra.CheckPatternAlignment(p,*plate,1);
+	  //if( i>=5  )  etra.CheckPatternAlignment(p,*plate,2);
+	  //if( i>=10 )  etra.CheckPatternAlignment(p,*plate,(int)(Sqrt(i)));
+	}
+	if(do_track)
+	{
+	  Log(1,"EdbScanTracking::TrackSetBT","AddPattern with ScanID: %s and %d segments",id->AsString(),p.N());
+	  if(i>0) 
+	    if(etra.eDoUseMCS==3) etra.ExtrapolateTracksToZ_mcs3(p.Z());
+	    else                  etra.ExtrapolateTracksToZ(p.Z());
+	    
 	  etra.FillTrZMap();
 	  etra.AddPattern(p);
 	}
@@ -887,9 +915,9 @@ void EdbScanTracking::TrackAli(EdbPVRec &ali, TEnv &env)
           Log(2,"EdbScanTracking::TrackSetBT","apply misalignment of %f",misalign_offset);
         }
   
-        if(i>0) etra.ExtrapolateTracksToZ(p.Z());
-        //if( eDoRealign && i==1 ) etra.CheckPatternAlignment(p,1);
-        //if( eDoRealign && i>1  ) etra.CheckPatternAlignment(p,2);
+        if(i>0)
+	  if(etra.eDoUseMCS==3) etra.ExtrapolateTracksToZ_mcs3(p.Z());
+	  else                  etra.ExtrapolateTracksToZ(p.Z());
         etra.FillTrZMap();
         etra.AddPattern(p);
       }

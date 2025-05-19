@@ -74,6 +74,7 @@ class EdbTrackAssembler: public TObject {
   void        InitTrZMap();
   void        FillTrZMap();
   void        ExtrapolateTracksToZ(float z, int nsegmin=0);
+  void        ExtrapolateTracksToZ_mcs3(float z, int nsegmin=0);
   void        AddPattern(EdbPattern &p);
   EdbTrackP   *AddSegment(EdbSegP &s);                  //owner of the segments!!!
   EdbTrackP   *AddSegmentAsTrack(EdbSegP &s);
@@ -85,7 +86,7 @@ class EdbTrackAssembler: public TObject {
   void        CombTracks( TObjArray &selected );
   void        FillXYseg(EdbPattern &p);
   
-  void CheckPatternAlignment(EdbPattern &p, EdbPlateP &plate, int nsegmin);
+  void CheckPatternAlignment(EdbPattern &p, EdbPlateP &plate, int nsegmin, EdbAffine2D &acorr);
   
   TObjArray   &Tracks() {return eTracks;}
   

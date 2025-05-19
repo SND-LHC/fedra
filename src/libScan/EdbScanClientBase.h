@@ -115,8 +115,7 @@ public:
 	const char * GetCmd(){return eCMD; };
 	void SetCmd(const char* cmd_){
 		int len = strlen(cmd_);
-		if(len > CMD_LEN-1);
-			len = CMD_LEN-1;
+		if(len > CMD_LEN-1)  len = CMD_LEN-1;
 		memcpy(eCMD, cmd_, len+1);//strcpy_s(eCMD, 256, cmd_); windows only :(
 		eCMD[len]=0;
 	};
@@ -124,8 +123,7 @@ public:
 	const char * GetMess(){return eMess; };
 	void SetMess(const char* mess_){
 		int len = strlen(mess_);
-		if(len > CMD_LEN-1)
-			len = CMD_LEN-1;
+		if(len > CMD_LEN-1) len = CMD_LEN-1;
 		memcpy(eMess, mess_, len+1);
 		eMess[len]=0;
 	};
@@ -133,8 +131,7 @@ public:
 	const char * GetMess1(){return eMess1; };
 	void SetMess1(const char* mess_){
 		int len = strlen(mess_);
-		if(len > CMD_LEN-1)
-			len = CMD_LEN-1;
+		if(len > CMD_LEN-1) len = CMD_LEN-1;
 		memcpy(eMess1, mess_, len+1);
 		eMess1[len]=0;
 	};
