@@ -90,8 +90,8 @@ class EdbEDALine : public EdbEDAObject{
 	TString text;
 	
 	public:
-	EdbEDALine( float x1, float y1, float z1, float x2, float y2, float z2, int color, int width, char *comment = "") : X1(x1), Y1(y1), Z1(z1), X2(x2), Y2(y2), Z2(z2), col(color), wid(width), text(comment){}
-	EdbEDALine( int color, int width, char *comment = "") : col(color), wid(width), text(comment){}
+	EdbEDALine( float x1, float y1, float z1, float x2, float y2, float z2, int color, int width, const char *comment = "") : X1(x1), Y1(y1), Z1(z1), X2(x2), Y2(y2), Z2(z2), col(color), wid(width), text(comment){}
+	EdbEDALine( int color, int width, const char *comment = "") : col(color), wid(width), text(comment){}
 	~EdbEDALine(){}
 	
 	void SetPoint1(float x1, float y1, float z1){ X1=x1; Y1=y1; Z1=z1;}
@@ -147,9 +147,9 @@ class EdbEDACamera {
 	void SetAnimationMode();
 	void StartAnimation();
 	void StopAnimation();
-	void SaveAnimation(char *filename = NULL, int n=100, int interval=10);
+	void SaveAnimation(const char *filename = NULL, int n=100, int interval=10);
 	void SavePictures();
-	void Snapshot(char *filename=NULL);
+	void Snapshot(const char *filename=NULL);
 	TGLViewer * GetGLViewer();
 	EdbEDAOverlay *SetOverlay() {eOverlay=new EdbEDAOverlay; eViewer->AddOverlayElement(eOverlay); return eOverlay;}
 	EdbEDAOverlay *GetOverlay() {return eOverlay;}
@@ -174,14 +174,14 @@ class EdbEDAIO{
 	EdbPattern * ReadCouples(int ipl, EdbPattern *pat=NULL);
 	EdbPattern * ReadCouplesPID(int pid, EdbPattern *pat=NULL);
 	EdbPattern * GetPatternIPL(int pid);
-	void WriteFeedbackFile(char *filename = NULL);
-	void WriteFeedbackFile2008(EdbVertex *v = NULL, char *filename = NULL);
-	void ReadFeedbackFile(char *filename = NULL);
-	EdbVertex * ReadFeedbackFile2008(char *filename = NULL);
-	int IdMuon(char *filename = "../cs_info.txt");
-	void OpenTextEditor(char *filename);
-	void WriteFilteredText(char *filename = NULL);
-	EdbPVRec * ReadFilteredText(char *filename = NULL);
+	void WriteFeedbackFile(const char *filename = NULL);
+	void WriteFeedbackFile2008(EdbVertex *v = NULL, const char *filename = NULL);
+	void ReadFeedbackFile(const char *filename = NULL);
+	EdbVertex * ReadFeedbackFile2008(const char *filename = NULL);
+	int IdMuon(const char *filename = "../cs_info.txt");
+	void OpenTextEditor(const char *filename);
+	void WriteFilteredText(const char *filename = NULL);
+	EdbPVRec * ReadFilteredText(const char *filename = NULL);
 	
 	//void PrintTrackFeedback(EdbTrackP *t=NULL, EdbVertex *v1=NULL, EdbVertex *v2=NULL, EdbSegP *s1=NULL, FILE *io=stdout, bool print_segs=kTRUE);
 	
@@ -501,7 +501,7 @@ class EdbEDA :
 	
 	public:
 	
-	EdbEDA(char *filename = NULL, int datatype = 100, TCut rcut = "1", bool auto_run=kTRUE) : 
+	EdbEDA(const char *filename = NULL, int datatype = 100, TCut rcut = "1", bool auto_run=kTRUE) : 
 				TNamed("EDA","Event Display and Analyser"){
 		// Constructor for EDA
 		//  filename : filename for "LinkDef" or "*.set.root(ScanSet)" or "*.root(linked_track.root format)"
@@ -513,14 +513,14 @@ class EdbEDA :
 		if(auto_run) Run();
 	}
 
-	EdbEDA(EdbID IDCalib, char *ProcDirClient=NULL) {
+	EdbEDA(EdbID IDCalib, const char *ProcDirClient=NULL) {
 		Init();
 		if(ProcDirClient!=NULL) eScanProc->eProcDirClient=ProcDirClient;
 		eID=IDCalib;
 		eScanSet = eScanProc->ReadScanSet(eID);
 	}
 	
-	EdbEDA(EdbScanSet *ss, char *ProcDirClient=NULL) : TNamed("EDA","Event Display and Analyser"){
+	EdbEDA(EdbScanSet *ss, const char *ProcDirClient=NULL) : TNamed("EDA","Event Display and Analyser"){
 		Init();
 		if(ProcDirClient!=NULL) eScanProc->eProcDirClient=ProcDirClient;
 		eScanSet = ss;
@@ -536,7 +536,7 @@ class EdbEDA :
 		GetTrackSet("TS")->DoSelection();
 	}
 
-	void OpenFile(char *filename = NULL, int datatype = 100, TCut rcut = "1");	
+	void OpenFile(const char *filename = NULL, int datatype = 100, TCut rcut = "1");	
 
 	EdbEDA(EdbPVRec *pvr, bool autorun=1){
 		Init();
@@ -577,7 +577,7 @@ class EdbEDA :
 	void Run();	
 	EdbScanProc *ScanProc() { return eScanProc;}
 	
-	EdbEDATrackSet *AddTrackSet(char *name) { EdbEDATrackSet *set = new EdbEDATrackSet(name); eTrackSets->Add(set); return set;}
+	EdbEDATrackSet *AddTrackSet(const char *name) { EdbEDATrackSet *set = new EdbEDATrackSet(name); eTrackSets->Add(set); return set;}
 	
 	void AddDrawObject(EdbEDAObject *o) { eDrawObjects->Add(o);}
 	void RemoveDrawObject(TObject *o){ eDrawObjects->Remove(o); eDrawObjects->Sort();}
@@ -615,7 +615,7 @@ class EdbEDA :
 	
 	int NTrackSets() { return eTrackSets->GetEntriesFast();}
 	EdbEDATrackSet * GetTrackSet(int i){ return (EdbEDATrackSet *) eTrackSets->At(i);}
-	EdbEDATrackSet * GetTrackSet(char *name){ return (EdbEDATrackSet *) eTrackSets->FindObject(name);}
+	EdbEDATrackSet * GetTrackSet(const char *name){ return (EdbEDATrackSet *) eTrackSets->FindObject(name);}
 	EdbEDATrackSet * GetTrackSet(EdbTrackP *t){ 
 		for(int i=0;i<NTrackSets();i++) 
 		if ( GetTrackSet(i)->IsMember(t) ) 
@@ -630,7 +630,7 @@ class EdbEDA :
 		return NULL;
 	}
 	
-	EdbEDATrackSet * CreateTrackSet(char *name) {
+	EdbEDATrackSet * CreateTrackSet(const char *name) {
 		EdbEDATrackSet *set=new EdbEDATrackSet(name);
 		eTrackSets->Add(set);
 		return set;

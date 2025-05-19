@@ -119,7 +119,7 @@ Int_t  EdbPredictionsBox::GetN()    const
 }
 
 //______________________________________________________________________________
-void     EdbPredictionsBox::WriteDC( char *file ) const
+void     EdbPredictionsBox::WriteDC( const char *file ) const
 {
   FILE *fp = fopen( file,"w");
   if( N()>0 ) for(int i=0; i<N(); i++ ) GetPrediction(i)->WriteDC(fp);
@@ -127,7 +127,7 @@ void     EdbPredictionsBox::WriteDC( char *file ) const
 }
 
 //______________________________________________________________________________
-void     EdbPredictionsBox::WriteDC1( char *file ) const
+void     EdbPredictionsBox::WriteDC1( const char *file ) const
 {
   // temporary routine to renumber the tracks
 
@@ -153,7 +153,7 @@ void     EdbPredictionsBox::WriteDC1( char *file ) const
 }
 
 //______________________________________________________________________________
-TNtuple     *EdbPredictionsBox::MakeNtuple( char *name ) const
+TNtuple     *EdbPredictionsBox::MakeNtuple( const char *name ) const
 {
   TNtuple *nt = new TNtuple( name, "$c predictions", "id:event:flag:ty:tz:y:z" );
   EdbPredictionDC *pdc=0;
@@ -200,7 +200,7 @@ void     EdbPredictionsBox::Generate( int n )
 }
 
 //______________________________________________________________________________
-Int_t     EdbPredictionsBox::ReadDC( char* file )
+Int_t     EdbPredictionsBox::ReadDC( const char* file )
 {
   FILE *fp = fopen( file,"r");
   char            buffer[256]="";
@@ -238,7 +238,7 @@ Int_t     EdbPredictionsBox::ReadDC( char* file )
 }
 
 //______________________________________________________________________________
-Int_t     EdbPredictionsBox::ReadDC0( char* file )
+Int_t     EdbPredictionsBox::ReadDC0( const char* file )
 {
   // read dc file with no header
 

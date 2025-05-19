@@ -34,8 +34,8 @@ private:
 
 public:
   EdbImage();
-  EdbImage( char *file, char *format="PGM" );
-  EdbImage( int columns, int rows, char *image, int col=256 );
+  EdbImage( const char *file, const char *format="PGM" );
+  EdbImage( int columns, int rows, const char *image, int col=256 );
   virtual ~EdbImage();
 
 
@@ -58,11 +58,11 @@ public:
 
   Int_t   Width()  const {return eColumns;}
   Int_t   Height() const {return eRows;}
-  Int_t   LoadPGM( char *file );
-  Int_t   LoadRAW( char *file );
-  Int_t   LoadBMP( char *file );
+  Int_t   LoadPGM( const char *file );
+  Int_t   LoadRAW( const char *file );
+  Int_t   LoadBMP( const char *file );
 
-  Int_t   DumpPGM( char *file );
+  Int_t   DumpPGM( const char *file );
 
   ClassDef(EdbImage,2)  // CCD Image in bytemap format
 };

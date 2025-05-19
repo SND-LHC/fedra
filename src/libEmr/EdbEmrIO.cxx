@@ -8,6 +8,7 @@
 
 #include "EdbVertex.h"
 #include "EdbEmrIO.h"
+#include "EdbLog.h"
 
 ClassImp(EdbEmrIO);
 ClassImp(EdbEmrFileAccess)
@@ -51,7 +52,10 @@ void EdbEmrFileAccess::PrintStat()
 EdbSegP *EdbEmrFileAccess::AddEntry(int plate, int side, int zone, int view, int entry, float x, float y, float z)
 {
   int iside = SideID(plate,side);
-  if(iside<0)    return 0;
+  if(iside<0||iside>1000)    {
+    Log(1,"EdbEmrFileAccess::AddEntry","Error: iside = %d is out of range! (%d %d)",iside,0,1000);
+    return 0;
+  }
   if(iside+1>eSides.GetSize()) eSides.Expand(iside+1);
   if(!eSides.At(iside)) eSides.AddAt(new EdbPattern, iside);
   EdbPattern *p = (EdbPattern*)eSides.At(iside);

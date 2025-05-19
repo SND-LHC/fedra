@@ -122,8 +122,8 @@ void EdbEDACamera::StartAnimation(){
 void EdbEDACamera::StopAnimation() { eTimer->TurnOff();}
 
 
-void EdbEDACamera::SaveAnimation(char *filename, int n, int interval){
-	printf("gEDA->SaveAnimation(char *filename, int nview=100, int interval=10)\n");
+void EdbEDACamera::SaveAnimation(const char *filename, int n, int interval){
+	printf("gEDA->SaveAnimation(const char *filename, int nview=100, int interval=10)\n");
 	if(filename==NULL){ // File dialog
 		TGFileInfo *fi=new TGFileInfo;
 		fi->fIniDir    = StrDup(".");
@@ -177,7 +177,7 @@ void EdbEDACamera::SavePictures(){
 
 
 
-void EdbEDACamera::Snapshot(char *filename){
+void EdbEDACamera::Snapshot(const char *filename){
 	if(filename==NULL) {
 		TGFileInfo *fi=new TGFileInfo;
 		fi->fIniDir    = StrDup(".");
@@ -305,7 +305,7 @@ EdbPattern * EdbEDAIO::GetPatternIPL(int ipl){
 }
 
 
-void EdbEDAIO::WriteFeedbackFile(char *filename){
+void EdbEDAIO::WriteFeedbackFile(const char *filename){
 	// write feedback file
 	// if eOutputFileMode == 0 (kBern), output comments with "//" escape sequence (default).
 	//                                  also track id is not 1,2,3,4, but id of track.
@@ -687,7 +687,7 @@ void EdbEDAIO::WriteFeedbackFile(char *filename){
 
 }
 
-void EdbEDAIO::WriteFeedbackFile2008(EdbVertex *v, char *filename){
+void EdbEDAIO::WriteFeedbackFile2008(EdbVertex *v, const char *filename){
 
 // write feedback file. original code from Frederic.
 // the flags are correct if you work in the correct directory.
@@ -754,7 +754,7 @@ void EdbEDAIO::WriteFeedbackFile2008(EdbVertex *v, char *filename){
 #endif
 }
 
-void EdbEDAIO::ReadFeedbackFile(char *filename){
+void EdbEDAIO::ReadFeedbackFile(const char *filename){
 	// Read feedback file format (ver 2009 Oct).
 	
 	gEDA->Reset();
@@ -951,7 +951,7 @@ void EdbEDAIO::ReadFeedbackFile(char *filename){
 }
 
 
-EdbVertex * EdbEDAIO::ReadFeedbackFile2008(char *filename){
+EdbVertex * EdbEDAIO::ReadFeedbackFile2008(const char *filename){
 	using namespace std;
 
 	// if filename is not given, open file browser.
@@ -1042,7 +1042,7 @@ EdbVertex * EdbEDAIO::ReadFeedbackFile2008(char *filename){
 	else return NULL;
 }
 
-int EdbEDAIO::IdMuon(char *filename){
+int EdbEDAIO::IdMuon(const char *filename){
 	// code by GL
   char            buf[256];
   char            key[256];
@@ -1091,7 +1091,7 @@ int EdbEDAIO::IdMuon(char *filename){
   return val;
 }
 
-void EdbEDAIO::OpenTextEditor(char *filename){
+void EdbEDAIO::OpenTextEditor(const char *filename){
 	TEveBrowser* browser = gEve->GetBrowser();
 	browser->StartEmbedding(1);
 	new TGTextEditor(filename, gClient->GetRoot());
@@ -1105,7 +1105,7 @@ void EdbEDAIO::OpenTextEditor(char *filename){
 }
 
 
-EdbPVRec * EdbEDAIO::ReadFilteredText(char *filename){
+EdbPVRec * EdbEDAIO::ReadFilteredText(const char *filename){
 	int i,j;
 	
 	if(filename==NULL||strlen(filename)<1){ // File dialog
@@ -1371,7 +1371,7 @@ void EdbEDAIO::PrintTrackFeedback(EdbTrackP *t, EdbVertex *v1, EdbVertex *v2, Ed
 
 */
 
-void EdbEDAIO::WriteFilteredText(char *filename){
+void EdbEDAIO::WriteFilteredText(const char *filename){
 	int i,j,k,l;
 	FILE *fp;
 	
@@ -2061,7 +2061,7 @@ void EdbEDA::Draw(int redraw){
 	eMainTab->SetDrawCheckBox();
 }
 
-void EdbEDA::OpenFile(char *filename, int datatype, TCut rcut){
+void EdbEDA::OpenFile(const char *filename, int datatype, TCut rcut){
 	//  filename : filename for "LinkDef" or "*.set.root(ScanSet)" or "*.root(linked_track.root format)"
 	//  datatype : only for "LinkDef". Data type for EdbDataProc::InitVolume(). put -1 for no InitVolume
 	//            if datatype= 100 or 1000. linked tracks will be registred to "TS".

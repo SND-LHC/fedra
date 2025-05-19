@@ -179,8 +179,8 @@ public:
 		int ny=0, 
 		float px=0, 
 		float py=0,
-		char *name="",
-		char *title="")
+		const char *name="",
+		const char *title="")
     { 
       eStage->GetCCD()->Set( nx, ny, px, py ); 
       eStage->GetCCD()->SetName( name );
@@ -189,8 +189,8 @@ public:
 
   void SetObjective( float mag, 
 	             float a, float b, float c, float d, float p, float q,
-		     char *name="",
-		     char *title="")
+		     const char *name="",
+		     const char *title="")
     { eStage->GetObjective()->Set( mag, a,b,c,d,p,q ); 
       eStage->GetObjective()->SetName( name );
       eStage->GetObjective()->SetTitle( title );
@@ -198,8 +198,8 @@ public:
 
   void SetPlate( int id, 
 		 float up, float base, float down, float shru, float shrd,
-		 char *name="",
-		 char *title="")
+		 const char *name="",
+		 const char *title="")
     { ePlate->Set( id, up, base, down, shru, shrd );
       ePlate->SetName(name);
       ePlate->SetTitle(title);

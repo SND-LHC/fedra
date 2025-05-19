@@ -68,7 +68,7 @@ class EdbFragmentAlignment : public TObject {
 
     void ApplyAff();
     int  ViewSideAl( EdbPattern &p1, EdbPattern &p2, EdbAffine2D &aff, bool do_shift );
-    void AddPatternAt( EdbPattern *p, int i ) { eParr.AddAt(p,i); }
+    void AddPatternAt( EdbPattern *p, int i );
     void SetPatternsOwner() { eParr.SetOwner(); }
     float CheckScaleX(float y0);
     float CheckScaleY(float x0);

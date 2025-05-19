@@ -135,20 +135,20 @@ namespace EdbEDAUtil{
 	double DTRMSTLGiven1Kink(EdbTrackP *t, int iKink, double *rmsspace, double *rmstransverse, double *rmslongitudinal, int *NKinkAngleUsed=NULL);
 	EdbTrackP * CleanTrack(EdbTrackP *t);
 	
-	void   ErrorMessage(char *title, char *message);
-	void   ErrorMessage(char *message);
-	bool   AskYesNo(char *message);
-	int    InputNumberInteger(char *message, int idefault=0);
-	double InputNumberReal(char *message, double default_num=0.0, TGNumberFormat::EStyle es=TGNumberFormat::kNESReal);
-	int    InputID(char *message, EdbID &id);
+	void   ErrorMessage(const char *title, const char *message);
+	void   ErrorMessage(const char *message);
+	bool   AskYesNo(const char *message);
+	int    InputNumberInteger(const char *message, int idefault=0);
+	double InputNumberReal(const char *message, double default_num=0.0, TGNumberFormat::EStyle es=TGNumberFormat::kNESReal);
+	int    InputID(const char *message, EdbID &id);
 	
 	char * FindProcDirClient();
 	int FindBrickIDFromPath();
 	
-	EdbPVRec * ReadFeedbackPVR(char *filename = NULL);
-	EdbPVRec * ReadMxxPVR(char *filename = NULL);
-	void WritePVRMxx(EdbPVRec *pvr, char *filename = NULL);
-	void WriteTracksMxx(TObjArray *pvr, char *filename = NULL);
+	EdbPVRec * ReadFeedbackPVR(const char *filename = NULL);
+	EdbPVRec * ReadMxxPVR(const char *filename = NULL);
+	void WritePVRMxx(EdbPVRec *pvr, const char *filename = NULL);
+	void WriteTracksMxx(TObjArray *pvr, const char *filename = NULL);
 	
 	void MakePVRFromTracksArray(TObjArray *tracks_or_segments, EdbPVRec& pvr);
 	void FillTracksFromPatterns(EdbPVRec *pvr);
@@ -168,7 +168,7 @@ class EdbIDDialog : public TGTransientFrame {
 	int *eRetVal;
 	public:
 	
-	EdbIDDialog(char *message, EdbID& id, int *retval = NULL) : 
+	EdbIDDialog(const char *message, EdbID& id, int *retval = NULL) : 
 		TGTransientFrame(gClient->GetRoot(), gEve?gEve->GetMainWindow():0,200,100,kMainFrame | kVerticalFrame), eID(id), eRetVal(retval){
 		SetLayoutBroken(kTRUE);
 		SetWindowName("EdbIDDialog");

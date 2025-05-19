@@ -230,3 +230,9 @@ int EdbFragmentAlignment::ViewSideAl( EdbPattern &p1, EdbPattern &p2, EdbAffine2
   //av.CloseOutputFile();
   return av.eNcoins;  
 }
+
+void EdbFragmentAlignment::AddPatternAt( EdbPattern *p, int i ) 
+{ 
+  if(i>=0&&i<eParr.GetSize()) eParr.AddAt( p, i );
+  else Log(1,"EdbFragmentAlignment::AddPatternAt","Error! i = %d is out of bounds(0:%d)",i,eParr.GetSize());
+}

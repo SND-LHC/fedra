@@ -19,7 +19,7 @@
 //ClassImp(EdbOnline)
 
 //______________________________________________________________________________
-EdbOnline::EdbOnline( char *name, char *title ) 
+EdbOnline::EdbOnline( const char *name, const char *title ) 
 : TROOT(name, title)
 {
   //  Init();

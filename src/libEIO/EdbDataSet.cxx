@@ -152,11 +152,16 @@ int EdbDataPiece::GetLinkedSegEntr(int side, int aid, int vid, int sid, TArrayI 
   TIndexCell *c = eCouplesInd->Find(4,v);
   if(!c) return 0;
   int n = c->N();
-  entr.Set(n);
-  for(int i=0; i<n; i++) entr.AddAt( (int)(c->At(i)->Value()), i);
-  return n;
+  if(n>=0&&n<800000000)
+  {
+    entr.Set(n);
+    for(int i=0; i<n; i++) entr.AddAt( (int)(c->At(i)->Value()), i);
+    return n;
+  } else
+  {
+     Log(1,"EdbDataPiece::GetLinkedSegEntr","Error: n = %d out of range!",n);
+  }
 }
-
 ///______________________________________________________________________________
 void EdbDataPiece::Print()
 {

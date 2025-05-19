@@ -97,13 +97,13 @@ class EdbPredictionsBox : public TObject, public EdbPointsBox2D {
   // other finctions
   void       Print( Option_t *opt="") const;
 
-  void      WriteDC( char *file="predictions.dc") const;
-  void      WriteDC1( char *file="predictions.dc") const;
+  void      WriteDC( const char *file="predictions.dc") const;
+  void      WriteDC1( const char *file="predictions.dc") const;
 
-  TNtuple  *MakeNtuple( char *name="predictions") const;
+  TNtuple  *MakeNtuple( const char *name="predictions") const;
 
-  int       ReadDC( char *file );
-  int       ReadDC0( char *file );
+  int       ReadDC( const char *file );
+  int       ReadDC0( const char *file );
 
   void      Generate( int n );
 

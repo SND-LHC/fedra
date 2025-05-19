@@ -96,7 +96,6 @@ class EdbSegP : public TObject, public EdbTrack2D {
   }
   
   void    SetCOV( TMatrixD &cov) { 
-    if(!(&cov)) return;
     if(eCOV) eCOV->Copy(cov);
     else eCOV = new TMatrixD(cov);
   }
@@ -107,7 +106,6 @@ class EdbSegP : public TObject, public EdbTrack2D {
   }
 
   void    ForceCOV( TMatrixD &cov) { //to correctly copy COV matrices in MakeTracksTree
-    if(!(&cov)) return;
     if(eCOV) *eCOV = cov;
     else eCOV = new TMatrixD(cov);
   }

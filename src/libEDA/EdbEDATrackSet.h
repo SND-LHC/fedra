@@ -12,7 +12,7 @@ class EdbEDATrackComment:public TObject{
 	EdbTrackP *eTrack;
 	
 	public:
-	EdbEDATrackComment(EdbTrackP *t, char *cmt):eTrack(t){
+	EdbEDATrackComment(EdbTrackP *t, const char *cmt):eTrack(t){
 		eComment = new TString(cmt);
 	}
 	EdbTrackP * GetTrack(){ return eTrack;}
@@ -225,7 +225,7 @@ class EdbEDATrackSet: public TNamed, public EdbEDATrackSelection{
 	
 	enum { kEnd, kTop, kMiddle};
 	
-	EdbEDATrackSet(char *title, TObjArray *EdbTrackPArray=NULL) 
+	EdbEDATrackSet(const char *title, TObjArray *EdbTrackPArray=NULL) 
 			: eID(0,0,1,0), ePVR(NULL), eDataSet(NULL), eScanSet(NULL){
 		SetName(title);
 		eTracks         = new TObjArray;
@@ -472,7 +472,7 @@ class EdbEDATrackSet: public TNamed, public EdbEDATrackSelection{
 	void SetDataSet (EdbDataSet *dset) { eDataSet = dset;}
 	EdbDataSet * GetDataSet(){ return eDataSet;}
 	
-	void AddComment(EdbTrackP *t, char *cmt){ eComments->Add(new EdbEDATrackComment(t,cmt));}
+	void AddComment(EdbTrackP *t, const char *cmt){ eComments->Add(new EdbEDATrackComment(t,cmt));}
 	void ClearComments() {eComments->Clear();}
 	const char * GetComment(EdbTrackP *t) { 
 		for(int i=0;i<eComments->GetEntriesFast();i++){
@@ -484,20 +484,20 @@ class EdbEDATrackSet: public TNamed, public EdbEDATrackSelection{
 		return "";
 	}
 	
-	void ReadFile(char *filename = NULL, int datatype = 100, TCut rcut = "1");
-	void ReadTracksTree (char *scanset_filename, TCut cut="1");
+	void ReadFile(const char *filename = NULL, int datatype = 100, TCut rcut = "1");
+	void ReadTracksTree (const char *scanset_filename, TCut cut="1");
 	void ReadTracksTree (EdbID ID, TCut cut = "1"); // for EdbScanProc style
-	EdbDataProc *ReadLinkedTracks (char *lnkdef="lnk.def", TCut cut = "1"); // for EdbDataProc style
-	EdbDataProc *ReadLinkedTracksFile (char *filename="linked_tracks.root", TCut cut = "1"); // for EdbDataProc style
+	EdbDataProc *ReadLinkedTracks (const char *lnkdef="lnk.def", TCut cut = "1"); // for EdbDataProc style
+	EdbDataProc *ReadLinkedTracksFile (const char *filename="linked_tracks.root", TCut cut = "1"); // for EdbDataProc style
 	EdbDataProc *ReadLinkedTracks (EdbDataProc *dproc); // for EdbDataProc style. expect EdbDataProc after InitVolume.
 
 	void ReadPredictionScan(int BRICK, int SBVERSION, int RUN_PRED, int UseMicrotrack=0); // for EdbDataProc style.
 	void ReadPredictionScan(EdbID id, bool force_update_setroot=0); // for EdbScanProc style
 	void ReadPredictionScan(EdbScanSet *ss); // for EdbScanProc style
-	void ReadTextTracks(char *filename = NULL);
-	void ReadMxxFile(char *filename);
-	void ReadListFile  (char *filename = NULL, bool clear_previous=kTRUE);
-	char *WriteListFile  (char *filename = NULL, bool append = kFALSE, bool open_editor = kFALSE);
+	void ReadTextTracks(const char *filename = NULL);
+	void ReadMxxFile(const char *filename);
+	void ReadListFile  (const char *filename = NULL, bool clear_previous=kTRUE);
+	const char *WriteListFile  (const char *filename = NULL, bool append = kFALSE, bool open_editor = kFALSE);
 
 	void DoVertexing(EdbVertexRec *VR = NULL, int ntrkcut = 3);
 	void DoSelection() { EdbEDATrackSelection::DoSelection(eTracksBase,eTracks);}
@@ -594,7 +594,7 @@ class EdbEDATrackSet: public TNamed, public EdbEDATrackSelection{
 
 	void Draw(int redraw=kFALSE);
 	void DrawSingleTrack(EdbTrackP *t);
-	void DrawSingleSegment(EdbSegP *s, char *elname, TEveCompound *cmp = NULL, int extendup = 1, int extenddown = 1);
+	void DrawSingleSegment(EdbSegP *s, const char *elname, TEveCompound *cmp = NULL, int extendup = 1, int extenddown = 1);
 	void DrawSingleComment(EdbEDATrackComment *tcmt);
 
 	// Area related

@@ -473,15 +473,15 @@ double EdbEDAUtil::DTRMSelectron(EdbTrackP *t){
 //	kMBYes, kMBNo, kMBOk, kMBApply, kMBRetry, kMBIgnore, kMBCancel, kMBClose, kMBYesAll, kMBNoAll, kMBNewer, kMBAppend, kMBDismiss
 //	kMBIconStop, kMBIconQuestion, kMBIconExclamation, kMBIconAsterisk
 
-void EdbEDAUtil::ErrorMessage(char *message){
+void EdbEDAUtil::ErrorMessage(const char *message){
 	ErrorMessage("Error", message);
 }
-void EdbEDAUtil::ErrorMessage(char *title, char *message){
+void EdbEDAUtil::ErrorMessage(const char *title, const char *message){
 	printf("%s : %s\n", title, message);
 	new TGMsgBox(gClient->GetRoot(), gEve? gEve->GetMainWindow() : 0,"Error", message, kMBIconAsterisk, kMBOk);
 }
 
-bool EdbEDAUtil::AskYesNo(char *message){
+bool EdbEDAUtil::AskYesNo(const char *message){
 	// Open a message dialog and ask you YES or No.
 	// if YES, return kTRUE
 	// if NO,  return kFALSE
@@ -843,7 +843,7 @@ double EdbEDAUtil::DTRMSTLGiven1Kink(EdbTrackP *t, int iKink, double *rmsspace, 
 	return rmst;
 }
 
-int EdbEDAUtil::InputNumberInteger(char *message, int idefault){
+int EdbEDAUtil::InputNumberInteger(const char *message, int idefault){
 	
 	char buf[20];
 	sprintf(buf,"%d",idefault);
@@ -855,7 +855,7 @@ int EdbEDAUtil::InputNumberInteger(char *message, int idefault){
 }
 
 
-double EdbEDAUtil::InputNumberReal(char *message, double default_num, TGNumberFormat::EStyle es){
+double EdbEDAUtil::InputNumberReal(const char *message, double default_num, TGNumberFormat::EStyle es){
 	// create a number entry window and return the number
 	
 	char buf[20];
@@ -869,7 +869,7 @@ double EdbEDAUtil::InputNumberReal(char *message, double default_num, TGNumberFo
 //	EStyle :: kNESInteger, kNESRealOne, kNESRealTwo, kNESRealThree, kNESRealFour, kNESReal
 
 
-int EdbEDAUtil::InputID(char *message, EdbID &id){
+int EdbEDAUtil::InputID(const char *message, EdbID &id){
 	// create a number entry window and return the number
 	// return 1 if successful, 0 if cancel.
 	int ret=0;
@@ -911,7 +911,7 @@ int EdbEDAUtil::FindBrickIDFromPath(){
 }
 
 
-EdbPVRec * EdbEDAUtil::ReadFeedbackPVR(char *filename){
+EdbPVRec * EdbEDAUtil::ReadFeedbackPVR(const char *filename){
 	// Read feedback file format (ver 2009 Oct), and return EdbPVRec object.
 	// eTracks, eVTX, patterns are filled.
 	// stand alone function.
@@ -1048,7 +1048,7 @@ EdbPVRec * EdbEDAUtil::ReadFeedbackPVR(char *filename){
 }
 
 
-EdbPVRec *EdbEDAUtil::ReadMxxPVR(char *filename){
+EdbPVRec *EdbEDAUtil::ReadMxxPVR(const char *filename){
 
 	if(filename==NULL){
 		TGFileInfo *fi=new TGFileInfo;
@@ -1165,7 +1165,7 @@ EdbPVRec *EdbEDAUtil::ReadMxxPVR(char *filename){
 	return pvr;
 }
 
-void EdbEDAUtil::WritePVRMxx(EdbPVRec *pvr, char *filename){
+void EdbEDAUtil::WritePVRMxx(EdbPVRec *pvr, const char *filename){
 	
 	if(filename==NULL){ // File dialog
 		TGFileInfo *fi=new TGFileInfo;
@@ -1228,7 +1228,7 @@ void EdbEDAUtil::WritePVRMxx(EdbPVRec *pvr, char *filename){
 
 }
 
-void EdbEDAUtil::WriteTracksMxx(TObjArray *tracks, char *filename){
+void EdbEDAUtil::WriteTracksMxx(TObjArray *tracks, const char *filename){
 	
 	if(filename==NULL){ // File dialog
 		TGFileInfo *fi=new TGFileInfo;

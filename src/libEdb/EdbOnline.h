@@ -30,8 +30,8 @@ class EdbOnline : TROOT
   Int_t         eRunID;                  // current run id
 
  public:
-  EdbOnline( char *name="OnlineRoot", 
-	     char *title="Root object for online scanning" );
+  EdbOnline( const char *name="OnlineRoot", 
+	     const char *title="Root object for online scanning" );
   virtual ~EdbOnline();
 
   EdbRun  *GetRun() const { return eRun; }

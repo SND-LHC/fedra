@@ -287,7 +287,7 @@ void EdbEDATrackSet::SetColorMode(int mode){
 	eColorMode = mode;
 }
 
-void EdbEDATrackSet::DrawSingleSegment(EdbSegP *s, char *elname, TEveCompound *cmp, int extendup, int extenddown){
+void EdbEDATrackSet::DrawSingleSegment(EdbSegP *s, const char *elname, TEveCompound *cmp, int extendup, int extenddown){
 	// Draw Single Segment
 	
 	if(s==NULL) return;
@@ -589,7 +589,7 @@ void EdbEDATrackSet::DoVertexing(EdbVertexRec *VR, int ntrkcut){
 
 }
 
-void EdbEDATrackSet::ReadFile(char *filename, int datatype, TCut rcut){
+void EdbEDATrackSet::ReadFile(const char *filename, int datatype, TCut rcut){
 	//  filename : filename for "LinkDef" or "*.set.root(ScanSet)" or "*.root(linked_track.root format)"
 	//  datatype : only for "LinkDef". Data type for EdbDataProc::InitVolume(). put -1 for no InitVolume
 	//            if datatype= 100 or 1000. linked tracks will be registred to "TS".
@@ -663,7 +663,7 @@ void EdbEDATrackSet::ReadFile(char *filename, int datatype, TCut rcut){
 	if(NBase()!=0) SetDraw();
 }
 
-void EdbEDATrackSet::ReadTracksTree (char *scanset_filename, TCut cut){
+void EdbEDATrackSet::ReadTracksTree (const char *scanset_filename, TCut cut){
 	TFile *f = TFile::Open(scanset_filename);
 	if(f==NULL) return;
 	eScanSet = (EdbScanSet *)f->Get("set");
@@ -686,7 +686,7 @@ void EdbEDATrackSet::ReadTracksTree (EdbID ID, TCut cut){
 	eID=ID;
 }
 
-EdbDataProc *EdbEDATrackSet::ReadLinkedTracksFile (char *filename, TCut cut){
+EdbDataProc *EdbEDATrackSet::ReadLinkedTracksFile (const char *filename, TCut cut){
 	// Read linked_tracks.root format file.
 	
 	// read file
@@ -714,7 +714,7 @@ EdbDataProc *EdbEDATrackSet::ReadLinkedTracksFile (char *filename, TCut cut){
 	return dproc;
 }
 
-EdbDataProc *EdbEDATrackSet::ReadLinkedTracks (char *lnkdef, TCut cut){
+EdbDataProc *EdbEDATrackSet::ReadLinkedTracks (const char *lnkdef, TCut cut){
 	EdbDataProc *dproc = new EdbDataProc(lnkdef);
 	dproc->InitVolume(100, cut);
 	ReadLinkedTracks(dproc);
@@ -915,7 +915,7 @@ void EdbEDATrackSet::ReadPredictionScan(EdbScanSet *ss){
 
 
 
-void EdbEDATrackSet::ReadTextTracks(char *filename){
+void EdbEDATrackSet::ReadTextTracks(const char *filename){
 	// Read Text file data
 	// the format should be : itrk ipl ph x y ax ay flag_trans
 	// flag_trans control Transformation. Affine=plate->global
@@ -1043,13 +1043,13 @@ void EdbEDATrackSet::ReadTextTracks(char *filename){
 	printf("%d tracks available from text file\n", N());
 }
 
-void EdbEDATrackSet::ReadMxxFile(char *filename){
+void EdbEDATrackSet::ReadMxxFile(const char *filename){
 	EdbPVRec *pvr = EdbEDAUtil::ReadMxxPVR(filename);
 	AddTracksPVR(pvr);
 }
 
 
-void EdbEDATrackSet::ReadListFile(char *filename, bool clear_previous){
+void EdbEDATrackSet::ReadListFile(const char *filename, bool clear_previous){
 	// Read list file.
 	// Search tracks in this track set.
 	// see also EdbEDAMainTab::ReadListFile(), which try to search 
@@ -1135,7 +1135,7 @@ void EdbEDATrackSet::ReadListFile(char *filename, bool clear_previous){
 	}
 }
 
-char * EdbEDATrackSet::WriteListFile(char *filename, bool append, bool open_editor){
+const char * EdbEDATrackSet::WriteListFile(const char *filename, bool append, bool open_editor){
 	// Write List file.
 	// ouput plate_number and segment_id. (track ID could change everytime after reconstruction, but segment ID doesn't change.)
 	// the result of MT search will be ignored.

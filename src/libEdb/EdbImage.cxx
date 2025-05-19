@@ -27,7 +27,7 @@ EdbImage::EdbImage()
 }
 
 //______________________________________________________________________________
-EdbImage::EdbImage(char *file, char *format)
+EdbImage::EdbImage(const char *file, const char *format)
 {
   Set0();
   eBuffer  = new TArrayC();
@@ -87,7 +87,7 @@ void EdbImage::Set0()
 }
 
 //______________________________________________________________________________
-EdbImage::EdbImage( int columns, int rows, char *image, int col )
+EdbImage::EdbImage( int columns, int rows, const char *image, int col )
 {
   eColors  = col;
   eColumns = columns;
@@ -178,7 +178,7 @@ TH2F *EdbImage::GetHist2(int flip) const
 
 
 //____________________________________________________________________________
-Int_t EdbImage::LoadRAW( char *file )
+Int_t EdbImage::LoadRAW( const char *file )
 {
 /*
   Loads a .raw format file...
@@ -213,7 +213,7 @@ Int_t EdbImage::LoadRAW( char *file )
 }
 
 //____________________________________________________________________________
-Int_t EdbImage::LoadPGM( char *file )
+Int_t EdbImage::LoadPGM( const char *file )
 {
 /*
   Loads a PGM format file...
@@ -278,7 +278,7 @@ Int_t EdbImage::LoadPGM( char *file )
 }
 
 //____________________________________________________________________________________
-Int_t EdbImage::DumpPGM( char *file )
+Int_t EdbImage::DumpPGM( const char *file )
 {
   //VT: 3/05/2004
 
@@ -304,7 +304,7 @@ Int_t EdbImage::DumpPGM( char *file )
 }
 
 //____________________________________________________________________________________
-Int_t EdbImage::LoadBMP( char *file )
+Int_t EdbImage::LoadBMP( const char *file )
 {
 /*
   Loads a BMP format file...

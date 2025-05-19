@@ -1174,7 +1174,7 @@ void EdbEDAMainTab::SetColorMode(){
 	gEDA->SetColorMode(mode);
 }
 
-void EdbEDAMainTab::ReadListFile(char *filename, bool clear_previous){
+void EdbEDAMainTab::ReadListFile(const char *filename, bool clear_previous){
 	// Read list file.
 	// search tracks with plateID and segmentID of BT.
 	// if corresponding track is not found in TS, it search in BT (couples file).
@@ -1291,7 +1291,7 @@ void EdbEDAMainTab::ReadListFile(char *filename, bool clear_previous){
 	gEDA->Redraw();
 }
 
-char * EdbEDAMainTab::WriteListFile(char *filename){
+const char * EdbEDAMainTab::WriteListFile(const char *filename){
 	filename = eTrackSet->WriteListFile(filename);
 	
 	EdbEDATrackSet *setBT = gEDA->GetTrackSet("BT");
