@@ -1092,34 +1092,50 @@ int  EdbTrackP::FitTrackKFS( bool zmax, float X0, int design )
 ///______________________________________________________________________________
 int EdbTrackP::EstimatePositionAt( Float_t z, EdbSegP &ss )
 {
-  // use coordinates of 2 nearest to z points for track extrapolation
+  // use coordinates of 2 nearest to z points for track extrapolation or interpolation
   // TODO: dz=0: mean?
-  if( N()<2 ) return 0;
-  EdbSegP *s1=0,*s2=0;
-  float   dz1,dz2;   dz1=dz2=kMaxInt;
-  for(int i=0; i<N(); i++)
+
+  float x1,y1,tx,ty,dz;
+  if( N()<2 )
   {
-    EdbSegP *s = GetSegment(i);
-    float dz = Abs(s->Z()-z);
-    if( dz < dz1 ) { dz1 = dz; s1=s; }
+    x1=X();
+    y1=Y();
+    tx=TX();
+    ty=TY();
+    dz=z-GetSegment(0)->Z();
   }
-  for(int i=0; i<N(); i++)
+  else
   {
-    EdbSegP *s = GetSegment(i);
-    float dz = Abs(s->Z()-z);
-    if( dz < dz2 && s != s1 ) { dz2 = dz; s2=s; }
+    EdbSegP *s1=0,*s2=0;
+    float   dz1,dz2;   dz1=dz2=kMaxInt;
+    for(int i=0; i<N(); i++)
+    {
+      EdbSegP *s = GetSegment(i);
+      float dz = Abs(s->Z()-z);
+      if( dz < dz1 ) { dz1 = dz; s1=s; }
+    }
+    for(int i=0; i<N(); i++)
+    {
+      EdbSegP *s = GetSegment(i);
+      float dz = Abs(s->Z()-z);
+      if( dz < dz2 && s != s1 ) { dz2 = dz; s2=s; }
+    }
+    float dz0 = s2->Z()-s1->Z();
+    if(abs(dz0)<0.000000001) {printf("dz0==0\n"); return 0;}
+    float dx0 = s2->X()-s1->X();
+    float dy0 = s2->Y()-s1->Y();
+    tx  = dx0/dz0;
+    ty  = dy0/dz0;
+    dz  = z-s1->Z();
+    x1  = s1->X();
+    y1  = s1->Y();
   }
-  float dz0 = s2->Z()-s1->Z();
-  if(abs(dz0)<0.000000001) return 0;
-  float dx0 = s2->X()-s1->X();
-  float dy0 = s2->Y()-s1->Y();
-  float dz  = z-s1->Z();
-  ss.SetX( s1->X() + dz*dx0/dz0 );
-  ss.SetY( s1->Y() + dz*dy0/dz0 );
+  ss.SetX( x1 + dz*tx );
+  ss.SetY( y1 + dz*ty );
   ss.SetZ( z );
   ss.SetDZ( dz );           // keep dz distance
-  ss.SetTX( dx0/dz0 );
-  ss.SetTY( dy0/dz0 );
+  ss.SetTX( tx );
+  ss.SetTY( ty );
   return 1;
 }
 
@@ -1836,9 +1852,15 @@ void EdbPatternsVolume::AddPattern( EdbPattern *pat )
 //______________________________________________________________________________
 void EdbPatternsVolume::AddPatternAt( EdbPattern *pat,int id )
 {
-  if(ePatterns->GetSize()<id+1) ePatterns->Expand(id+1);
-  pat->SetID(id);
-  ePatterns->AddAt(pat,id);
+  if(id>=0&&id<1000 && pat)
+  {
+    if(ePatterns->GetSize()<id+1) ePatterns->Expand(id+1);
+    pat->SetID(id);
+    ePatterns->AddAt(pat,id);
+  } else {
+    Log(1,"EdbPatternsVolume::AddPatternAt","Error! id out of range (0,1000): id = %d",id);
+    if(!pat) Log(1,"EdbPatternsVolume::AddPatternAt","Error! pat is not defined!");
+ }
 }
 
 //______________________________________________________________________________
