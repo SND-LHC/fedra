@@ -273,7 +273,7 @@ void EdbRun::Create(const char *fname)
   // Create the tree
   eTree = new TTree("Views", "Scanning Views data");
   eTree->SetAutoSave(-100000000);  // Autosave each 100MB
-  eTree->SetMaxTreeSize(64000000000LL);  // Set 64GB file size limit
+  eTree->SetMaxTreeSize(512000000000LL);  // Set 512GB file size limit
   Log(3, "EdbRun::Create", "Set max tree size as: %lld", eTree->GetMaxTreeSize());
   
   // Create branches
