@@ -154,12 +154,17 @@ void EdbFragmentAlignment::AlignAndShift( EdbMosaicPath &mp )
   for(int i=1; i<eN; i++)
   {
     EdbPattern *p = GetPattern(mp.I(i));
-    TArrayI narr(10);
+    if(p->N()<eMinPeak)
+    {
+	Log(1,"EdbFragmentAlignment::AlignAndShift","Skip view with %d segments",p->N());
+	continue;
+    } 
+    TArrayI narr(20);
     int nb = mp.GetAlignedNeighbours( mp.I(i), narr );
-    if(nb>10) 
+    if(nb>20) 
     { 
-      Log(1,"EdbFragmentAlignment::AlignAndShift","Warning! too many neigbours: %d  in dr = %f  reset to 10",nb, mp.eR0);
-      nb=10;
+      Log(1,"EdbFragmentAlignment::AlignAndShift","Warning! too many neigbours: %d  in dr = %f  reset to 20",nb, mp.eR0);
+      nb=20;
     }
     EdbPattern  alp;
     for(int ii=0; ii<nb; ii++) {
@@ -187,12 +192,17 @@ void EdbFragmentAlignment::RealignAndShift( EdbMosaicPath &mp )
   {
     if(mp.OK(i)) continue;
     EdbPattern *p = GetPattern(i);
-    TArrayI narr(10);
+    if(p->N()<eMinPeak)
+    {
+	Log(1,"EdbFragmentAlignment::RealignAndShift","Skip view with %d segments",p->N());
+	continue;
+    } 
+    TArrayI narr(20);
     int nb = mp.GetAlignedNeighbours( i, narr );
-    if(nb>10) 
+    if(nb>20) 
     { 
-      Log(1,"EdbFragmentAlignment::AlignAndShift","Warning! too many neigbours: %d  in dr = %f  reset to 10",nb, mp.eR0);
-      nb=10;
+      Log(1,"EdbFragmentAlignment::AlignAndShift","Warning! too many neigbours: %d  in dr = %f  reset to 20",nb, mp.eR0);
+      nb=20;
     }
     EdbPattern  alp;
     for(int ii=0; ii<nb; ii++) {
@@ -218,7 +228,7 @@ int EdbFragmentAlignment::ViewSideAl( EdbPattern &p1, EdbPattern &p2, EdbAffine2
   EdbPlateAlignment av;
   SetAlPar( eAP, av );
   av.eSaveCouples=0;
-  //av.InitOutputFile( Form( "p%.3d/%d_%d.al.vsa.root", p2.Plate(), p1.ID(), p2.ID() ) ); 
+  //av.InitOutputFile( Form( "p%.3d/%d_%d.al.vsa.root", p2.ScanID().ePlate, p1.ID(), p2.ID() ) ); 
   av.Align( p1, p2, 0);
   EdbAffine2D *affXY = av.eCorrL[0].GetAffineXY();
   EdbAffine2D *affTXTY = av.eCorrL[0].GetAffineTXTY();
