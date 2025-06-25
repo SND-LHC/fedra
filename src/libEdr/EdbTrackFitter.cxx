@@ -276,8 +276,8 @@ float EdbTrackFitter::Chi2PSeg( EdbSegP &s1, EdbSegP &s2, EdbSegP &seg, EdbScanC
 
   Double_t dx = s2.X()-s1.X();
   Double_t dy = s2.Y()-s1.Y();
-  Float_t  sx = cond1.SigmaX(0);
-  Float_t  sy = cond1.SigmaY(0);
+  Float_t  sx = cond1.SigmaX(s1.Theta());  // to test!
+  Float_t  sy = cond1.SigmaY(s1.Theta());  // use the same value since MCS is the main source of errors(theta) in SND conditions
   Double_t chi2 = Sqrt( dx*dx/sx/sx + dy*dy/sy/sy );
   seg.SetChi2(chi2);
   return chi2;

@@ -85,7 +85,7 @@ void EdbTrackAssembler::CheckPatternAlignment(EdbPattern &p, EdbPlateP &plate,  
   for(int i=0; i<ntr; i++) ptr.AddSegment( *((EdbSegP*)(eTrZ.UncheckedAt(i))) );
     
   EdbPlateAlignment al;
-  al.InitOutputFile(Form("%s_real.root",p.ScanID().AsString()));
+  //al.InitOutputFile(Form("%s_real.root",p.ScanID().AsString()));
   al.SetSigma( 1.5, 0.003 );
   al.eOffsetMax = 100.;
   al.eDZ        = 0;
@@ -375,13 +375,10 @@ void EdbTrackAssembler::ExtrapolateTracksToZ_mcs3(float z, int nsegmin)
     t->EstimatePositionAt(eZ,*t); //use angles if 1 seg, overwise use coordinates, t->DZ() - is gap
   }
 
-  float gap=1600;
   for(int i=0; i<n; i++)
   {
     EdbTrackP *t = (EdbTrackP*)(eTracks.At(i));
-    if( Abs(t->DZ()) > 3*gap                     ) continue;
-    //if( Abs(t->DZ()) > 2*gap && t->N()<nsegmin+2 ) continue;
-    //if( Abs(t->DZ()) >   gap && t->N()<nsegmin+1 ) continue;
+    if( Abs(t->DZ()) > eDZGapMax                 ) continue;
     if( t->N()<nsegmin                           ) continue;
     eTrZ.Add(t);
   }
