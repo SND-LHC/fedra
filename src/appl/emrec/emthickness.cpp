@@ -184,8 +184,10 @@ TH1D *get_step_fft( TH1D *h )
 //----------------------------------------------------------------------------------------
 void define_steps(TTree *tree)
 {
-  TH1D *hx = get_h_var(tree,"eXview","hx",FFT.bin);
-  TH1D *hy = get_h_var(tree,"eYview","hy",FFT.bin);
+  TH1D *hx = get_h_var(tree,"headers.eXview","hx",FFT.bin,"1");
+  TH1D *hy = get_h_var(tree,"headers.eYview","hy",FFT.bin,"1");
+  //hx->Draw();
+  
   TH1D *hstepx = get_step_fft(hx);
   TH1D *hstepy = get_step_fft(hy);
   B.nx   = hstepx->GetXaxis()->GetNbins();
@@ -196,6 +198,7 @@ void define_steps(TTree *tree)
   B.ymin = hstepy->GetXaxis()->GetXmin();
   B.ymax = hstepy->GetXaxis()->GetXmax();
   B.ybin = (B.ymax-B.ymin)/B.ny;
+
 }
 
 //----------------------------------------------------------------------------------------
@@ -366,7 +369,7 @@ int process_file(const char* input_file, const char* output_file)
   gSystem->GetPathInfo(input_file, &id, &(RES.file_size), &flags, &time);
   RES.file_modification_date.Set(time);
   RES.file_creation_date = file->GetCreationDate();
-  //    std::cout << "File: " << input_file << "\n";
+  std::cout << "File: " << input_file << "\n";
   
   TTree *tree = (TTree*)file->Get("Views");
   if (!tree) {

@@ -18,6 +18,7 @@ TARGET	=	$(BIN_DIR)/emlink$(ExeSuf)      \
 		$(BIN_DIR)/emunbend$(ExeSuf)  \
 		$(BIN_DIR)/emvertex$(ExeSuf)  \
 		$(BIN_DIR)/emthickness$(ExeSuf) \
+		$(BIN_DIR)/emflipraw$(ExeSuf) \
 		$(BIN_DIR)/emdbl_tb$(ExeSuf) 
 #		$(BIN_DIR)/emdbl_tb$(ExeSuf) 
 #		$(BIN_DIR)/emrawcorr$(ExeSuf)   
