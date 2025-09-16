@@ -1,9 +1,10 @@
 #include <vector>
 #include "TSpectrum.h"
 #include "ERTools.h"
+#include "EdbLog.h"
+NamespaceImp(ERTools);
 
 using namespace ERTools;
-
 
 std::vector<PeakInfo> ERTools::FindPeaksWithIntegral(TH1* hist, int window_size, double threshold = 0.1, 
 					    int from_bin=0, int to_bin=0)
@@ -71,7 +72,7 @@ std::vector<PeakInfo> ERTools::FindPeaksWithIntegral(TH1* hist, int window_size,
     return peaks;
 }
 
-
+//----------------------------------------------------------------------------------------
 void ERTools::DiffProfile2D(const TProfile2D* prof1, const TProfile2D* prof2, TH2D *hDiff)
 {
   for (int binx = 1; binx <= prof1->GetNbinsX(); ++binx) {
@@ -91,11 +92,23 @@ void ERTools::DiffProfile2D(const TProfile2D* prof1, const TProfile2D* prof2, TH
 //----------------------------------------------------------------------------------------
 TH1D* ERTools::get_h_var( TTree *tree, const char *var, const char *hname, double bin, const char *cut  )
 {
+  Log(1,"ERTools::get_h_var","%s %s %f %s", var,hname,bin,cut);
   if(!tree) return 0;
   tree->Draw(var, cut, "goff");
+
+/*  
+  Float_t var_val, min_ = 1e30, max_ = -1e30;
+  tree->SetBranchAddress(var, &var_val);
+  for (Long64_t i = 0; i < tree->GetEntries(); i++) {
+    tree->GetEntry(i);
+    if (var_val < min_) min_ = var_val;
+    if (var_val > max_) max_ = var_val;
+  }
+*/    
   double  min_ = tree->GetMinimum(var);
   double  max_ = tree->GetMaximum(var);
   int n = (max_-min_)/bin;
+  Log(1,"ERTools::get_h_var","%d %f %f", n,min_,max_);
   TH1D *h = new TH1D(hname,var,n,min_,max_);
   tree->Draw(Form("%s>>%s",var,hname), cut, "goff");
   return h;

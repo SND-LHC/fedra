@@ -50,6 +50,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.vsa.Xfrag"          ,  10000  );
   cenv.SetValue("fedra.vsa.Yfrag"          ,  10000  );
   cenv.SetValue("fedra.vsa.MinPeak"        ,  25   );
+  cenv.SetValue("fedra.vsa.R0"             ,  1200.);
   cenv.SetValue("fedra.vsa.HeaderCut"      , "1" );
   cenv.SetValue("fedra.vsa.sigmaR"         , 0.5 );
   cenv.SetValue("fedra.vsa.sigmaT"         , 0.005 );
@@ -149,5 +150,4 @@ void MosaicAlSet(EdbScanSet &sc, const TEnv &cenv)
     EdbMosaicAl mal;
     mal.ProcRun( *id, cenv );
   }
-
 }

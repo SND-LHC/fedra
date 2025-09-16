@@ -652,8 +652,6 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
       emulsioncell->X(ix),emulsioncell->Xbin()*(1.+overlap_fraction)/2.,emulsioncell->Y(iy),emulsioncell->Ybin()*(1.+overlap_fraction)/2.);
   }
   
-    //EdbPattern p;
-    
     EdbAffine2D misalign[60];
     if(do_misalign) {
         //           1 2 3 4 5 6  7  8  9

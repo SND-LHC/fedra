@@ -59,7 +59,8 @@ class EdbScanSet : public TNamed
       return eB.GetPlate(ePID.Find(p)->At(0)->Value()); 
     else return 0; 
   }
-
+  
+  int  GetPlateIDNearestToZ(float z, int dir=0);
   void UpdateBrickWithP2P(EdbLayer &la, int plate1, int plate2);
   void RemovePlate(int pid);
   void UpdateGap(float dz, int pid1, int pid2);

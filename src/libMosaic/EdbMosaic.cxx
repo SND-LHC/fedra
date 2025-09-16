@@ -67,6 +67,7 @@ void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
   float fx = env.GetValue("fedra.vsa.Xfrag" , 10000);
   float fy = env.GetValue("fedra.vsa.Yfrag" , 5000);
   eMinPeak = env.GetValue("fedra.vsa.MinPeak" , 20);  
+  eR0      = env.GetValue("fedra.vsa.R0"      , 1200);
   SetAlPar( env, eAP );
 
   EdbViewMap vm;
@@ -183,7 +184,7 @@ void EdbMosaicAl::AlignFragment( EdbPattern &pf, TObjArray &harr )
   // do not join view patterns
   int nh = harr.GetEntries();  
   EdbMosaicPath mp(nh);
-  mp.eR0=1200;
+  mp.eR0=eR0;
   mp.InitArea(harr, pf.X(), pf.Y(), eMinPeak );
 
   Log(1,"EdbMosaicAl::AlignFragment","with %d views at x0,y0:   %f %f",nh,mp.eX0,mp.eY0);

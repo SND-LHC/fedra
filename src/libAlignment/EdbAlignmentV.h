@@ -132,6 +132,7 @@ class EdbAlignmentV : public TObject
   float          Var(int side, int iseg, int ivar) { return Var(side,*((EdbSegP*)eS[side].UncheckedAt(iseg)),ivar); }
   void           Corr2Aff(EdbLayer &layer);
   void           Corr2Aff(EdbSegCorr &corr, EdbLayer &layer);
+  void           PrintCorr();
   
   ClassDef(EdbAlignmentV,1)  // universal basic alignment class
 };

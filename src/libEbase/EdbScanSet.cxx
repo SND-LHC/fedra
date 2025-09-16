@@ -6,12 +6,13 @@
 // Scanning data assembler                                              //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-
+#include "TMath.h"
 #include "EdbLog.h"
 #include "EdbScanSet.h"
 #include <iostream>
 
 using namespace std;
+using namespace TMath;
 
 ClassImp(EdbID)
 ClassImp(EdbScanSet)
@@ -308,6 +309,23 @@ void  EdbScanSet::UpdateBrickWithP2P(EdbLayer &la, int plate1, int plate2)
   
   //Log( 1, "UpdateBrickWithP2P","after: Z(%d)=%f", pfrom, GetPlate(pfrom)->Z() );
 
+}
+
+//----------------------------------------------------------------
+int EdbScanSet::GetPlateIDNearestToZ(float z, int dir)
+{
+  int   plate=-1;
+  float dz0=kMaxInt;
+  for(Int_t i=0; i<eIDS.GetSize(); i++)
+  {
+    EdbID *id = (EdbID*)eIDS.At(i);
+    EdbPlateP *p = GetPlate(id->ePlate);
+    float dz = (p->Z()-z);
+    if(dir==0||dz==0) if(         Abs(dz)  < dz0) { dz0 = dz; plate = id->ePlate; }
+    else if(dir<0)    if( dz>0 && Abs(dz)  < dz0) { dz0 = dz; plate = id->ePlate; }
+    else if(dir>0)    if( dz<0 && Abs(dz)  < dz0) { dz0 = dz; plate = id->ePlate; }
+  }
+  return plate;
 }
 
 //----------------------------------------------------------------

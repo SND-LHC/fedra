@@ -31,6 +31,7 @@ class EdbMosaicAl : public TObject {
     
     EdbLayer      *eCorrMap[3]; // corrections for sides 0,1,2
     
+    float   eR0;              // radius for neighbours search (~diagonal view size)
     int     eMinPeak;         // minimum coincidences to accept alignment
     AlPar   eAP;              // alignment parameters
     TH2F   *eH_XY[3];         // global histograms after the alignments (only 1 and 2 for now)

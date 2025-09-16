@@ -250,8 +250,8 @@ void EdbRun::Create(const char *fname)
 {
   // Check if the file already exists
   if (!gSystem->AccessPathName(fname, kFileExists)) {
-    Log(2, "EdbRun::Create", "WARNING: File %s already exists!", fname);
-    return;
+    Log(1, "EdbRun::Create", "WARNING: File %s already exists!", fname);
+//    return;
   }    
   // Check if the directory exists and is writable
   TString dirPath = gSystem->DirName(fname);
@@ -288,7 +288,7 @@ void EdbRun::Create(const char *fname)
   eTree->Branch("segments", &eSegments);
   eTree->Branch("tracks",   &eTracks);
   eTree->Branch("frames",   &eFrames);
-  eTree->Branch("headers", "EdbViewHeader", eView->GetHeaderAddr());
+  eTree->Branch("headers", "EdbViewHeader", eView->GetHeaderAddr(), 32000, 99);
   gErrorIgnoreLevel = savelevel;
   
   SetView();

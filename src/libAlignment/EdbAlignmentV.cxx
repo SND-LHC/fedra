@@ -37,6 +37,21 @@ EdbAlignmentV::~EdbAlignmentV()
 }
 
 //---------------------------------------------------------------------
+void EdbAlignmentV::PrintCorr()
+{
+  printf("eUseAffCorr = %d\n",eUseAffCorr);
+  if(eUseAffCorr) {
+    printf("use layers:\n");
+    eCorrL[0].Print();
+    eCorrL[1].Print();
+  } else {
+    printf("use eCorr offsets:\n");
+    eCorrL[0].Print();
+    eCorrL[1].Print();   
+  } 
+}
+
+//---------------------------------------------------------------------
 void EdbAlignmentV::InitOutputFile(const char *file, const char *option)
 {
   CloseOutputFile();
