@@ -1,1 +1,1 @@
-/home/valeri/mysw/fedra_svn/src/libScan/Makefile.linux
+/data/valeri/swdev/fedra/src/libScan/Makefile.linux

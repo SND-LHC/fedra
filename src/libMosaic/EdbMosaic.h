@@ -40,6 +40,7 @@ class EdbMosaicAl : public TObject {
     EdbMosaicAl(); //{eCorrMap[0]=eCorrMap[1]=eCorrMap[2]=0;}
     virtual ~EdbMosaicAl();
     
+    void InitH2( const TEnv &env );
     void FormFragments( float fx, float fy, TObjArray &harr );
     void AlignFragments();
     void AlignFragment( EdbPattern &pf, TObjArray &a);

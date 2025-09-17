@@ -23,8 +23,8 @@ EdbMosaicAl::EdbMosaicAl()
 {
   eCorrMap[0]=eCorrMap[1]=eCorrMap[2]=0;
   eH_XY[0] = 0;
-  eH_XY[1] = new TH2F("hxy1","xy side 1",2000,0,200000, 2000, 0,200000);
-  eH_XY[2] = new TH2F("hxy2","xy side 2",2000,0,200000, 2000, 0,200000);
+  eH_XY[1] = 0;
+  eH_XY[2] = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -38,8 +38,26 @@ EdbMosaicAl::~EdbMosaicAl()
 }
 
 //-----------------------------------------------------------------------
+void EdbMosaicAl::InitH2( const TEnv &env )
+{
+  int    nbinsx, nbinsy;
+  float  xlow, xup, ylow, yup;
+  const char *str = env.GetValue( "fedra.vsa.hxy", "2000 0. 200000. 2000 0. 200000." );
+  if(6 != sscanf(str,"%d %f %f %d %f %f",
+           &nbinsx, &xlow, &xup, &nbinsy, &ylow, &yup)) {
+    Log(1,"EdbMosaicAl::InitH2","Error parsing hxy parameters: %s");
+    return;
+  }
+  for(int i=1; i<=2; i++) {
+    if(eH_XY[i]) delete eH_XY[i];
+    eH_XY[i] = new TH2F( Form("hxy%d",i), Form("xy side %d",i), nbinsx,xlow,xup, nbinsy,ylow,yup);
+  }
+}
+
+//-----------------------------------------------------------------------
 void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
 {
+  InitH2(env);
   EdbID idset =id; idset.ePlate =0;
   EdbScanProc sproc;
   sproc.eProcDirClient="..";
@@ -140,6 +158,7 @@ void EdbMosaicAl::AlignFragments()
 	fa.SetSide(side);
 	fa.SetHarr(*a);
 	fa.SetMinPeak( eMinPeak );
+  fa.eR0 = eR0;
 	ReadPatterns( fa );
 	fa.eAP=eAP;
 	fa.AlignFragment(pf);
@@ -229,6 +248,7 @@ void EdbMosaicAl::AlignSpot(TObjArray &parr, EdbMosaicPath &mp)
       TArrayI narr(10);
       int nb = mp.GetAlignedNeighbours( mp.I(i), narr );
       if(nb>10) { Log(1,"EdbMosaicAl::AlignSpot","too many neigbours! %d ", nb ); nb=10;}
+      else { Log(3,"EdbMosaicAl::AlignSpot","%d neighbours found", nb );}
       EdbPattern  alp;
       for(int ii=0; ii<nb; ii++) {
         alp.AddPattern(*(EdbPattern *)(parr.At(narr[ii])) );

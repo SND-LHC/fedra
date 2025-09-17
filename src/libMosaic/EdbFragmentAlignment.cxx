@@ -49,10 +49,10 @@ void EdbFragmentAlignment::FillVC()
 }
 
 //-----------------------------------------------------------------------
-void EdbFragmentAlignment::AlignFragment( EdbPattern &pf )
+void EdbFragmentAlignment::AlignFragment( EdbPattern &pf)
 {
   EdbMosaicPath mp(eN);
-  mp.eR0=1200;
+  mp.eR0=eR0;
   EdbViewHeader *h = mp.FindNearest( eHarr, pf.X(), pf.Y() );
   if(h) {
     Log(1,"EdbFragmentAlignment::AlignFragment","with %d views at x0,y0 was %f %f:   %f %f",
@@ -97,7 +97,7 @@ float EdbFragmentAlignment::CheckScaleX( float y0 )
 {
   EdbMosaicPath mp(eN);
   float length = mp.InitLineX(eHarr, y0, 100. );
-  mp.eR0 = 800;
+  mp.eR0 = eR0;
   EdbAffine2D aff;
   CheckScale(mp,aff);
   return (length-aff.B1())/length;
@@ -108,7 +108,7 @@ float EdbFragmentAlignment::CheckScaleY( float x0 )
 {
   EdbMosaicPath mp(eN);
   float length = mp.InitLineY(eHarr, x0, 100. );
-  mp.eR0 = 800;
+  mp.eR0 = eR0;
   EdbAffine2D aff;
   CheckScale(mp,aff);
   return (length-aff.B2())/length;

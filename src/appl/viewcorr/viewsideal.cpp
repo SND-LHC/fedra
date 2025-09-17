@@ -42,6 +42,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.vsa.DoImageMatrixCorr"      , 0 );
   cenv.SetValue("fedra.vsa.ImageMatrixCorrSide1"   , "");
   cenv.SetValue("fedra.vsa.ImageMatrixCorrSide2"   , "");
+  cenv.SetValue("fedra.vsa.hxy"   , "2000 0. 200000. 2000 0. 200000.");
   cenv.SetValue("fedra.vsa.offsetMax"      , 10. );
   cenv.SetValue("fedra.vsa.DZ"             ,  0. );
   cenv.SetValue("fedra.vsa.DPHI"           ,  0. );

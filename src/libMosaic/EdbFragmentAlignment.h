@@ -44,13 +44,14 @@ class EdbFragmentAlignment : public TObject {
     int       eID;        // fragment id
     int       eSide;      // side
     int    eMinPeak;
-
+  
     EdbAffine2D   eAff;  // recalculeated scaleX scaleY
 
   public:
-    AlPar     eAP;        // alignment parameters
-   
-  public:
+    AlPar     eAP;       // alignment parameters
+    float    eR0;        // max distance for neighbour search
+
+     public:
     EdbFragmentAlignment(){ eN=0; eVC0=0; eVC=0; }
     virtual ~EdbFragmentAlignment(){ eParr.Delete(); SafeDelete(eVC); SafeDelete(eVC0);  }
     
