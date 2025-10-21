@@ -34,7 +34,9 @@ struct
   TDatime file_modification_date;
   Long_t  file_size;
   float   scan_time;           // total scanning time in seconds
-  float   scanned_area;
+  float   requested_area;
+  float   scanned_area_top;
+  float   scanned_area_bot;
   float   empty_frac_top;
   float   empty_frac_bot;
   float   density_top;         // density as total/area excluding lost (zero) bins [/mm2]
@@ -47,6 +49,8 @@ struct
   float xmin, xmax, xbin;
   int ny;
   float ymin, ymax, ybin;
+  double rxmin, rxmax;
+  double rymin, rymax;
 }B;                         // view step binning
 
 struct
@@ -84,6 +88,10 @@ void set_default(TEnv &cenv)
   cenv.SetValue("quality.input"          , "");
   cenv.SetValue("quality.output"         , "raw_quality_report");
   cenv.SetValue("quality.EdbDebugLevel"  , 1);
+  cenv.SetValue("quality.requestXmin"    , 5000);
+  cenv.SetValue("quality.requestYmin"    , 5000);
+  cenv.SetValue("quality.requestXmax"    , 185000);
+  cenv.SetValue("quality.requestYmax"    , 185000);
 }
 
 //----------------------------------------------------------------------------------------
@@ -109,19 +117,25 @@ void generate_json_report(TH2* h, std::ofstream &report, bool first_plot)
       count++;
     }
   }
-  
+  int rnbinsx = int((B.rxmax-B.rxmin)/B.xbin) + 1;
+  int rnbinsy = int((B.rymax-B.rymin)/B.ybin) + 1;
+  RES.requested_area = B.xbin*B.ybin*rnbinsx*rnbinsy;
+  double scanned_area = count*B.xbin*B.ybin;
   double mean = (count > 0) ? sum / count : 0;
   double rms = (count > 0) ? TMath::Sqrt(sum2/count - mean*mean) : 0;
-  double empty_frac = (double)empty_bins / total_bins;
+  //double empty_frac = (double)empty_bins / total_bins;
+  double empty_frac = (RES.requested_area - scanned_area)/(RES.requested_area);
   double density = mean/B.xbin/B.ybin*1000*1000;  // density in mm2
   
   if( !strcmp( h->GetName(),"nseg_top") ) 
   {
+    RES.scanned_area_top = scanned_area;
     RES.empty_frac_top = empty_frac;
     RES.density_top = density;
   }
   if( !strcmp( h->GetName(),"nseg_bot") )
   {
+    RES.scanned_area_bot =scanned_area;
     RES.empty_frac_bot = empty_frac;
     RES.density_bot = density;
   }
@@ -229,7 +243,7 @@ void  make_histos(TTree *tree)
   
   float dxcm = (B.xmax-B.xmin)/10000;
   float dycm = (B.ymax-B.ymin)/10000;
-  RES.scanned_area = dxcm*dycm;        // cm2
+  //RES.scanned_area = dxcm*dycm;        // cm2
  
   tree->Draw("eEvent>>htime(10000)","","goff");
   TH1 *htime = (TH1*)(gDirectory->Get("htime"));
@@ -257,12 +271,18 @@ void make_canvas(const char *nameo="ccc")
 		    RES.filename.c_str(), 
 		    RES.file_creation_date.AsString(), 
 		    RES.file_size/1024./1024./1024. ) );
-  tp->AddText( Form("Xrange:  %.1f   %.1f     Yrange:  %.1f   %.1f     Step:  %.1f   %.1f   ScanTime: %.2f h",
-		    B.xmin, B.xmax, B.ymin, B.ymax, B.xbin, B.ybin, RES.scan_time/60./60.) );
+  tp->AddText( Form("Xrange:  %.1f   %.1f     Yrange:  %.1f   %.1f     Requested area  (%.1f, %.1f) x (%.1f, %.1f)     Step:  %.1f   %.1f   ScanTime: %.2f h",
+		    B.xmin, B.xmax, B.ymin, B.ymax, B.rxmin, B.rxmax, B.rymin, B.rymax, B.xbin, B.ybin, RES.scan_time/60./60.) );
   tp->AddText( Form(
-    "Scanned area:  %.1f cm2    EmptyTop: %.2f %%  EmptyBot: %.2f %%   Density/mm2: Top = %.1f  Bot = %.1f",
-    RES.scanned_area, RES.empty_frac_top*100, RES.empty_frac_bot*100, RES.density_top, RES.density_bot) );
+    "Scanned area top:  %.1f cm2  EmptyTop: %.2f %%  Scanned area bot: %.1f cm2  EmptyBot: %.2f %%   Density/mm2: Top = %.1f  Bot = %.1f",
+    RES.scanned_area_top/1E8, RES.empty_frac_top*100, RES.scanned_area_bot/1E8, RES.empty_frac_bot*100, RES.density_top, RES.density_bot) );
+  if ( RES.scanned_area_top < 0.96*RES.requested_area || RES.scanned_area_bot < 0.96*RES.requested_area) {
+    TText *tt = tp->AddText("Warning! Scanned area is lower than 95 % of the requested area");
+    tt->SetTextColor(kRed);
+  }
   tp->Draw();
+  TProfile2D* dummy= new TProfile2D("dummy", "", 1, 0, 200000, 1, 0, 200000);
+  dummy->SetStats(0);
   
   cc->cd(0);
   TPad    *pad = new TPad("pad","",0.,0.,1.,0.9);
@@ -270,12 +290,14 @@ void make_canvas(const char *nameo="ccc")
   pad->cd();
   pad->Divide(3,2, 0.01, 0.01);
   
-  pad->cd(1);  H.nseg_top->Draw("prof colz");
-  pad->cd(4);  H.nseg_bot->Draw("prof colz");
-  pad->cd(2);  H.thick_top->Draw("prof colz");
-  pad->cd(5);  H.thick_bot->Draw("prof colz");
-  pad->cd(3);  H.thick_base->Draw("prof colz");
-  pad->cd(6);  H.glass->Draw("prof colz");
+  //pad->cd(1);  dummy->SetTitle(H.nseg_top->GetTitle());dummy->SetMaximum(H.nseg_top->GetMaximum());dummy->SetMinimum(H.nseg_top->GetMinimum());dummy->DrawCopy("AXIS COLZ");gPad->Update();H.nseg_top->Draw("same prof colz");gPad->Update();
+  pad->cd(1);  dummy->SetTitle(H.nseg_top->GetTitle());dummy->SetMaximum(H.nseg_top->GetMaximum()*1.2);dummy->SetMinimum(0.);dummy->DrawCopy("AXIS COLZ");gPad->Update();H.nseg_top->Draw("same prof colz");gPad->Update();
+  //pad->cd(4);  dummy->SetTitle(H.nseg_bot->GetTitle());dummy->SetMaximum(H.nseg_bot->GetMaximum());dummy->SetMinimum(H.nseg_bot->GetMinimum());dummy->DrawCopy("AXIS COLZ");gPad->Update();H.nseg_bot->Draw("same prof colz");gPad->Update();
+  pad->cd(4);  dummy->SetTitle(H.nseg_bot->GetTitle());dummy->SetMaximum(H.nseg_bot->GetMaximum()*1.2);dummy->SetMinimum(0.);dummy->DrawCopy("AXIS COLZ");gPad->Update();H.nseg_bot->Draw("same prof colz");gPad->Update();
+  pad->cd(2);  dummy->SetTitle(H.thick_top->GetTitle());dummy->SetMaximum(H.thick_top->GetMaximum());dummy->SetMinimum(H.thick_top->GetMinimum());dummy->DrawCopy("AXIS COLZ");gPad->Update();H.thick_top->Draw("same prof colz");gPad->Update();
+  pad->cd(5);  dummy->SetTitle(H.thick_bot->GetTitle());dummy->SetMaximum(H.thick_bot->GetMaximum());dummy->SetMinimum(H.thick_bot->GetMinimum());dummy->DrawCopy("AXIS COLZ");gPad->Update();H.thick_bot->Draw("same prof colz");gPad->Update();
+  pad->cd(3);  dummy->SetTitle(H.thick_base->GetTitle());dummy->SetMaximum(H.thick_base->GetMaximum());dummy->SetMinimum(H.thick_base->GetMinimum());dummy->DrawCopy("AXIS COLZ");gPad->Update();H.thick_base->Draw("same prof colz");gPad->Update();
+  pad->cd(6);  dummy->SetTitle(H.glass->GetTitle());dummy->SetMaximum(H.glass->GetMaximum());dummy->SetMinimum(H.glass->GetMinimum());dummy->DrawCopy("AXIS COLZ");gPad->Update();H.glass->Draw("same prof colz");gPad->Update();
   pad->cd(0);
   TDatime time;
   TText *t = new TText();
@@ -316,7 +338,8 @@ int make_report( const char *output_file )
   report << "\n  ],\n";
   report << "  \"result\": {\n";
   report << "    \"scan_time\": \"" << RES.scan_time << "\",\n";
-  report << "    \"scanned_area\": \"" << RES.scanned_area << "\",\n";
+  report << "    \"scanned_area_top\": \"" << RES.scanned_area_top << "\",\n";
+  report << "    \"scanned_area_bot\": \"" << RES.scanned_area_bot << "\",\n";
   report << "    \"empty_frac_top\": \"" << RES.empty_frac_top << "\",\n";
   report << "    \"empty_frac_bot\": \"" << RES.empty_frac_bot << "\",\n";
   report << "    \"density_top\": \"" << RES.density_top << "\",\n";
@@ -414,9 +437,12 @@ int main(int argc, char *argv[])
       gEDBDEBUGLEVEL = atoi(key+3);
     }
   }
-
+  
   cenv.ReadFile("quality.rootrc", kEnvLocal);
-
+  B.rxmin = cenv.GetValue("quality.requestXmin", 5000);
+  B.rymin = cenv.GetValue("quality.requestYmin", 5000);
+  B.rxmax = cenv.GetValue("quality.requestXmax", 185000);
+  B.rymax = cenv.GetValue("quality.requestYmax", 185000);
   if(DO.interactive) {
     gROOT->SetBatch(false);
     if(!gApplication) {
