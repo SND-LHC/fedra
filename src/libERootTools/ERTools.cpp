@@ -92,23 +92,31 @@ void ERTools::DiffProfile2D(const TProfile2D* prof1, const TProfile2D* prof2, TH
 //----------------------------------------------------------------------------------------
 TH1D* ERTools::get_h_var( TTree *tree, const char *var, const char *hname, double bin, const char *cut  )
 {
-  Log(1,"ERTools::get_h_var","%s %s %f %s", var,hname,bin,cut);
+  Log(3,"ERTools::get_h_var","%s %s %f %s", var,hname,bin,cut);
   if(!tree) return 0;
-  tree->Draw(var, cut, "goff");
-
-/*  
-  Float_t var_val, min_ = 1e30, max_ = -1e30;
-  tree->SetBranchAddress(var, &var_val);
-  for (Long64_t i = 0; i < tree->GetEntries(); i++) {
-    tree->GetEntry(i);
-    if (var_val < min_) min_ = var_val;
-    if (var_val > max_) max_ = var_val;
+  
+  // First draw with cut to get selected entries
+  Long64_t nentries = tree->Draw(var, cut, "goff");
+  
+  if (nentries == 0) {
+    Log(3,"ERTools::get_h_var","No entries pass the cut");
+    return 0;
   }
-*/    
-  double  min_ = tree->GetMinimum(var);
-  double  max_ = tree->GetMaximum(var);
+  
+  // Get the drawn values array
+  Double_t *v = tree->GetV1();
+  
+  // Calculate min/max from the selected entries
+  double min_ = 1e30;
+  double max_ = -1e30;
+  for (Long64_t i = 0; i < nentries; i++) {
+    if (v[i] < min_) min_ = v[i];
+    if (v[i] > max_) max_ = v[i];
+  }
+  
   int n = (max_-min_)/bin;
-  Log(1,"ERTools::get_h_var","%d %f %f", n,min_,max_);
+  Log(3,"ERTools::get_h_var","%d %f %f", n,min_,max_);
+  
   TH1D *h = new TH1D(hname,var,n,min_,max_);
   tree->Draw(Form("%s>>%s",var,hname), cut, "goff");
   return h;
