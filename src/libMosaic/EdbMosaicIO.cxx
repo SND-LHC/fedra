@@ -21,9 +21,10 @@ void EdbMosaicIO::Init( const char *file, Option_t* option)
 }
 
 //-----------------------------------------------------------------------
-char *EdbMosaicIO::FileName(int brick, int plate, int major, int minor, const char *pref, const char *suff)
+std::string EdbMosaicIO::FileName(int brick, int plate, int major, int minor, const char *pref, const char *suff)
 {
-  return Form("p%3.3d/%s%d.%d.%d.%d%s",plate,pref,brick,plate,major,minor,suff);
+  TString s = Form("p%3.3d/%s%d.%d.%d.%d%s",plate,pref,brick,plate,major,minor,suff);
+  return std::string(s.Data());
 }
 
 //-----------------------------------------------------------------------
@@ -32,7 +33,12 @@ void EdbMosaicIO::SaveFragment(EdbPattern &p)
   if(eFile) 
   {
     eFile->cd();
-    p.Write( Form("p%d_%d_%d", p.Plate(), p.Side(), p.ID() ) );
+    Int_t bytes = p.Write( Form("p%d_%d_%d", p.Plate(), p.Side(), p.ID() ) );
+    if(bytes==0) 
+      Log(1,"EdbMosaicIO::SaveFragment","Error writing pattern p%d_%d_%d", p.Plate(), p.Side(), p.ID() );
+    if(bytes>1000000000||bytes<0) 
+      Log(1,"EdbMosaicIO::SaveFragment","Warning: fragment p%d_%d_%d serialized size %d exceeds 1 GB - reduce the fragment size!",
+          p.Plate(), p.Side(), p.ID(), bytes);
   }
 }
 
@@ -59,24 +65,35 @@ void EdbMosaicIO::SaveSideObj(TObject *ob, int plate, int side, const char *pref
 //-----------------------------------------------------------------------
 EdbPattern *EdbMosaicIO::GetFragment(int plate, int side, int id, bool do_corr )
 {
-  EdbLayer *mapside = GetCorrMap( plate, side );
-  EdbLayer *l = mapside->Map().GetLayer( id );
-  char *name = Form("p%d_%d_%d", plate, side, id);
-  Log(2,"EdbMosaicIO::GetFragment","%s",name);
+  EdbPattern *p=0;
+  std::unique_ptr<EdbLayer> mapside(GetCorrMap(plate, side));
+  EdbLayer *l = nullptr;
+  if(mapside){
+    l = mapside->Map().GetLayer( id );
+  } else {
+    Log(1, "EdbMosaicIO::GetFragment", "Warning: no correction map found for plate %d side %d", plate, side);
+  }
+  //  char *name = Form("p%d_%d_%d", plate, side, id);
+  std::string name = Form("p%d_%d_%d", plate, side, id);
+  Log(1,"EdbMosaicIO::GetFragment","%s",name.c_str());
   if(eFile)
   {
-    EdbPattern *p = (EdbPattern *)(eFile->Get( name ));
-    p->SetSide(side);
-    p->SetID(id);
-    if(do_corr) 
+    TObject *obj = eFile->Get( name.c_str() );
+    if(obj)    p = (dynamic_cast<EdbPattern*>(obj));
+    if(p)
+    {
+      p->SetSide(side);
+      p->SetID(id);
+      if(do_corr) 
       if(l) 
       {
-	p->Transform(    l->GetAffineXY());
-	p->TransformA(   l->GetAffineTXTY());
-	p->TransformShr( l->Shr() );
-	Log(2,"EdbMosaicIO::GetFragment","AffXY  : %s", l->GetAffineXY()->AsString() );
- 	Log(2,"EdbMosaicIO::GetFragment","AffTXTY: %s", l->GetAffineTXTY()->AsString() );
+        p->Transform(    l->GetAffineXY());
+        p->TransformA(   l->GetAffineTXTY());
+        p->TransformShr( l->Shr() );
+        Log(3,"EdbMosaicIO::GetFragment","AffXY  : %s", l->GetAffineXY()->AsString() );
+        Log(3,"EdbMosaicIO::GetFragment","AffTXTY: %s", l->GetAffineTXTY()->AsString() );
       }
+    }
     return p;
   }
   else return 0;
@@ -97,7 +114,7 @@ void EdbMosaicIO::SaveCorrMap(int plate, int side, EdbLayer &l, const char *file
 {
   std::unique_ptr<TFile> f(TFile::Open(file,"UPDATE"));
   if (!f || f->IsZombie())  Log(1,"EdbMosaicIO::SaveCorrMap","ERROR! can not open file %s", file);
-  else                      l.Write( Form("map_p%d_%d", plate,side ) );
+  else                   {f->cd();   l.Write( Form("map_p%d_%d", plate,side ) ); }
 }
 
 //-----------------------------------------------------------------------

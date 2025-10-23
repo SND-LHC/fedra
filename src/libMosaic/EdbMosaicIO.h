@@ -32,7 +32,7 @@ class EdbMosaicIO : public TObject {
     void SaveCorrMap( int plate, int side, EdbLayer &l );
     EdbLayer *GetCorrMap( int plate, int side );
     
-    char *FileName(int brick, int plate, int major, int minor, const char *pref="", const char *suff="");
+    std::string FileName(int brick, int plate, int major, int minor, const char *pref="", const char *suff="");
     const char *GetFileName() const { if(eFile) return eFile->GetName(); else return 0; }
 
     void DrawFragment(EdbPattern &p);
