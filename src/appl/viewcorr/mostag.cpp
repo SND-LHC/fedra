@@ -220,7 +220,7 @@ void DrawOut(const EdbPattern &p, EdbMosaicIO &omio)
   gStyle->SetOptStat("n");
 
   if(do_save_canvas) omio.SaveFragmentObj( c, p.Plate(), p.Side(), p.ID(), "peaks");
-  if(do_save_gif) c->Print( omio.FileName( p.Brick(), p.Plate(), p.Side(), p.ID(), "", ".gif") );
+  if(do_save_gif) c->Print( omio.FileName( p.Brick(), p.Plate(), p.Side(), p.ID(), "", ".gif").c_str() );
   delete c;
 }
 
@@ -248,7 +248,9 @@ void TagSide( EdbID id, EdbPattern &pat, int from, int nfrag, int side, TEnv &ce
   
   for( int i=from; i<from+nfrag; i++ )
   {
+    printf("i=%d\n",i);
     EdbPattern *p = mio.GetFragment( id.ePlate, side, i, true); // (plate,side,id)
+    printf("n= %d\n",p->N());
     if(p) if(p->N()>nPatMin)
     {
       p->SetScanID(id);
@@ -274,9 +276,9 @@ void TagSide( EdbID id, EdbPattern &pat, int from, int nfrag, int side, TEnv &ce
       SafeDelete(gOH.spectrSmooth);
       SafeDelete(gOH.spectrProc);
       SafeDelete(gOH.dblxy);
-      SafeDelete(gOH.dbltxty);
-      delete p;      
+      SafeDelete(gOH.dbltxty);   
     }
+    if(p) delete p;
   }
 }
 
