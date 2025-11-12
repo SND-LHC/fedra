@@ -46,8 +46,8 @@ class EdbRunAccess : public TObject {
   Int_t        eTracking;   // to test tracking alorithm: -1-ignored(def),0/1 - trackings to accept
   
   TGraph2D    *eGraphZ[4];    //! keep z1/z2/z3/z4 surfaces using eZ1/eZ2/eZ3/eZ4 for each view
-  TGraph2D    *eGraphDZ[3];    //! keep the base/layer1/layer2 thickness calculated using eZ1/eZ2/eZ3/eZ4 for each view
-  
+  TGraph2D    *eGraphDZ[3];   //! keep the base/layer1/layer2 thickness calculated using eZ1/eZ2/eZ3/eZ4 for each view
+   
  private:
   TString  eRunFileName;
   EdbRun   *eRun;        // pointer to the run to be accessed
@@ -75,7 +75,8 @@ class EdbRunAccess : public TObject {
   Float_t eViewYmin[3], eViewYmax[3];
   
   TObjArray *eViewCorr; //! corrections obtained from the views alignment
-  
+  Float_t     eScoreCut[2];   // score cut for segments selection (a,b)
+ 
  public:
   EdbRunAccess();
   EdbRunAccess(EdbRun *run);
@@ -114,6 +115,10 @@ class EdbRunAccess : public TObject {
   void  CheckViewStep(int ud);
   TH2F  *CheckUpDownOffsets();
   void  CheckViewSize();
+  void SetScoreCut(const char *cut) { float a,b; sscanf(cut,"%f %f",&a,&b); SetScoreCut(a,b); }
+  void SetScoreCut(float a, float b) { eScoreCut[0]=a; eScoreCut[1]=b; }
+  float GetScoreA() const { return eScoreCut[0]; }
+  float GetScoreB() const { return eScoreCut[1]; }
 
   EdbRun *GetRun() const {return eRun;}
   EdbLayer *GetMakeLayer(int id);

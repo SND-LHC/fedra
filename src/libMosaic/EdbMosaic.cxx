@@ -68,7 +68,8 @@ void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
   eRAW.eHeaderCut = cut.GetTitle();
   eRAW.AddSegmentCut(1,env.GetValue("fedra.vsa.ICUT"      , "-1") );
   eRAW.AddSegmentCut(0,env.GetValue("fedra.vsa.XCUT"      , "-1") );
-
+  eRAW.SetScoreCut( env.GetValue("fedra.vsa.ScoreCUT"  , "-1.5 1.5") );
+  
   if(!sproc.InitRunAccessNew(eRAW,idset,id.ePlate)) return;  
   eRAW.eDoImageMatrixCorr = env.GetValue("fedra.vsa.DoImageMatrixCorr", 0  );
   if(eRAW.eDoImageMatrixCorr) {

@@ -57,6 +57,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.vsa.sigmaT"         , 0.005 );
   cenv.SetValue("fedra.vsa.ICUT"      , "-1     -500. 500.   -500.   500.    -1.   1.      -1.   1.       8.  50.");
   cenv.SetValue("fedra.vsa.XCUT"      , "-1     -300. 300.   -200.   200.    -1.   1.      -1.   1.       0.  0.");
+  cenv.SetValue("fedra.vsa.ScoreCUT"  , "-1.5 1.5");
   cenv.SetValue("fedra.vsa.DoFine"      ,  1    );
   cenv.SetValue("fedra.vsa.SaveCouples" ,  1    );
   

@@ -67,6 +67,8 @@ void EdbRunAccess::Set0()
     eCuts[i]=0;
     eCond[i]=0;
   }
+  eScoreCut[0]=-1.e10;
+  eScoreCut[1]= 0;
   eAFID=0;
   eCLUST=0;
   eFirstArea = 9999999;
@@ -1179,6 +1181,9 @@ bool  EdbRunAccess::PassCuts(int id, EdbSegment &seg)
   for(int i=0; i<nc; i++) {
     if( !(GetCut(id,i)->PassCut(var)) )  return false;
   }
+  // score cut
+  float t = TMath::Sqrt( seg.GetTx()*seg.GetTx() + seg.GetTy()*seg.GetTy() );
+  if(seg.GetSigmaX()<eScoreCut[0]+eScoreCut[1]*t) return false;
   return true;
 }
 
