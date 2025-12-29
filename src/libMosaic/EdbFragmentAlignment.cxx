@@ -228,7 +228,7 @@ int EdbFragmentAlignment::ViewSideAl( EdbPattern &p1, EdbPattern &p2, EdbAffine2
   EdbPlateAlignment av;
   SetAlPar( eAP, av );
   av.eSaveCouples=0;
-  //av.InitOutputFile( Form( "p%.3d/%d_%d.al.vsa.root", p2.ScanID().ePlate, p1.ID(), p2.ID() ) ); 
+  if(eDoSaveAlignments) av.InitOutputFile( Form( "p%.3d/%d_%d.al.vsa.root", p1.ScanID().ePlate, p1.ID(), p2.ID() ) ); 
   av.Align( p1, p2, 0);
   EdbAffine2D *affXY = av.eCorrL[0].GetAffineXY();
   EdbAffine2D *affTXTY = av.eCorrL[0].GetAffineTXTY();
@@ -237,7 +237,7 @@ int EdbFragmentAlignment::ViewSideAl( EdbPattern &p1, EdbPattern &p2, EdbAffine2
     if(do_shift) p1.Transform( affXY );
     aff.Transform( affXY );
   }
-  //av.CloseOutputFile();
+  if(eDoSaveAlignments) av.CloseOutputFile();
   return av.eNcoins;  
 }
 

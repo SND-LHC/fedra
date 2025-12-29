@@ -87,6 +87,7 @@ void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
   float fy = env.GetValue("fedra.vsa.Yfrag" , 5000);
   eMinPeak = env.GetValue("fedra.vsa.MinPeak" , 20);  
   eR0      = env.GetValue("fedra.vsa.R0"      , 1200);
+  eDoSaveAlignments = env.GetValue("fedra.vsa.DoSaveAlignments", 0);
   SetAlPar( env, eAP );
 
   EdbViewMap vm;
@@ -107,7 +108,7 @@ void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
     if(eCorrMap[2]) eMIO.SaveCorrMap(id.ePlate, 2, *eCorrMap[2]);
     
     if(eH_XY[1]) eMIO.SaveSideObj( eH_XY[1], id.ePlate, 1, "hxy_" );
-				  if(eH_XY[2]) eMIO.SaveSideObj( eH_XY[2], id.ePlate, 2, "hxy_" );
+		if(eH_XY[2]) eMIO.SaveSideObj( eH_XY[2], id.ePlate, 2, "hxy_" );
   }
 }
 
@@ -122,8 +123,8 @@ void EdbMosaicAl::SetAlPar( const TEnv &env, AlPar &ap )
   ap.DoSaveCouples = env.GetValue("fedra.vsa.SaveCouples",1);
   ap.SigmaR        = env.GetValue("fedra.vsa.SigmaR",0.5);
   ap.SigmaT        = env.GetValue("fedra.vsa.SigmaT",0.005);
-  ap.Doublets[0]   = ap.Doublets[1] = 0.5;
-  ap.Doublets[2]   = ap.Doublets[3] = 0.005;
+  ap.Doublets[0]   = ap.Doublets[1] = 0.25;
+  ap.Doublets[2]   = ap.Doublets[3] = 0.0025;
 }
 
 //-----------------------------------------------------------------------
@@ -160,6 +161,7 @@ void EdbMosaicAl::AlignFragments()
 	fa.SetHarr(*a);
 	fa.SetMinPeak( eMinPeak );
   fa.eR0 = eR0;
+  fa.eDoSaveAlignments = eDoSaveAlignments;
 	ReadPatterns( fa );
 	fa.eAP=eAP;
 	fa.AlignFragment(pf);

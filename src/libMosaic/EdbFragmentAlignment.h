@@ -50,6 +50,7 @@ class EdbFragmentAlignment : public TObject {
   public:
     AlPar     eAP;       // alignment parameters
     float    eR0;        // max distance for neighbour search
+    bool     eDoSaveAlignments; // flag to save individual alignments
 
      public:
     EdbFragmentAlignment(){ eN=0; eVC0=0; eVC=0; }

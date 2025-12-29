@@ -35,6 +35,7 @@ class EdbMosaicAl : public TObject {
     int     eMinPeak;         // minimum coincidences to accept alignment
     AlPar   eAP;              // alignment parameters
     TH2F   *eH_XY[3];         // global histograms after the alignments (only 1 and 2 for now)
+    bool    eDoSaveAlignments; // flag to save individual alignments
    
   public:
     EdbMosaicAl(); //{eCorrMap[0]=eCorrMap[1]=eCorrMap[2]=0;}
