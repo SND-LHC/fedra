@@ -60,6 +60,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.vsa.ScoreCUT"  , "-1.5 1.5");
   cenv.SetValue("fedra.vsa.DoFine"      ,  1    );
   cenv.SetValue("fedra.vsa.SaveCouples" ,  1    );
+  cenv.SetValue("fedra.vsa.DoSaveAlignments" ,  0    );
   
   cenv.SetValue("viewsideal.outdir"          , ".."  );
   cenv.SetValue("viewsideal.env"             , "viewsideal.rootrc");

@@ -39,8 +39,13 @@ void set_default_par(TEnv &cenv)
   cenv.SetValue("fedra.align.SigmaT"      , 0.008  );
   cenv.SetValue("fedra.align.DoFine"      , 1      );
   cenv.SetValue("fedra.align.DZ"          , 0      );
-  cenv.GetValue("fedra.align.DPHI"        , 0.008  );
-  cenv.GetValue("fedra.align.SaveCouples" , 1      );
+  cenv.SetValue("fedra.align.DPHI"        , 0.008  );
+  cenv.SetValue("fedra.align.DoSub"       , 0      );
+  cenv.SetValue("fedra.align.Xmin"        , 0. );
+  cenv.SetValue("fedra.align.Xmax"        , 0. );
+  cenv.SetValue("fedra.align.Ymin"        , 0. );
+  cenv.SetValue("fedra.align.Ymax"        , 0. );
+  cenv.SetValue("fedra.align.SaveCouples" , 1      );
 }
 
 int main(int argc, char* argv[])
@@ -59,7 +64,7 @@ int main(int argc, char* argv[])
   bool      do_flip     = false;
   EdbID     id;
   EdbID     ida, idb;
-  int       al_side     = 1; // 1, 2, 0-base
+  int       al_side     = cenv.GetValue("fedra.tagalign.AlignSide", 1); // 1, 2, 0-base
 
   for(int i=1; i<argc; i++ ) {
     char *key  = argv[i];
@@ -149,7 +154,7 @@ int AlignID( EdbID id, TEnv &cenv )
 }
 
 //-----------------------------------------------------------------------------------
-EdbPattern *GetPattern( EdbID id, int side )
+EdbPattern *GetPattern( EdbID id, int side, int do_sub, float xmin, float xmax, float ymin, float ymax )
 {
   EdbMosaicIO mio;
   TString file;
@@ -157,9 +162,16 @@ EdbPattern *GetPattern( EdbID id, int side )
 	      id.ePlate, id.eBrick, id.ePlate, id.eMajor, id.eMinor);
   TFile f( file.Data() );
   EdbPattern *p = (EdbPattern*)(f.Get( Form("gpat%d_%d_0",id.ePlate, side) ) );
-  p->SetScanID(id); p->SetSide(side);
-  p->SetSegmentsW(1.);
-  return p;
+  if(!do_sub) {
+    p->SetScanID(id); p->SetSide(side);
+    p->SetSegmentsW(1.);
+    return p;
+  }
+  EdbPattern *psub = p->ExtractSubPatternXY(xmin, xmax, ymin, ymax);
+  delete p;
+  psub->SetScanID(id); psub->SetSide(side);
+  psub->SetSegmentsW(1.);
+  return psub;
 }
 
 //-----------------------------------------------------------------------
@@ -216,9 +228,14 @@ void AlignNewNopar(EdbID id1, EdbID id2, int side, TEnv &cenv, EdbAffine2D *aff,
   av.eDZ          = cenv.GetValue("fedra.align.DZ"          , 0);
   av.eDPHI        = cenv.GetValue("fedra.align.DPHI"        , 0.008 );
   av.eSaveCouples = cenv.GetValue("fedra.align.SaveCouples" , 1);
+  int do_sub = cenv.GetValue("fedra.align.DoSub", 0);
+  float xmin = cenv.GetValue("fedra.align.Xmin" , 0.);
+  float xmax = cenv.GetValue("fedra.align.Xmax" , 0.);
+  float ymin = cenv.GetValue("fedra.align.Ymin" , 0.);
+  float ymax = cenv.GetValue("fedra.align.Ymax" , 0.);
 
-  EdbPattern *p1 = GetPattern(id1,side);
-  EdbPattern *p2 = GetPattern(id2,side);
+  EdbPattern *p1 = GetPattern(id1,side, do_sub, xmin, xmax, ymin, ymax );
+  EdbPattern *p2 = GetPattern(id2,side, do_sub, xmin, xmax, ymin, ymax );
   if(aff) { aff->Print(); p1->Transform(aff);}
  
   TString alfile;  
