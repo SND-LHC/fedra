@@ -64,7 +64,10 @@ void set_default(TEnv &env)
   env.SetValue("emvertex.addtr.cuttr"       , "1");
 
   env.SetValue("emvertex.edd.ajustseg"      ,  0);
-
+  env.SetValue("emvertex.edd.seglength"      , 300);
+  env.SetValue("emvertex.edd.DrawTracks"    , 14);
+  env.SetValue("emvertex.edd.DrawVertex"    ,  1);
+ 
   env.SetValue("emvertex.trfit.doit"     ,  1 );
   env.SetValue("emvertex.trfit.P"        , 10 );
   env.SetValue("emvertex.trfit.M"        ,  0.139);
@@ -83,7 +86,7 @@ void AjustSegmentsDisplay( TObjArray &tarr )
     for(int j=0; j<nseg; j++)
     {
       EdbSegP *s=t->GetSegment(j);
-      s->SetDZ(300);
+      s->SetDZ(1300);
       s->SetW(10);
     }    
   } 
