@@ -312,6 +312,7 @@ class EdbPattern : public EdbSegmentsBox {
   void  SetSegmentsPID();
   void  SetSegmentsScanID(EdbID id);
   EdbPattern *ExtractSubPattern(float min[5], float max[5], int MCevt=-1);
+  EdbPattern *ExtractSubPatternXY(float xmin, float xmax, float ymin, float ymax);
   Int_t       AddPattern(EdbPattern &p);
 
   void  SetID(int id)   {eID=id;}

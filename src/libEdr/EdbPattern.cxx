@@ -1570,6 +1570,26 @@ Int_t EdbPattern::AddPattern(EdbPattern &p)
 }
 
 //______________________________________________________________________________
+EdbPattern *EdbPattern::ExtractSubPatternXY(float xmin, float xmax, float ymin, float ymax)
+{
+  EdbPattern *pat = new EdbPattern( X(), Y(), Z() );
+  EdbSegP *s;
+  int nseg = N();
+
+  for(int i=0; i<nseg; i++) {
+    s = GetSegment(i);
+    if(s->X() < xmin || s->X() > xmax || s->Y() < ymin || s->Y() > ymax) continue;
+    pat->AddSegment(*s);
+  }
+
+  // Set ID() and PID() to have consistent values of this pattern:
+  pat->SetID(this->ID());
+  pat->SetPID(this->PID());
+
+  return pat;
+}
+
+//______________________________________________________________________________
 EdbPattern *EdbPattern::ExtractSubPattern(float min[5], float max[5], int MCEvt)
 {
   //
