@@ -88,6 +88,7 @@ void EdbMosaicAl::ProcRun( EdbID id, const TEnv &env )
   eMinPeak = env.GetValue("fedra.vsa.MinPeak" , 20);  
   eR0      = env.GetValue("fedra.vsa.R0"      , 1200);
   eDoSaveAlignments = env.GetValue("fedra.vsa.DoSaveAlignments", 0);
+  eNoAlign = env.GetValue("fedra.vsa.NoAlign", 0);
   SetAlPar( env, eAP );
 
   EdbViewMap vm;
@@ -164,7 +165,8 @@ void EdbMosaicAl::AlignFragments()
   fa.eDoSaveAlignments = eDoSaveAlignments;
 	ReadPatterns( fa );
 	fa.eAP=eAP;
-	fa.AlignFragment(pf);
+	if(eNoAlign) fa.AlignFragment_dummy(pf);
+	else         fa.AlignFragment(pf);
 	fa.FillVDT(vdt);
 	FillHXY( pf, *(eH_XY[side]) );
 	eMIO.SaveFragment( pf );

@@ -61,6 +61,7 @@ void set_default(TEnv &cenv)
   cenv.SetValue("fedra.vsa.DoFine"      ,  1    );
   cenv.SetValue("fedra.vsa.SaveCouples" ,  1    );
   cenv.SetValue("fedra.vsa.DoSaveAlignments" ,  0    );
+  cenv.SetValue("fedra.vsa.NoAlign"     ,  0    );
   
   cenv.SetValue("viewsideal.outdir"          , ".."  );
   cenv.SetValue("viewsideal.env"             , "viewsideal.rootrc");

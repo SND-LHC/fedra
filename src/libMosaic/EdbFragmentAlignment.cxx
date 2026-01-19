@@ -83,6 +83,40 @@ void EdbFragmentAlignment::AlignFragment( EdbPattern &pf)
 }
 
 //-----------------------------------------------------------------------
+void EdbFragmentAlignment::AlignFragment_dummy( EdbPattern &pf)
+{
+  EdbMosaicPath mp(eN);
+  mp.eR0=eR0;
+  EdbViewHeader *h = mp.FindNearest( eHarr, pf.X(), pf.Y() );
+  if(h) {
+    Log(1,"EdbFragmentAlignment::AlignFragment","with %d views at x0,y0 was %f %f:   %f %f",
+	eN,h->GetXview(), h->GetYview(), pf.X(), pf.Y() );
+    mp.InitArea( eHarr, h->GetXview(), h->GetYview(), eMinPeak );
+  }
+  else {
+    Log(1,"EdbFragmentAlignment::AlignFragment","Warning! central view close to (%f %f) was not found! abandon this fragment",pf.X(), pf.Y());
+    //mp.InitArea( eHarr, pf.X(), pf.Y(), eMinPeak );
+    return;
+  }
+    
+  //AlignAndShift( mp );  
+  //RealignAndShift( mp );
+  //AlignAndShift( mp );
+  //RealignAndShift( mp );
+  
+  for(int i=0; i<eN; i++)
+  {
+    pf.AddPattern( *GetPattern(i) );
+  }
+  
+  //eAff.Reset();
+  //eAff.Calculate(eVC,eVC0);                     // from found to original
+  Log(1,"EdbFragmentAlignment::AlignFragment_dummy","apply %s",eAff.AsString());
+  //eVC->Transform(&eAff);
+  //pf.Transform(&eAff);
+}
+
+//-----------------------------------------------------------------------
 void EdbFragmentAlignment::FillVDT( EdbCouplesTree &vdt  )
 {
   int n = eVC0->N();

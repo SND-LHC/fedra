@@ -76,6 +76,7 @@ class EdbFragmentAlignment : public TObject {
     float CheckScaleY(float x0);
     void CheckScale( EdbMosaicPath &mp, EdbAffine2D &aff );
     void AlignFragment( EdbPattern &pf );
+    void AlignFragment_dummy( EdbPattern &pf );
     void AlignAndShift( EdbMosaicPath &mp );
     void RealignAndShift( EdbMosaicPath &mp );
     void FillVC();
