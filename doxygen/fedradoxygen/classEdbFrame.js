@@ -1,0 +1,26 @@
+var classEdbFrame =
+[
+    [ "EdbFrame", "classEdbFrame.html#af0887612c0bb8f7e9512d7c260e9c640", null ],
+    [ "EdbFrame", "classEdbFrame.html#a0489579d4b4851d3f8c204fd997e5689", null ],
+    [ "EdbFrame", "classEdbFrame.html#a34e4fea28aed4ce431ded8437c6cba79", null ],
+    [ "~EdbFrame", "classEdbFrame.html#a399fcf7c09ca8d26a27961e47a5fc5be", null ],
+    [ "GetBuffer", "classEdbFrame.html#a570a519b12220c69fe5c10371865a943", null ],
+    [ "GetHist1", "classEdbFrame.html#a42a505dfe52db3f5fbf33c1799dc7c36", null ],
+    [ "GetHist2", "classEdbFrame.html#a8a16ec48ba31d50a02f46d6fa0612285", null ],
+    [ "GetID", "classEdbFrame.html#ac74b67caafc06c13e7e78743f63d83fb", null ],
+    [ "GetImage", "classEdbFrame.html#ae761aca59a7fab67cd5bb77a8d1da4fa", null ],
+    [ "GetNcl", "classEdbFrame.html#aa6d1c617192416acc37ca9d364272221", null ],
+    [ "GetNpix", "classEdbFrame.html#a0d14e0cd60fbfe346510c8698e09f500", null ],
+    [ "GetZ", "classEdbFrame.html#a08eefa6de2b8c64541b011d7c5702844", null ],
+    [ "Pixel", "classEdbFrame.html#a508126d540953c2934813cc665724225", null ],
+    [ "Print", "classEdbFrame.html#a8d9565d1c2920b6ca01673695a10d9f6", null ],
+    [ "Set0", "classEdbFrame.html#ae2ea3c2815248940dac1bec5376c4708", null ],
+    [ "SetID", "classEdbFrame.html#ae81a9ef11f7bf62db800550a1d28b4e3", null ],
+    [ "SetImage", "classEdbFrame.html#a8d5ff6c22797594af10a268ee178cf7a", null ],
+    [ "SetZ", "classEdbFrame.html#a7745f2515f6fb2eeef972e5749d3f4f5", null ],
+    [ "eFrameID", "classEdbFrame.html#aba02a831cf1ddec42d51059ef104ed83", null ],
+    [ "eImage", "classEdbFrame.html#a160443b06887cd96beff20cc04b7cb83", null ],
+    [ "eNcl", "classEdbFrame.html#a896512704c4df437662b3af747e7e5fa", null ],
+    [ "eNpix", "classEdbFrame.html#ae201c32d2c24d1538674578da53173ba", null ],
+    [ "eZframe", "classEdbFrame.html#a0b95529726762b7ad72044d9705acb5f", null ]
+];

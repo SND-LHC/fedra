@@ -1,0 +1,28 @@
+var classEdbImage =
+[
+    [ "EdbImage", "classEdbImage.html#a74547e7ae2a4730d07aa2714f6bd880c", null ],
+    [ "EdbImage", "classEdbImage.html#af87b9a4727336e4226aa2b3ea1ebbdfb", null ],
+    [ "EdbImage", "classEdbImage.html#a819af90d5a61d35098b93705ada41e26", null ],
+    [ "~EdbImage", "classEdbImage.html#a245f9688d25ea062ff8a59fa000b785d", null ],
+    [ "AdoptImage", "classEdbImage.html#ac3fd7502c7a66662f7029ee18536219b", null ],
+    [ "DumpPGM", "classEdbImage.html#afb845a121fda5b35bec611da1915f8c9", null ],
+    [ "FillBufferDouble", "classEdbImage.html#a8a731fd85dedf849e6949ad91804395c", null ],
+    [ "GetBuffer", "classEdbImage.html#a4245ad1983b82803b0427340de50f495", null ],
+    [ "GetHist1", "classEdbImage.html#a8c828eb5685038e44ec9299b0d03352b", null ],
+    [ "GetHist2", "classEdbImage.html#a6a243aa09a68d25c8e8eba4515b739f6", null ],
+    [ "Height", "classEdbImage.html#a22a609b910a63d50c2902ed33e52559b", null ],
+    [ "LoadBMP", "classEdbImage.html#a16ed6155784c2e6ec0185e6f4578b92e", null ],
+    [ "LoadPGM", "classEdbImage.html#affb32c2029b4de42986117018d63b6b9", null ],
+    [ "LoadRAW", "classEdbImage.html#aed2b67356db64b1fc84924b51ac26ba4", null ],
+    [ "Pixel", "classEdbImage.html#aec2644b468f31843e46dfa2019a00bcb", null ],
+    [ "Pixel", "classEdbImage.html#ac81e2732d4c777d04a8a9db63e7e78f8", null ],
+    [ "Print", "classEdbImage.html#a5c419011afa185b2e489f7fa99b646d7", null ],
+    [ "Set0", "classEdbImage.html#aa60be563c094d50288867b047fdec0b2", null ],
+    [ "SetColors", "classEdbImage.html#a4eb2bb09d0d6fec9175f3b0183ca9415", null ],
+    [ "Width", "classEdbImage.html#a590e69812e759e17cde41b22491da8a9", null ],
+    [ "eBuffer", "classEdbImage.html#a46ebcf33c183b7d31ea0da10af626439", null ],
+    [ "eBytes", "classEdbImage.html#ab3c5f93d75dbf97ca4d08737db409c10", null ],
+    [ "eColors", "classEdbImage.html#abe25d8ea9ee884e2bbdc25952e7dc97c", null ],
+    [ "eColumns", "classEdbImage.html#acdba31a9afa0b508c71be0338fdc5ca0", null ],
+    [ "eRows", "classEdbImage.html#acf1c91889f2426d6e3b3fdd182282e27", null ]
+];

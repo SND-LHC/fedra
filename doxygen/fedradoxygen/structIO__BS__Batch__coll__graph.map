@@ -1,0 +1,8 @@
+<map id="IO_BS_Batch" name="IO_BS_Batch">
+<area shape="rect" id="node1" title=" " alt="" coords="217,199,320,225"/>
+<area shape="rect" id="node2" href="$structBS__ClusterDump.html" title=" " alt="" coords="5,109,129,136"/>
+<area shape="rect" id="node3" href="$structIdentifier.html" title=" " alt="" coords="157,5,229,32"/>
+<area shape="rect" id="node4" href="$structBS__Track.html" title=" " alt="" coords="153,109,232,136"/>
+<area shape="rect" id="node6" href="$structBS__PhotoSequence.html" title=" " alt="" coords="257,109,395,136"/>
+<area shape="rect" id="node5" href="$structIO__Header.html" title=" " alt="" coords="419,109,505,136"/>
+</map>

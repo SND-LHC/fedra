@@ -1,0 +1,26 @@
+var classEdbSeg3D =
+[
+    [ "EdbSeg3D", "classEdbSeg3D.html#aa14d3be62e2351571d66756860c76d2f", null ],
+    [ "EdbSeg3D", "classEdbSeg3D.html#a2ab1dc2a7cfe8a1d0cbaa9b9976ef6ac", null ],
+    [ "~EdbSeg3D", "classEdbSeg3D.html#a32cbb6c2cc4c71af2a026e95af432407", null ],
+    [ "GetDz", "classEdbSeg3D.html#a09e39820c0d3b901fd6c184bd4522d1b", null ],
+    [ "GetTx", "classEdbSeg3D.html#a5ab3702e7ed144451459d7bb81b84a87", null ],
+    [ "GetTy", "classEdbSeg3D.html#ac6d7aaad0dee68439928f0508b3d7610", null ],
+    [ "GetX0", "classEdbSeg3D.html#a39c9a22fcddb374d1ef36c9b83a1aada", null ],
+    [ "GetY0", "classEdbSeg3D.html#abaf5e37e86f2d1f36cf05ae4dd0e8312", null ],
+    [ "GetZ0", "classEdbSeg3D.html#a90bb2a04496f8ad31a6e86cd50ae656d", null ],
+    [ "Set", "classEdbSeg3D.html#a2c6652417d185dbe25bc1f28c05683e5", null ],
+    [ "SetDz", "classEdbSeg3D.html#a3d0541a1771cb6c5366d03acc42adb63", null ],
+    [ "SetTx", "classEdbSeg3D.html#a964eae9be81b21957da9bd45c11632ed", null ],
+    [ "SetTy", "classEdbSeg3D.html#a75afadf519b4c33e1f5317d908e42efc", null ],
+    [ "SetX0", "classEdbSeg3D.html#a23ad87bc58c2904785ce28b94734bd17", null ],
+    [ "SetY0", "classEdbSeg3D.html#aebc419784d64367d363c5a87c8c80298", null ],
+    [ "SetZ0", "classEdbSeg3D.html#addb2e872b3eaa1b75545c423c5b8686d", null ],
+    [ "Transform", "classEdbSeg3D.html#a44d912c16d52b89e7ec71d6a216005e3", null ],
+    [ "eDz", "classEdbSeg3D.html#a570eea59e13f8c06e26e22559b62fe55", null ],
+    [ "eTx", "classEdbSeg3D.html#a39336f9a66c7e6abc2a781c9caeff6ac", null ],
+    [ "eTy", "classEdbSeg3D.html#acd7f3e42c573aa7a258a7d8a95484090", null ],
+    [ "eX0", "classEdbSeg3D.html#a0aa572a252b99437c53639e5bf6b79e7", null ],
+    [ "eY0", "classEdbSeg3D.html#afadd740b45f4ce29488cb2d77468bf12", null ],
+    [ "eZ0", "classEdbSeg3D.html#a7af0763551cdc8b39d566179118908e4", null ]
+];

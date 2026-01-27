@@ -1,0 +1,11 @@
+<map id="AcqTrackScanner" name="AcqTrackScanner">
+<area shape="rect" id="node1" title=" " alt="" coords="28,468,153,495"/>
+<area shape="rect" id="node2" title=" " alt="" coords="147,5,215,32"/>
+<area shape="rect" id="node3" href="$classAcqOdyssey.html" title=" " alt="" coords="43,379,139,405"/>
+<area shape="rect" id="node4" href="$classEdbView.html" title=" " alt="" coords="117,289,192,316"/>
+<area shape="rect" id="node5" href="$classEdbViewHeader.html" title=" " alt="" coords="169,200,285,227"/>
+<area shape="rect" id="node6" href="$classEdbAffine2D.html" title=" " alt="" coords="219,81,314,108"/>
+<area shape="rect" id="node7" href="$classAcqStage1.html" title=" " alt="" coords="309,200,395,227"/>
+<area shape="rect" id="node8" href="$classAcqAxis.html" title=" " alt="" coords="390,81,461,108"/>
+<area shape="rect" id="node9" href="$classAcqLight.html" title=" " alt="" coords="485,81,558,108"/>
+</map>

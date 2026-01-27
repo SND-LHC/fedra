@@ -1,0 +1,28 @@
+var classEdbPlate =
+[
+    [ "EdbPlate", "classEdbPlate.html#ad71cba0f23b0600fcec1942cc449feaf", null ],
+    [ "~EdbPlate", "classEdbPlate.html#ac93810fccdebea07b51e62336e4dcf8c", null ],
+    [ "GetBase", "classEdbPlate.html#ac37797b1ca7727433d020da62a4ef1a2", null ],
+    [ "GetDown", "classEdbPlate.html#a402c48711a7e95221ba15e25f27eaf69", null ],
+    [ "GetEmulsion", "classEdbPlate.html#ab11fb480e91a4299696f45de40c19892", null ],
+    [ "GetID", "classEdbPlate.html#a75b535f7e5c05dc316fb2af37b7f704f", null ],
+    [ "GetShrinkageD", "classEdbPlate.html#ae88561be4d7857aae53c44e2dc4ea551", null ],
+    [ "GetShrinkageU", "classEdbPlate.html#a7417ef2a3ca74a69509b460733251a61", null ],
+    [ "GetUp", "classEdbPlate.html#a722a6bfa39575ba119c545cfa3db0678", null ],
+    [ "Print", "classEdbPlate.html#a916eca7ab0b78fa87dc7afe713ba0d4d", null ],
+    [ "ReadParameters", "classEdbPlate.html#a7e9796421494bba17e378193be3c3ee4", null ],
+    [ "Set", "classEdbPlate.html#aa8b96ab59bcd7e24497f2f8511b6360a", null ],
+    [ "SetBase", "classEdbPlate.html#aa19dbaaee41e5cc2485653682e1dc71c", null ],
+    [ "SetDown", "classEdbPlate.html#aa79eeef973b394b4aac396a6bb96b559", null ],
+    [ "SetEmulsion", "classEdbPlate.html#a7e816c19fbeced9e8f44402a3a3dda44", null ],
+    [ "SetID", "classEdbPlate.html#abdb92ef765e3fc9b81fb104abf3df8e1", null ],
+    [ "SetSrinkageD", "classEdbPlate.html#afe1f9beca02f9e1e354c46a4d56a8e1f", null ],
+    [ "SetSrinkageU", "classEdbPlate.html#a20c519cd185a0de44dcbdd1d0c6a314d", null ],
+    [ "SetUp", "classEdbPlate.html#a1dac54c4572854df799c86c7fa6ca04d", null ],
+    [ "eBase", "classEdbPlate.html#ac2cff1a8d22fd807819abf04d45cc882", null ],
+    [ "eDown", "classEdbPlate.html#a27914d5c6d147a6a97bf18a60a0f2c49", null ],
+    [ "eID", "classEdbPlate.html#a001fb88d72e94b883483ebd2c9151d3f", null ],
+    [ "eShrinkageD", "classEdbPlate.html#afb55854cbc3443c72c9ef1cfaa1aee62", null ],
+    [ "eShrinkageU", "classEdbPlate.html#a5ad43c37b683adf557e8452f045d98af", null ],
+    [ "eUp", "classEdbPlate.html#a6c8e41356990c85d4f5a1c066f4fad80", null ]
+];

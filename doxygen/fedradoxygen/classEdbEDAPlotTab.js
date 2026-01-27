@@ -1,0 +1,25 @@
+var classEdbEDAPlotTab =
+[
+    [ "EdbEDAPlotTab", "classEdbEDAPlotTab.html#a8b19315a291c3aacbbbf9814568cfe20", null ],
+    [ "CheckAlignment", "classEdbEDAPlotTab.html#a1fbacb8fd9b94d92accd2401295cdf71", null ],
+    [ "CheckEff", "classEdbEDAPlotTab.html#ae011b703854d1b1c9c7af06101457c6a", null ],
+    [ "CheckKink", "classEdbEDAPlotTab.html#acebac134c6b3ed9205f9f786f428acff", null ],
+    [ "CheckKinkTracks", "classEdbEDAPlotTab.html#ada3e3378d11f9e26909a91fc1abc29aa", null ],
+    [ "CheckOverview", "classEdbEDAPlotTab.html#a38e03f49f4b71f691e9e8e635fb7278d", null ],
+    [ "CheckPHDAngle", "classEdbEDAPlotTab.html#ae0d7ac01f6f107f53bd27103e5545f45", null ],
+    [ "CheckSingleTrack", "classEdbEDAPlotTab.html#a71483d307bec7afcfd2d7289c7964a56", null ],
+    [ "CheckTracks", "classEdbEDAPlotTab.html#a39e7ce45f08c323246e7db060c7305df", null ],
+    [ "MakeGUI", "classEdbEDAPlotTab.html#a8f61c5a989e4cc19ae52c76163b6e27b", null ],
+    [ "MomPlot", "classEdbEDAPlotTab.html#a81de95a71a9869b7e20ad12cf8838538", null ],
+    [ "SetEffMinSeg", "classEdbEDAPlotTab.html#a820700e39d46e9adaaf8abf07f672235", null ],
+    [ "SetEffNbins", "classEdbEDAPlotTab.html#af27a652a6c71d066ef713e995606e9e5", null ],
+    [ "SetMomAlg", "classEdbEDAPlotTab.html#ae544f694c53c171a4a422ac688e26248", null ],
+    [ "SetMomAlgAngle", "classEdbEDAPlotTab.html#a9c78c5d253d7aee56b4647e08c0272eb", null ],
+    [ "SetMomAlgCoord", "classEdbEDAPlotTab.html#a8bed6a3bffe1d566e18a18dc9a71cf84", null ],
+    [ "eDTReference", "classEdbEDAPlotTab.html#a1845131a522749692a0d3eb24c552168", null ],
+    [ "eEffMinSeg", "classEdbEDAPlotTab.html#a40b3ca1904eda6b20f64ea6eeb1627ce", null ],
+    [ "eEffNbins", "classEdbEDAPlotTab.html#a6a6ad9213b485ed13b252b1f18201a1b", null ],
+    [ "eEffTmax", "classEdbEDAPlotTab.html#aadb75fe0365b4f5fc8a4c46fd72d6fc4", null ],
+    [ "eMomAngleRes", "classEdbEDAPlotTab.html#a9adf1e2d9cdf75371945a83776b3d5fb", null ],
+    [ "eTF", "classEdbEDAPlotTab.html#ac494519e6f757f5a64ea116d1fbb2df3", null ]
+];

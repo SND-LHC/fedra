@@ -1,0 +1,12 @@
+<map id="EdbSegP" name="EdbSegP">
+<area shape="rect" id="node1" title=" " alt="" coords="73,229,150,256"/>
+<area shape="rect" id="node7" href="$classEdbShowerP.html" title=" " alt="" coords="5,304,103,331"/>
+<area shape="rect" id="node8" href="$classEdbTrackP.html" title=" " alt="" coords="127,304,213,331"/>
+<area shape="rect" id="node2" title=" " alt="" coords="25,155,93,181"/>
+<area shape="rect" id="node3" href="$classEdbTrack2D.html" title=" " alt="" coords="117,155,212,181"/>
+<area shape="rect" id="node4" href="$classEdbPoint2D.html" title=" " alt="" coords="60,80,152,107"/>
+<area shape="rect" id="node5" href="$classEdbPoint.html" title=" " alt="" coords="69,5,143,32"/>
+<area shape="rect" id="node6" href="$classEdbAngle2D.html" title=" " alt="" coords="176,80,271,107"/>
+<area shape="rect" id="node9" href="$classEdbEDATrackP.html" title=" " alt="" coords="50,379,162,405"/>
+<area shape="rect" id="node10" href="$classEdbTrackDS.html" title=" " alt="" coords="186,379,282,405"/>
+</map>

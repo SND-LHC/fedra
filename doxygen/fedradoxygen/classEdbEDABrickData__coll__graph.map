@@ -1,0 +1,19 @@
+<map id="EdbEDABrickData" name="EdbEDABrickData">
+<area shape="rect" id="node1" title=" " alt="" coords="317,688,447,715"/>
+<area shape="rect" id="node2" href="$classEdbDataSet.html" title=" " alt="" coords="5,531,97,557"/>
+<area shape="rect" id="node3" title=" " alt="" coords="90,376,162,403"/>
+<area shape="rect" id="node4" href="$classEdbScanProc.html" title=" " alt="" coords="133,531,236,557"/>
+<area shape="rect" id="node5" href="$classEdbScanSet.html" title=" " alt="" coords="573,590,668,617"/>
+<area shape="rect" id="node17" href="$classEdbScanCond.html" title=" " alt="" coords="131,480,238,507"/>
+<area shape="rect" id="node6" href="$classEdbBrickP.html" title=" " alt="" coords="763,480,847,507"/>
+<area shape="rect" id="node7" href="$classEdbLayer.html" title=" " alt="" coords="768,376,844,403"/>
+<area shape="rect" id="node8" title=" " alt="" coords="645,5,713,32"/>
+<area shape="rect" id="node11" href="$classEdbH2.html" title=" " alt="" coords="752,81,815,108"/>
+<area shape="rect" id="node12" href="$classEdbAffine2D.html" title=" " alt="" coords="848,132,943,159"/>
+<area shape="rect" id="node13" href="$classTIndexCell.html" title=" " alt="" coords="482,376,567,403"/>
+<area shape="rect" id="node14" href="$classEdbID.html" title=" " alt="" coords="678,480,737,507"/>
+<area shape="rect" id="node16" href="$classEdbPatternsVolume.html" title=" " alt="" coords="313,480,451,507"/>
+<area shape="rect" id="node9" href="$classEdbCorrectionMap.html" title=" " alt="" coords="742,287,873,313"/>
+<area shape="rect" id="node10" href="$classEdbCell2.html" title=" " alt="" coords="754,183,829,209"/>
+<area shape="rect" id="node15" href="$classEdbPVRec.html" title=" " alt="" coords="339,590,425,617"/>
+</map>

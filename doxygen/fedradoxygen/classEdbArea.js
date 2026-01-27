@@ -1,0 +1,27 @@
+var classEdbArea =
+[
+    [ "EdbArea", "classEdbArea.html#ac642b568adb4576e837e1e4318a43fc8", null ],
+    [ "~EdbArea", "classEdbArea.html#ab0b4e48175a90460ae81b1cf84c15a0d", null ],
+    [ "GetN", "classEdbArea.html#a13805c4de50b6be7dd46c3d0a559c5cd", null ],
+    [ "GetNframesBot", "classEdbArea.html#aa8409e0a81dc4f5989b436ea740ad9fc", null ],
+    [ "GetNframesTop", "classEdbArea.html#abab90d0d8bee5714c14b3cf4adc7fab2", null ],
+    [ "GetPath", "classEdbArea.html#a7e63c41ac9c878ca88978349efb83f60", null ],
+    [ "GetStepX", "classEdbArea.html#a56b5e6bdf0368599207af1612b3f939f", null ],
+    [ "GetStepY", "classEdbArea.html#a194a8f2c3b8d69f0160688582b71211f", null ],
+    [ "MakeSerpentina", "classEdbArea.html#a2b4cc97ec8a0929254559e8070644740", null ],
+    [ "MakeSpiralPath", "classEdbArea.html#a957ea263d84707a29be0fd31886fd79c", null ],
+    [ "Nviews", "classEdbArea.html#a0a8afd45886e9425eaefcd4f33dfed4d", null ],
+    [ "Print", "classEdbArea.html#a6bf425b4ccb31e741fde396562d1372a", null ],
+    [ "ReadParameters", "classEdbArea.html#a5da1bc9efa595c414ca2a57f8f3aad23", null ],
+    [ "Scale", "classEdbArea.html#aa4e89d04cf109a8a8770f73da72bd1b2", null ],
+    [ "Set", "classEdbArea.html#abe20bd33affe35d451e1bd3e1157f6ce", null ],
+    [ "SetCentre", "classEdbArea.html#a9e61181b92927acbed11c67d6c5ccbf4", null ],
+    [ "Xview", "classEdbArea.html#a61947fc7778f9637eaf7976a840a69a6", null ],
+    [ "Yview", "classEdbArea.html#a13e748fac0ad83edfb4f77ac4aa6804d", null ],
+    [ "eFramesBot", "classEdbArea.html#a0d343b138422f01d96517e8e8b783fbd", null ],
+    [ "eFramesTop", "classEdbArea.html#a51c77eed1c50478db7f8c3d68adae08a", null ],
+    [ "eN", "classEdbArea.html#a2edc8a14c260ffd888e07ebb5727e99a", null ],
+    [ "ePath", "classEdbArea.html#a0cee2cad9fc8feacae06b2dd3b7dd7de", null ],
+    [ "eStepX", "classEdbArea.html#a8fbc250150d5f70683c6be0264a583a0", null ],
+    [ "eStepY", "classEdbArea.html#ad4c1c972737f7162852f6fa9333a492f", null ]
+];

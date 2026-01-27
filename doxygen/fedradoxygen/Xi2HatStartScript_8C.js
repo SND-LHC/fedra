@@ -1,0 +1,26 @@
+var Xi2HatStartScript_8C =
+[
+    [ "Draw", "Xi2HatStartScript_8C.html#ab48a659c4749b759cc516824e7833aeb", null ],
+    [ "Draw", "Xi2HatStartScript_8C.html#ad87b3193b7b89e5ee1a5e54552eda072", null ],
+    [ "for", "Xi2HatStartScript_8C.html#a1fe2fef1e88e23725014bf994a1684cb", null ],
+    [ "GetXaxis", "Xi2HatStartScript_8C.html#a32f143a7a26ed4517913c68245f72552", null ],
+    [ "GetYaxis", "Xi2HatStartScript_8C.html#abc6e8cacb07a46e3f8cdb736f867b162", null ],
+    [ "Print", "Xi2HatStartScript_8C.html#a4cd808b2e6e67ff4cb17c74b740bceff", null ],
+    [ "TCanvas", "Xi2HatStartScript_8C.html#aebbc9d77e7cc4fa7b6b5571cd62c3023", null ],
+    [ "ali", "Xi2HatStartScript_8C.html#a4f95d61aa085b645c6068e645fb191c8", null ],
+    [ "arr_s", "Xi2HatStartScript_8C.html#aa2de866bf2fabdb43fdfb16521b226a4", null ],
+    [ "chi2Normalized", "Xi2HatStartScript_8C.html#a0d01196a4ff6701ec36a431537f2f47d", null ],
+    [ "h_chi2", "Xi2HatStartScript_8C.html#a1d81cf35b7b55055b219453b25177f1e", null ],
+    [ "h_chi2_v_ttheta", "Xi2HatStartScript_8C.html#a6fe651bb20faca6edbfdcf47d241564f", null ],
+    [ "h_chi2Normalized", "Xi2HatStartScript_8C.html#a52c092de0875b722ea784c192083ca42", null ],
+    [ "h_WTilde", "Xi2HatStartScript_8C.html#a13bc28146bca07a1aa90f81b50630942", null ],
+    [ "h_WTilde_v_ttheta", "Xi2HatStartScript_8C.html#a92966bef32b76b106a371d0b4d86124c", null ],
+    [ "h_WTildeNormalized", "Xi2HatStartScript_8C.html#a30f4a3a1f0e1eca9c4316a7fb5941c75", null ],
+    [ "h_X2", "Xi2HatStartScript_8C.html#a719166301f818622103a4ca3713668d1", null ],
+    [ "npat", "Xi2HatStartScript_8C.html#a2da5953c416c478bd7431118ff63b1b5", null ],
+    [ "return", "Xi2HatStartScript_8C.html#a9717e7bbecb906637e86cef6da3d83c2", null ],
+    [ "TTheta", "Xi2HatStartScript_8C.html#ac5802ff62e5138d8ce4a2a46938cc73f", null ],
+    [ "WTilde", "Xi2HatStartScript_8C.html#a1574b46d2c801c2b7baeafd2e7e2ca8e", null ],
+    [ "WTildeNormalized", "Xi2HatStartScript_8C.html#afac711febf2caa1c1f4f82553a4579bf", null ],
+    [ "X2", "Xi2HatStartScript_8C.html#a920bc10b48e5b58b873da26b160e2e96", null ]
+];

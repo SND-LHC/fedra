@@ -1,0 +1,27 @@
+var classTOracleServer =
+[
+    [ "TOracleServer", "classTOracleServer.html#ae0f0970dc59c62e39abcb831dc3a7aaf", null ],
+    [ "~TOracleServer", "classTOracleServer.html#a50fb2bcacb254158d7beab7f85df1962", null ],
+    [ "Close", "classTOracleServer.html#a34f5f9bb8308904d00cb246b7047c6f5", null ],
+    [ "CreateDataBase", "classTOracleServer.html#a34b185535586e45a4436034e275afd5c", null ],
+    [ "DropDataBase", "classTOracleServer.html#a6842a97816455c520348ce781999e2ca", null ],
+    [ "GetColumns", "classTOracleServer.html#aaee3dc64ac585124cd7702abe453e96f", null ],
+    [ "GetDataBases", "classTOracleServer.html#a9540ba48644eba8ead22441b540b3cf7", null ],
+    [ "GetTables", "classTOracleServer.html#a7bb299b28c3294e958b2f27bc87b8142", null ],
+    [ "PrintResult", "classTOracleServer.html#a750cd3a0ceef30c51f3c6ef06ea2b202", null ],
+    [ "PrintResultStr", "classTOracleServer.html#a841043b257bbbe90959773584db3a62f", null ],
+    [ "Query", "classTOracleServer.html#a2be47a4c47244bd22d6f309601c4638d", null ],
+    [ "QueryTree", "classTOracleServer.html#a75cf85f244acdbcb2d7666e785058d89", null ],
+    [ "Reload", "classTOracleServer.html#a1be1529f9a1dc41d7bea319f6cf94b50", null ],
+    [ "SelectDataBase", "classTOracleServer.html#ae029329798183054aa0c71f65b59cd9f", null ],
+    [ "ServerInfo", "classTOracleServer.html#a5eae7d3ad6b63f59412fca2004d38ae5", null ],
+    [ "Shutdown", "classTOracleServer.html#af8a9c6eda3d17e53314a26ed3b18cb5f", null ],
+    [ "TOracleServerE", "classTOracleServer.html#a11ef4d6c9743c0812f143cdb8fd06a25", null ],
+    [ "TOracleServerE2", "classTOracleServer.html#ada6a7cf27bd21673ad2914d7c7b9f634", null ],
+    [ "TOracleServerE2W", "classTOracleServer.html#ae333ca4c484b88c7669bfa74aa2537bb", null ],
+    [ "TOracleServerE2WFB", "classTOracleServer.html#af16d6a89b220aed0292a000c80fefaf5", null ],
+    [ "TOracleServerE2WX", "classTOracleServer.html#a750afeefd7d0131c348674a43c72ab7a", null ],
+    [ "fConn", "classTOracleServer.html#a25a4dd472f3dcdaaa5cb45710a9dc074", null ],
+    [ "fEnv", "classTOracleServer.html#a30f0af6642cc6492d3b6f742ef8b0ea9", null ],
+    [ "fStmt", "classTOracleServer.html#a32ee50ec71a48adcedc797157ea60602", null ]
+];

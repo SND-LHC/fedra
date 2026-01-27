@@ -1,0 +1,28 @@
+var structIM__PAT__INQUIRE__ST =
+[
+    [ "acceptance", "structIM__PAT__INQUIRE__ST.html#ab7cfbf0f596b83884a4896a43f6dc8c6", null ],
+    [ "center_x", "structIM__PAT__INQUIRE__ST.html#a5c20d5617a54152feda379d2cf8c244a", null ],
+    [ "center_y", "structIM__PAT__INQUIRE__ST.html#aaa9ce889b501c5eba1573c7edcd74377", null ],
+    [ "certainty", "structIM__PAT__INQUIRE__ST.html#af53d60607af841c69b8ef15c5c75b687", null ],
+    [ "fast_find", "structIM__PAT__INQUIRE__ST.html#ad0fdec4427e16699674b697019a45d54", null ],
+    [ "first_level", "structIM__PAT__INQUIRE__ST.html#a92e4755d51c6bc3ba22acd564805b780", null ],
+    [ "last_level", "structIM__PAT__INQUIRE__ST.html#af3d0d2340149cbd83d75bdb14249f8f0", null ],
+    [ "model_step", "structIM__PAT__INQUIRE__ST.html#a30c07e216fe6c80e1054d22c7c3bd9a2", null ],
+    [ "number", "structIM__PAT__INQUIRE__ST.html#a8b539a62bd76610e8958068e743a8c80", null ],
+    [ "offset_x", "structIM__PAT__INQUIRE__ST.html#adcabc48f1a3be1e90b31e59ddbfcf956", null ],
+    [ "offset_y", "structIM__PAT__INQUIRE__ST.html#a1853e2143bba0de4ea2af7d69078e9ac", null ],
+    [ "original_x", "structIM__PAT__INQUIRE__ST.html#ae9fcc2947a94be443db01a3c2da2b8c0", null ],
+    [ "original_y", "structIM__PAT__INQUIRE__ST.html#aa73b2955c934260dc54f5f4312a1344f", null ],
+    [ "position_accuracy", "structIM__PAT__INQUIRE__ST.html#a9828aad805a0e72febc910986148966a", null ],
+    [ "position_size_x", "structIM__PAT__INQUIRE__ST.html#ad92184d84482abf0ae0b97a3b1bb7869", null ],
+    [ "position_size_y", "structIM__PAT__INQUIRE__ST.html#a1cd29657ec7c5ca32c1584055b97a767", null ],
+    [ "position_start_x", "structIM__PAT__INQUIRE__ST.html#ad6c2b19d9cd3ec86b27da9b619acf6d6", null ],
+    [ "position_start_y", "structIM__PAT__INQUIRE__ST.html#a3d40e54ca809155769d5e970fe6e8363", null ],
+    [ "preprocessed", "structIM__PAT__INQUIRE__ST.html#aaeb107d25250b9a2c5c909335a4dc26e", null ],
+    [ "reserved", "structIM__PAT__INQUIRE__ST.html#ae4a9c62c3fed89185e302290abddb1cb", null ],
+    [ "score_type", "structIM__PAT__INQUIRE__ST.html#ab20fa34e5c4ca129eb78132ca105d499", null ],
+    [ "size_x", "structIM__PAT__INQUIRE__ST.html#a36690e5d7ce1ec3ec882f65ea24b2c72", null ],
+    [ "size_y", "structIM__PAT__INQUIRE__ST.html#ac51fbc4dc39c52c4c0ea430825ff2ec7", null ],
+    [ "speed", "structIM__PAT__INQUIRE__ST.html#a775d46738e30e830dda7aff59d4f4ffe", null ],
+    [ "type", "structIM__PAT__INQUIRE__ST.html#a2ef155fc5480d5f179eb3bbfd21abb34", null ]
+];

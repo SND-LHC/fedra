@@ -1,0 +1,8 @@
+<map id="AcqPlateChanger" name="AcqPlateChanger">
+<area shape="rect" id="node1" title=" " alt="" coords="5,289,129,316"/>
+<area shape="rect" id="node2" title=" " alt="" coords="136,5,204,32"/>
+<area shape="rect" id="node3" href="$classAcqStage1.html" title=" " alt="" coords="127,200,213,227"/>
+<area shape="rect" id="node4" href="$classAcqAxis.html" title=" " alt="" coords="135,81,205,108"/>
+<area shape="rect" id="node5" href="$classEdbAffine2D.html" title=" " alt="" coords="229,81,324,108"/>
+<area shape="rect" id="node6" href="$classAcqLight.html" title=" " alt="" coords="348,81,421,108"/>
+</map>

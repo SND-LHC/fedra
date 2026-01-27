@@ -1,0 +1,10 @@
+<map id="EdbMarksSet" name="EdbMarksSet">
+<area shape="rect" id="node1" title=" " alt="" coords="5,427,108,453"/>
+<area shape="rect" id="node2" title=" " alt="" coords="52,81,120,108"/>
+<area shape="rect" id="node3" href="$classEdbMarksBox.html" title=" " alt="" coords="73,323,179,349"/>
+<area shape="rect" id="node8" href="$classEdbAffine2D.html" title=" " alt="" coords="124,157,219,184"/>
+<area shape="rect" id="node4" href="$classEdbPointsBox2D.html" title=" " alt="" coords="123,247,246,273"/>
+<area shape="rect" id="node5" href="$classEdbPoint3D.html" title=" " alt="" coords="243,157,335,184"/>
+<area shape="rect" id="node6" href="$classEdbPoint2D.html" title=" " alt="" coords="243,81,335,108"/>
+<area shape="rect" id="node7" href="$classEdbPoint.html" title=" " alt="" coords="251,5,326,32"/>
+</map>

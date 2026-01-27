@@ -1,0 +1,13 @@
+<map id="EdbPointsBox2D" name="EdbPointsBox2D">
+<area shape="rect" id="node1" title=" " alt="" coords="211,229,334,256"/>
+<area shape="rect" id="node5" href="$classEdbMarksBox.html" title=" " alt="" coords="5,304,111,331"/>
+<area shape="rect" id="node7" href="$classEdbPointsBox3D.html" title=" " alt="" coords="135,304,258,331"/>
+<area shape="rect" id="node9" href="$classEdbPredictionsBox.html" title=" " alt="" coords="282,304,415,331"/>
+<area shape="rect" id="node10" href="$classEdbSegmentsBox.html" title=" " alt="" coords="440,304,567,331"/>
+<area shape="rect" id="node2" href="$classEdbPoint3D.html" title=" " alt="" coords="227,155,319,181"/>
+<area shape="rect" id="node3" href="$classEdbPoint2D.html" title=" " alt="" coords="227,80,319,107"/>
+<area shape="rect" id="node4" href="$classEdbPoint.html" title=" " alt="" coords="235,5,310,32"/>
+<area shape="rect" id="node6" href="$classEdbArea.html" title=" " alt="" coords="22,379,94,405"/>
+<area shape="rect" id="node8" href="$classEdbClustersBox.html" title=" " alt="" coords="137,379,256,405"/>
+<area shape="rect" id="node11" href="$classEdbPattern.html" title=" " alt="" coords="460,379,547,405"/>
+</map>

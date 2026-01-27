@@ -1,0 +1,10 @@
+<map id="EdbSegCouple" name="EdbSegCouple">
+<area shape="rect" id="node1" title=" " alt="" coords="5,365,115,392"/>
+<area shape="rect" id="node2" title=" " alt="" coords="55,81,123,108"/>
+<area shape="rect" id="node3" href="$classEdbSegP.html" title=" " alt="" coords="91,247,168,273"/>
+<area shape="rect" id="node8" href="$classEdbID.html" title=" " alt="" coords="127,157,185,184"/>
+<area shape="rect" id="node4" href="$classEdbTrack2D.html" title=" " alt="" coords="210,157,305,184"/>
+<area shape="rect" id="node5" href="$classEdbPoint2D.html" title=" " alt="" coords="179,81,271,108"/>
+<area shape="rect" id="node6" href="$classEdbPoint.html" title=" " alt="" coords="188,5,263,32"/>
+<area shape="rect" id="node7" href="$classEdbAngle2D.html" title=" " alt="" coords="295,81,390,108"/>
+</map>

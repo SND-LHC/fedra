@@ -1,0 +1,10 @@
+<map id="ASide" name="ASide">
+<area shape="rect" id="node1" title=" " alt="" coords="141,439,199,465"/>
+<area shape="rect" id="node2" href="$structAArea.html" title=" " alt="" coords="141,349,199,376"/>
+<area shape="rect" id="node3" href="$structAView.html" title=" " alt="" coords="141,260,199,287"/>
+<area shape="rect" id="node4" href="$classEdbViewHeader.html" title=" " alt="" coords="5,171,121,197"/>
+<area shape="rect" id="node5" title=" " alt="" coords="29,5,97,32"/>
+<area shape="rect" id="node6" href="$classEdbAffine2D.html" title=" " alt="" coords="85,81,180,108"/>
+<area shape="rect" id="node7" href="$structAApv.html" title=" " alt="" coords="232,171,287,197"/>
+<area shape="rect" id="node8" href="$structAlignmentParView.html" title=" " alt="" coords="204,81,333,108"/>
+</map>

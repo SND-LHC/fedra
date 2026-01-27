@@ -1,0 +1,34 @@
+<map id="src/appl/emrec/emhts2raw.cpp" name="src/appl/emrec/emhts2raw.cpp">
+<area shape="rect" id="node1" title=" " alt="" coords="335,5,535,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,72,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,80,165,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="189,80,261,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="286,80,343,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="367,80,422,107"/>
+<area shape="rect" id="node7" title=" " alt="" coords="446,80,503,107"/>
+<area shape="rect" id="node8" title=" " alt="" coords="528,80,589,107"/>
+<area shape="rect" id="node9" href="$EdbRun_8h.html" title=" " alt="" coords="613,80,693,107"/>
+<area shape="rect" id="node13" href="$EdbView_8h.html" title=" " alt="" coords="1318,155,1402,181"/>
+<area shape="rect" id="node23" href="$EdbSegment_8h.html" title=" " alt="" coords="1623,229,1729,256"/>
+<area shape="rect" id="node10" title=" " alt="" coords="553,155,615,181"/>
+<area shape="rect" id="node11" title=" " alt="" coords="320,155,387,181"/>
+<area shape="rect" id="node12" title=" " alt="" coords="513,229,607,256"/>
+<area shape="rect" id="node25" href="$EdbRunHeader_8h.html" title=" " alt="" coords="729,155,852,181"/>
+<area shape="rect" id="node30" href="$EdbFiducial_8h.html" title=" " alt="" coords="829,304,931,331"/>
+<area shape="rect" id="node31" href="$EdbPrediction_8h.html" title=" " alt="" coords="691,304,805,331"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1028,379,1140,405"/>
+<area shape="rect" id="node15" title=" " alt="" coords="1540,304,1631,331"/>
+<area shape="rect" id="node16" title=" " alt="" coords="1487,229,1548,256"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1134,229,1258,256"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1282,229,1361,256"/>
+<area shape="rect" id="node19" href="$EdbAffine_8h.html" title=" " alt="" coords="1415,304,1505,331"/>
+<area shape="rect" id="node21" href="$EdbCluster_8h.html" title=" " alt="" coords="1061,304,1160,331"/>
+<area shape="rect" id="node20" title=" " alt="" coords="1075,453,1154,480"/>
+<area shape="rect" id="node22" href="$EdbVirtual_8h.html" title=" " alt="" coords="858,379,953,405"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1655,304,1729,331"/>
+<area shape="rect" id="node26" title=" " alt="" coords="632,229,715,256"/>
+<area shape="rect" id="node27" title=" " alt="" coords="955,304,1037,331"/>
+<area shape="rect" id="node28" title=" " alt="" coords="739,229,842,256"/>
+<area shape="rect" id="node29" href="$EdbStage_8h.html" title=" " alt="" coords="968,229,1059,256"/>
+<area shape="rect" id="node32" title=" " alt="" coords="709,379,787,405"/>
+</map>

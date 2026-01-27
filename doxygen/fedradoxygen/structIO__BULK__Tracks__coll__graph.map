@@ -1,0 +1,10 @@
+<map id="IO_BULK_Tracks" name="IO_BULK_Tracks">
+<area shape="rect" id="node1" title=" " alt="" coords="175,243,299,269"/>
+<area shape="rect" id="node2" href="$structBULK__TracksHeader.html" title=" " alt="" coords="41,153,186,180"/>
+<area shape="rect" id="node3" href="$structIdentifier.html" title=" " alt="" coords="5,5,77,32"/>
+<area shape="rect" id="node4" href="$structIO__Header.html" title=" " alt="" coords="101,5,187,32"/>
+<area shape="rect" id="node5" href="$classTrack.html" title=" " alt="" coords="210,153,265,180"/>
+<area shape="rect" id="node6" href="$structTVector.html" title=" " alt="" coords="267,5,333,32"/>
+<area shape="rect" id="node7" href="$structFlatTrack.html" title=" " alt="" coords="303,153,379,180"/>
+<area shape="rect" id="node8" href="$structFlatStrip.html" title=" " alt="" coords="425,5,495,32"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="EdbClustersBox" name="EdbClustersBox">
+<area shape="rect" id="node1" title=" " alt="" coords="5,399,124,425"/>
+<area shape="rect" id="node2" title=" " alt="" coords="45,81,113,108"/>
+<area shape="rect" id="node8" href="$classEdbAffine2D.html" title=" " alt="" coords="87,157,181,184"/>
+<area shape="rect" id="node3" href="$classEdbPointsBox3D.html" title=" " alt="" coords="86,323,209,349"/>
+<area shape="rect" id="node4" href="$classEdbPointsBox2D.html" title=" " alt="" coords="86,247,209,273"/>
+<area shape="rect" id="node5" href="$classEdbPoint3D.html" title=" " alt="" coords="205,157,297,184"/>
+<area shape="rect" id="node6" href="$classEdbPoint2D.html" title=" " alt="" coords="205,81,297,108"/>
+<area shape="rect" id="node7" href="$classEdbPoint.html" title=" " alt="" coords="214,5,289,32"/>
+</map>

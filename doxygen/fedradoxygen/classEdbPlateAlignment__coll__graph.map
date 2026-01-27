@@ -1,0 +1,13 @@
+<map id="EdbPlateAlignment" name="EdbPlateAlignment">
+<area shape="rect" id="node1" title=" " alt="" coords="78,583,211,609"/>
+<area shape="rect" id="node2" href="$classEdbAlignmentV.html" title=" " alt="" coords="330,498,442,525"/>
+<area shape="rect" id="node3" title=" " alt="" coords="479,5,547,32"/>
+<area shape="rect" id="node4" href="$classEdbLayer.html" title=" " alt="" coords="348,388,424,415"/>
+<area shape="rect" id="node7" href="$classEdbH2.html" title=" " alt="" coords="113,81,176,108"/>
+<area shape="rect" id="node8" href="$classEdbAffine2D.html" title=" " alt="" coords="413,132,508,159"/>
+<area shape="rect" id="node9" href="$classEdbH1.html" title=" " alt="" coords="505,235,568,261"/>
+<area shape="rect" id="node10" href="$classEdbSegCorr.html" title=" " alt="" coords="523,337,617,364"/>
+<area shape="rect" id="node5" href="$classEdbCorrectionMap.html" title=" " alt="" coords="218,287,349,313"/>
+<area shape="rect" id="node6" href="$classEdbCell2.html" title=" " alt="" coords="145,183,219,209"/>
+<area shape="rect" id="node11" href="$classEdbPeak2.html" title=" " alt="" coords="5,439,87,465"/>
+</map>

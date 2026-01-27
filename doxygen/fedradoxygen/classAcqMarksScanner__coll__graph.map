@@ -1,0 +1,18 @@
+<map id="AcqMarksScanner" name="AcqMarksScanner">
+<area shape="rect" id="node1" title=" " alt="" coords="450,573,581,600"/>
+<area shape="rect" id="node2" title=" " alt="" coords="609,81,677,108"/>
+<area shape="rect" id="node3" href="$classAcqOdyssey.html" title=" " alt="" coords="547,469,643,496"/>
+<area shape="rect" id="node4" href="$classEdbView.html" title=" " alt="" coords="510,365,585,392"/>
+<area shape="rect" id="node5" href="$classEdbViewHeader.html" title=" " alt="" coords="427,276,543,303"/>
+<area shape="rect" id="node6" href="$classEdbAffine2D.html" title=" " alt="" coords="397,157,492,184"/>
+<area shape="rect" id="node7" href="$classEdbMarksSet.html" title=" " alt="" coords="143,469,245,496"/>
+<area shape="rect" id="node8" href="$classEdbMarksBox.html" title=" " alt="" coords="221,365,327,392"/>
+<area shape="rect" id="node14" href="$classAcqStage1.html" title=" " alt="" coords="803,276,889,303"/>
+<area shape="rect" id="node15" href="$classAcqAxis.html" title=" " alt="" coords="836,157,907,184"/>
+<area shape="rect" id="node16" href="$classAcqLight.html" title=" " alt="" coords="931,157,1004,184"/>
+<area shape="rect" id="node9" href="$classEdbPointsBox2D.html" title=" " alt="" coords="173,276,295,303"/>
+<area shape="rect" id="node13" href="$classEdbArea.html" title=" " alt="" coords="275,469,347,496"/>
+<area shape="rect" id="node10" href="$classEdbPoint3D.html" title=" " alt="" coords="5,157,97,184"/>
+<area shape="rect" id="node11" href="$classEdbPoint2D.html" title=" " alt="" coords="5,81,97,108"/>
+<area shape="rect" id="node12" href="$classEdbPoint.html" title=" " alt="" coords="14,5,89,32"/>
+</map>

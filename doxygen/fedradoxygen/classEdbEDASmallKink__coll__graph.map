@@ -1,0 +1,21 @@
+<map id="EdbEDASmallKink" name="EdbEDASmallKink">
+<area shape="rect" id="node1" title=" " alt="" coords="271,819,402,845"/>
+<area shape="rect" id="node2" href="$classEdbVertex.html" title=" " alt="" coords="409,533,491,560"/>
+<area shape="rect" id="node19" href="$classEdbVTA.html" title=" " alt="" coords="349,624,420,651"/>
+<area shape="rect" id="node3" title=" " alt="" coords="263,233,331,260"/>
+<area shape="rect" id="node5" href="$classVERTEX_1_1Track.html" title=" " alt="" coords="521,353,635,380"/>
+<area shape="rect" id="node12" href="$classEdbSegP.html" title=" " alt="" coords="191,444,269,471"/>
+<area shape="rect" id="node17" href="$classEdbID.html" title=" " alt="" coords="267,353,326,380"/>
+<area shape="rect" id="node4" href="$classVERTEX_1_1Vertex.html" title=" " alt="" coords="615,444,736,471"/>
+<area shape="rect" id="node6" href="$classVERTEX_1_1RelationList.html" title=" " alt="" coords="503,233,653,260"/>
+<area shape="rect" id="node7" href="$classMATRIX_1_1CMatrix.html" title=" " alt="" coords="355,233,479,260"/>
+<area shape="rect" id="node8" href="$classMATRIX_1_1VtSymMatrix.html" title=" " alt="" coords="553,157,707,184"/>
+<area shape="rect" id="node9" href="$classMATRIX_1_1VtSqMatrix.html" title=" " alt="" coords="559,81,701,108"/>
+<area shape="rect" id="node10" href="$classMATRIX_1_1VtMatrix.html" title=" " alt="" coords="567,5,693,32"/>
+<area shape="rect" id="node11" href="$classMATRIX_1_1VtVector.html" title=" " alt="" coords="678,233,806,260"/>
+<area shape="rect" id="node18" href="$classEdbTrackP.html" title=" " alt="" coords="293,729,380,756"/>
+<area shape="rect" id="node13" href="$classEdbTrack2D.html" title=" " alt="" coords="97,353,192,380"/>
+<area shape="rect" id="node14" href="$classEdbPoint2D.html" title=" " alt="" coords="5,233,97,260"/>
+<area shape="rect" id="node15" href="$classEdbPoint.html" title=" " alt="" coords="14,157,89,184"/>
+<area shape="rect" id="node16" href="$classEdbAngle2D.html" title=" " alt="" coords="121,233,216,260"/>
+</map>

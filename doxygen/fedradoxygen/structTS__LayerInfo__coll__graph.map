@@ -1,0 +1,10 @@
+<map id="TS_LayerInfo" name="TS_LayerInfo">
+<area shape="rect" id="node1" title=" " alt="" coords="792,97,891,124"/>
+<area shape="rect" id="node2" href="$structTS__Segment.html" title=" " alt="" coords="507,28,605,55"/>
+<area shape="rect" id="node3" href="$structTVector.html" title=" " alt="" coords="5,32,72,59"/>
+<area shape="rect" id="node4" href="$structTS__RawTrack.html" title=" " alt="" coords="211,63,315,89"/>
+<area shape="rect" id="node5" href="$structTS__LayerInfo_1_1t__LocalSideAlign.html" title=" " alt="" coords="469,142,643,183"/>
+<area shape="rect" id="node6" href="$structTS__LayerInfo_1_1t__LocalSideAlign_1_1t__SlopeAlign.html" title=" " alt="" coords="176,129,351,170"/>
+<area shape="rect" id="node7" href="$structTS__LayerInfo_1_1t__LocalSideAlign_1_1t__PosAlign.html" title=" " alt="" coords="176,194,351,235"/>
+<area shape="rect" id="node8" href="$structTS__LayerInfo_1_1t__GlobalSideAlign.html" title=" " alt="" coords="465,207,647,249"/>
+</map>

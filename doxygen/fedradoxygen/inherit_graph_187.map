@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classTiXmlBase.html" title=" " alt="" coords="5,107,92,133"/>
+<area shape="rect" id="node2" href="$classTiXmlAttribute.html" title=" " alt="" coords="140,81,245,108"/>
+<area shape="rect" id="node3" href="$classTiXmlNode.html" title=" " alt="" coords="149,132,236,159"/>
+<area shape="rect" id="node4" href="$classTiXmlComment.html" title=" " alt="" coords="298,5,411,32"/>
+<area shape="rect" id="node5" href="$classTiXmlDeclaration.html" title=" " alt="" coords="293,56,416,83"/>
+<area shape="rect" id="node6" href="$classTiXmlDocument.html" title=" " alt="" coords="297,107,413,133"/>
+<area shape="rect" id="node7" href="$classTiXmlElement.html" title=" " alt="" coords="303,157,407,184"/>
+<area shape="rect" id="node8" href="$classTiXmlText.html" title=" " alt="" coords="314,208,395,235"/>
+<area shape="rect" id="node9" href="$classTiXmlUnknown.html" title=" " alt="" coords="299,259,410,285"/>
+</map>

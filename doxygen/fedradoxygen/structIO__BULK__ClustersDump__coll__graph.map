@@ -1,0 +1,8 @@
+<map id="IO_BULK_ClustersDump" name="IO_BULK_ClustersDump">
+<area shape="rect" id="node1" title=" " alt="" coords="106,184,277,211"/>
+<area shape="rect" id="node2" href="$structBULK__ClustersPlaneInfo.html" title=" " alt="" coords="5,95,175,121"/>
+<area shape="rect" id="node3" href="$structCluster.html" title=" " alt="" coords="58,5,122,32"/>
+<area shape="rect" id="node4" href="$structBULK__ClustersDumpHeader.html" title=" " alt="" coords="199,95,389,121"/>
+<area shape="rect" id="node5" href="$structIdentifier.html" title=" " alt="" coords="206,5,278,32"/>
+<area shape="rect" id="node6" href="$structIO__Header.html" title=" " alt="" coords="302,5,387,32"/>
+</map>

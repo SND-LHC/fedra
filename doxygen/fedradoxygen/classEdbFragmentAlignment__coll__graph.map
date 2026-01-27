@@ -1,0 +1,14 @@
+<map id="EdbFragmentAlignment" name="EdbFragmentAlignment">
+<area shape="rect" id="node1" title=" " alt="" coords="326,540,485,567"/>
+<area shape="rect" id="node2" title=" " alt="" coords="142,81,210,108"/>
+<area shape="rect" id="node4" href="$classEdbSegmentsBox.html" title=" " alt="" coords="159,360,286,387"/>
+<area shape="rect" id="node9" href="$classEdbAffine2D.html" title=" " alt="" coords="227,157,322,184"/>
+<area shape="rect" id="node10" href="$classTIndexCell.html" title=" " alt="" coords="71,208,156,235"/>
+<area shape="rect" id="node11" href="$classEdbID.html" title=" " alt="" coords="5,309,64,336"/>
+<area shape="rect" id="node3" href="$classEdbPattern.html" title=" " alt="" coords="113,436,199,463"/>
+<area shape="rect" id="node5" href="$classEdbPointsBox2D.html" title=" " alt="" coords="213,259,336,285"/>
+<area shape="rect" id="node6" href="$classEdbPoint3D.html" title=" " alt="" coords="477,157,569,184"/>
+<area shape="rect" id="node7" href="$classEdbPoint2D.html" title=" " alt="" coords="477,81,569,108"/>
+<area shape="rect" id="node8" href="$classEdbPoint.html" title=" " alt="" coords="485,5,560,32"/>
+<area shape="rect" id="node12" href="$structAlPar.html" title=" " alt="" coords="477,436,531,463"/>
+</map>

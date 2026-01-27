@@ -1,0 +1,24 @@
+<map id="EdbEDAPlotTab" name="EdbEDAPlotTab">
+<area shape="rect" id="node1" title=" " alt="" coords="67,727,183,753"/>
+<area shape="rect" id="node2" href="$classEdbMomentumEstimator.html" title=" " alt="" coords="41,637,208,664"/>
+<area shape="rect" id="node3" href="$classEdbTrackFitter.html" title=" " alt="" coords="49,533,155,560"/>
+<area shape="rect" id="node4" title=" " alt="" coords="66,444,138,471"/>
+<area shape="rect" id="node5" href="$classEdbTrackP.html" title=" " alt="" coords="181,533,268,560"/>
+<area shape="rect" id="node13" href="$classEdbVTA.html" title=" " alt="" coords="293,637,364,664"/>
+<area shape="rect" id="node6" href="$classEdbSegP.html" title=" " alt="" coords="187,444,265,471"/>
+<area shape="rect" id="node7" title=" " alt="" coords="327,233,395,260"/>
+<area shape="rect" id="node12" href="$classEdbID.html" title=" " alt="" coords="265,353,323,380"/>
+<area shape="rect" id="node14" href="$classEdbVertex.html" title=" " alt="" coords="398,533,481,560"/>
+<area shape="rect" id="node16" href="$classVERTEX_1_1Track.html" title=" " alt="" coords="545,353,659,380"/>
+<area shape="rect" id="node8" href="$classEdbTrack2D.html" title=" " alt="" coords="95,353,189,380"/>
+<area shape="rect" id="node9" href="$classEdbPoint2D.html" title=" " alt="" coords="5,233,97,260"/>
+<area shape="rect" id="node10" href="$classEdbPoint.html" title=" " alt="" coords="14,157,89,184"/>
+<area shape="rect" id="node11" href="$classEdbAngle2D.html" title=" " alt="" coords="121,233,216,260"/>
+<area shape="rect" id="node15" href="$classVERTEX_1_1Vertex.html" title=" " alt="" coords="476,444,597,471"/>
+<area shape="rect" id="node17" href="$classVERTEX_1_1RelationList.html" title=" " alt="" coords="527,233,677,260"/>
+<area shape="rect" id="node18" href="$classMATRIX_1_1CMatrix.html" title=" " alt="" coords="701,233,825,260"/>
+<area shape="rect" id="node19" href="$classMATRIX_1_1VtSymMatrix.html" title=" " alt="" coords="487,157,642,184"/>
+<area shape="rect" id="node20" href="$classMATRIX_1_1VtSqMatrix.html" title=" " alt="" coords="493,81,636,108"/>
+<area shape="rect" id="node21" href="$classMATRIX_1_1VtMatrix.html" title=" " alt="" coords="501,5,628,32"/>
+<area shape="rect" id="node22" href="$classMATRIX_1_1VtVector.html" title=" " alt="" coords="850,233,978,260"/>
+</map>

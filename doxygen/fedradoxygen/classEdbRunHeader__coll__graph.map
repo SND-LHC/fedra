@@ -1,0 +1,17 @@
+<map id="EdbRunHeader" name="EdbRunHeader">
+<area shape="rect" id="node1" title=" " alt="" coords="31,539,141,565"/>
+<area shape="rect" id="node2" title=" " alt="" coords="62,259,134,285"/>
+<area shape="rect" id="node3" href="$classEdbStage.html" title=" " alt="" coords="145,449,224,476"/>
+<area shape="rect" id="node4" href="$classEdbCCD.html" title=" " alt="" coords="259,348,332,375"/>
+<area shape="rect" id="node5" href="$classEdbObjective.html" title=" " alt="" coords="135,348,234,375"/>
+<area shape="rect" id="node9" href="$classEdbPlate.html" title=" " alt="" coords="10,399,85,425"/>
+<area shape="rect" id="node6" href="$classEdbAffine2D.html" title=" " alt="" coords="239,157,333,184"/>
+<area shape="rect" id="node12" href="$classEdbPointsBox2D.html" title=" " alt="" coords="407,259,530,285"/>
+<area shape="rect" id="node7" title=" " alt="" coords="348,81,416,108"/>
+<area shape="rect" id="node8" href="$classEdbAffine3D.html" title=" " alt="" coords="335,208,429,235"/>
+<area shape="rect" id="node11" href="$classEdbMarksBox.html" title=" " alt="" coords="447,348,552,375"/>
+<area shape="rect" id="node10" href="$classEdbArea.html" title=" " alt="" coords="331,449,403,476"/>
+<area shape="rect" id="node13" href="$classEdbPoint3D.html" title=" " alt="" coords="605,157,697,184"/>
+<area shape="rect" id="node14" href="$classEdbPoint2D.html" title=" " alt="" coords="605,81,697,108"/>
+<area shape="rect" id="node15" href="$classEdbPoint.html" title=" " alt="" coords="614,5,689,32"/>
+</map>

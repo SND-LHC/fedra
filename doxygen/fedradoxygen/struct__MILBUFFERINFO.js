@@ -1,0 +1,27 @@
+var struct__MILBUFFERINFO =
+[
+    [ "AncestorId", "struct__MILBUFFERINFO.html#a52eade1802398552ae10c9986031a90c", null ],
+    [ "AncestorOffsetBand", "struct__MILBUFFERINFO.html#a97fa99097716ed1eb19a85b7e36b8395", null ],
+    [ "AncestorOffsetBit", "struct__MILBUFFERINFO.html#a4c164b63bb814ff3c0945470247ab012", null ],
+    [ "AncestorOffsetX", "struct__MILBUFFERINFO.html#a0484fb95d4302affea485ad7b6bc8da7", null ],
+    [ "AncestorOffsetY", "struct__MILBUFFERINFO.html#a0c0289f7a298a0f7d2c61133b842ed1c", null ],
+    [ "Attribute", "struct__MILBUFFERINFO.html#a3f42d255b15972b144c60a26790064b0", null ],
+    [ "BandHostPtr", "struct__MILBUFFERINFO.html#a4e3345bf725482fd66230a756f70eb02", null ],
+    [ "Format", "struct__MILBUFFERINFO.html#a6840f3946d88639f66bba68d78246962", null ],
+    [ "HostPtr", "struct__MILBUFFERINFO.html#a7a2709e30d1a0d30d837c3f772c2033e", null ],
+    [ "Id", "struct__MILBUFFERINFO.html#ada0fdc8d60936c9c67b359b53648b334", null ],
+    [ "NativeId", "struct__MILBUFFERINFO.html#a8c73f8942309a7abb1efcf21a60c4386", null ],
+    [ "OffsetBand", "struct__MILBUFFERINFO.html#ac790c80e0f25a7c31b2b32a6d755ee7c", null ],
+    [ "OffsetX", "struct__MILBUFFERINFO.html#a7421482946e9062e827f99c3d3a26af4", null ],
+    [ "OffsetY", "struct__MILBUFFERINFO.html#acd3fcf2698ee8c5739d0b56b183c894b", null ],
+    [ "ParentId", "struct__MILBUFFERINFO.html#a3023c98997950ce3c7254b0f8075568f", null ],
+    [ "PhysPtr", "struct__MILBUFFERINFO.html#a01f5bc89450300a155b029fb21a37552", null ],
+    [ "Pitch", "struct__MILBUFFERINFO.html#a6b3602d25f5e580719135f3122870cd5", null ],
+    [ "PitchByte", "struct__MILBUFFERINFO.html#addd7e3e950cb9ba9a7b9a01f27c72a1b", null ],
+    [ "SizeBand", "struct__MILBUFFERINFO.html#a955f222d5bd2468d88637e044d3e0814", null ],
+    [ "SizeBit", "struct__MILBUFFERINFO.html#afbabfcca30bbc064d0b7e19dda0e97fa", null ],
+    [ "SizeX", "struct__MILBUFFERINFO.html#aac423413ec59276e1c78f98d8b96f1c2", null ],
+    [ "SizeY", "struct__MILBUFFERINFO.html#adde62c9f9787a0f8b1398a0a377763a2", null ],
+    [ "StructSize", "struct__MILBUFFERINFO.html#acb8070f2e84bc43087063c7da9a444e1", null ],
+    [ "Type", "struct__MILBUFFERINFO.html#ac2579e8ca7cf5070955145c078e992e2", null ]
+];

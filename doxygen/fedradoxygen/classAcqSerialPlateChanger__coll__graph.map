@@ -1,0 +1,9 @@
+<map id="AcqSerialPlateChanger" name="AcqSerialPlateChanger">
+<area shape="rect" id="node1" title=" " alt="" coords="5,289,163,316"/>
+<area shape="rect" id="node2" title=" " alt="" coords="119,5,187,32"/>
+<area shape="rect" id="node3" href="$classAcqCOM.html" title=" " alt="" coords="43,141,119,167"/>
+<area shape="rect" id="node4" href="$classAcqStage1.html" title=" " alt="" coords="167,200,254,227"/>
+<area shape="rect" id="node5" href="$classAcqAxis.html" title=" " alt="" coords="175,81,246,108"/>
+<area shape="rect" id="node6" href="$classEdbAffine2D.html" title=" " alt="" coords="270,81,365,108"/>
+<area shape="rect" id="node7" href="$classAcqLight.html" title=" " alt="" coords="389,81,462,108"/>
+</map>

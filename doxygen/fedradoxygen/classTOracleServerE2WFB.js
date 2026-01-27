@@ -1,0 +1,28 @@
+var classTOracleServerE2WFB =
+[
+    [ "TOracleServerE2WFB", "classTOracleServerE2WFB.html#ad62d98b132ed455062b073b4c18487a6", null ],
+    [ "~TOracleServerE2WFB", "classTOracleServerE2WFB.html#a406a2ba6017aa067bf356af8f11500fb", null ],
+    [ "AddEventBrick", "classTOracleServerE2WFB.html#a321fc6b810e5c203c74e6988ef8eb1d8", null ],
+    [ "AddFeedbackReconstruction", "classTOracleServerE2WFB.html#a0f152aef8b86f2987729bc2ae6dbe981", null ],
+    [ "AddFeedbackReconstructionTest", "classTOracleServerE2WFB.html#a79002d09c8733a654e18cafb315a7a96", null ],
+    [ "AddFeedbackSegment", "classTOracleServerE2WFB.html#a2a326d191706977467802bcae541fb51", null ],
+    [ "AddFeedbackTrack", "classTOracleServerE2WFB.html#a0d11e52fea9b018fa21e499eb4aae4c2", null ],
+    [ "AddFeedbackVertex", "classTOracleServerE2WFB.html#a26d02e0ec38ee5bc0b3c6042f0df1786", null ],
+    [ "AddPlate", "classTOracleServerE2WFB.html#a4dc83b58cf25c996201043eb6c92b55f", null ],
+    [ "AddProcessOperationBrick", "classTOracleServerE2WFB.html#ae40ca1de28c52dab4f3471b38d9b9edb", null ],
+    [ "AddTemplateMarkSets", "classTOracleServerE2WFB.html#ae5ba00e7cf37bf98940dd1964a718f2b", null ],
+    [ "CloseFeedbackDataset", "classTOracleServerE2WFB.html#a618bb2fe2418c27fdbc8ae2527e08948", null ],
+    [ "FinishTransaction", "classTOracleServerE2WFB.html#afa0448bd2ac8e866b3f8012d6c49ee07", null ],
+    [ "IfEventBrick", "classTOracleServerE2WFB.html#a9d2d8f532afbab617d3be0f6fc4fcd51", null ],
+    [ "IfEventRec", "classTOracleServerE2WFB.html#a234392f7ea7fe459572df63f24ae98ea", null ],
+    [ "MyQuery", "classTOracleServerE2WFB.html#a3ac41a9b8eb119355b8596bfa8750d6d", null ],
+    [ "Ostr", "classTOracleServerE2WFB.html#a46f622317cdc3a05c7dd3c7d538d3c4c", null ],
+    [ "Ostr", "classTOracleServerE2WFB.html#adafec2b009c7cf940feb9ff8f45ddfbe", null ],
+    [ "Print", "classTOracleServerE2WFB.html#a0b54faff4d03367ac6d5344e951a3c59", null ],
+    [ "Set0", "classTOracleServerE2WFB.html#a4482bf5d61b71daad12cdb6e67fdf0b5", null ],
+    [ "SetTransactionRW", "classTOracleServerE2WFB.html#a6ebc5a3ae15c30d750c9ab65ded18e8d", null ],
+    [ "Timestamp", "classTOracleServerE2WFB.html#a4c6e32bf80da6e82327462e359023e87", null ],
+    [ "eDoCommit", "classTOracleServerE2WFB.html#a392688db748b2d77c7df6fda61b9cadd", null ],
+    [ "eLa", "classTOracleServerE2WFB.html#a5645de2736a0207edb5c8239858756fa", null ],
+    [ "eLab", "classTOracleServerE2WFB.html#adfc98a8b923464fc2f0f18adbf288292", null ]
+];
