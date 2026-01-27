@@ -6,5 +6,6 @@ From the fedradoxygen branch
 
 -- git pull
 -- doxygen doxygen/fedoxy.conf
+-- git commit -m 'update commit'
 -- git rebase origin/master
 -- git push
