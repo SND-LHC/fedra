@@ -5,7 +5,7 @@ include $(FEDRA_ROOT)/src/config/RootDef.mk
 
 TARGET	=	$(BIN_DIR)/viewdist$(ExeSuf) $(BIN_DIR)/viewdist_old$(ExeSuf) $(BIN_DIR)/viewsideal$(ExeSuf) $(BIN_DIR)/moslink$(ExeSuf) 
 TARGET	+=	$(BIN_DIR)/mosalign$(ExeSuf) $(BIN_DIR)/mosalignbeam$(ExeSuf) $(BIN_DIR)/mostag$(ExeSuf) $(BIN_DIR)/tagalign$(ExeSuf) 
-TARGET	+=	$(BIN_DIR)/tagtra$(ExeSuf) 
+TARGET	+=	$(BIN_DIR)/tagtra$(ExeSuf) $(BIN_DIR)/cp2mos$(ExeSuf) 
 ##TARGET	+=	$(BIN_DIR)/mosvol$(ExeSuf) 
 
 ROOTLIBS      += -lMLP
