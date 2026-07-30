@@ -97,7 +97,7 @@ void EdbLinking::Link(EdbPattern &p1, EdbPattern &p2, EdbLayer &l1, EdbLayer &l2
    // main linking function
   // Input: p1,p2 - patterns, l1,l2 layers, env - linking parameters
 
-  Log(2,"EdbLinking::Link","patterns with %d and %d segments and z1 = %f  z2 = %f",p1.N(),p2.N(),l1.Z(),l2.Z());
+  Log(1,"EdbLinking::Link","patterns with %d and %d segments and z1 = %f  z2 = %f",p1.N(),p2.N(),l1.Z(),l2.Z());
   if(p1.N()<=0) return;
   if(p2.N()<=0) return;
   Log(2,"EdbLinking::Link","segments z1 = %f  z2 = %f",
@@ -151,18 +151,18 @@ void EdbLinking::Link(EdbPattern &p1, EdbPattern &p2, EdbLayer &l1, EdbLayer &l2
     eCorr[0].SetV(5,eShr0);
     eCorr[1].SetV(5,eShr0);
     CorrectShrinkage( eDShr );
-    CorrectShrinkage( eDShr*0.8 );
+  ///  CorrectShrinkage( eDShr*0.8 );
     eDoCorrectShrinkage = VerifyShrinkageCorr(0) * VerifyShrinkageCorr(1);
   }
   if(eDoCorrectAngles)    CorrectAngles( p1shr,p2shr );
-  if(eDoCorrectAngles)    CorrectAngles( p1shr,p2shr );
+ /// if(eDoCorrectAngles)    CorrectAngles( p1shr,p2shr );
   if(eDoCorrectShrinkage) {
-    CorrectShrinkage(  eDShr*0.5 );
-    CorrectShrinkage(  eDShr*0.5 );
+   /// CorrectShrinkage(  eDShr*0.5 );
+   /// CorrectShrinkage(  eDShr*0.5 );
     CorrectShrinkage(  eDShr*0.5 );
     if(eOutputFile) WriteShrinkagePlots();
   }
-  if(eDoCorrectAngles)    CorrectAngles( p1shr,p2shr );
+  ///if(eDoCorrectAngles)    CorrectAngles( p1shr,p2shr );
   if(eDoCorrectAngles)    CorrectAngles( p1shr,p2shr );
   if(eDoCorrectShrinkage || eDoCorrectAngles) {
     if(eOutputFile)
