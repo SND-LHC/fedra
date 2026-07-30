@@ -95,6 +95,12 @@ struct
 
 struct
 {
+  bool save_root_file = false;
+  string filename;
+} ORF; // output root file if requested
+
+struct
+{
   float bin = 20;
 } FFT;
 
@@ -130,6 +136,9 @@ void set_default_env()
   cenv.SetValue("quality.prof.X0", 100000);
   cenv.SetValue("quality.prof.Y0", 100000);
   cenv.SetValue("quality.prof.width", 1000);
+
+  cenv.SetValue("quality.save_root_file", 0);
+  cenv.SetValue("quality.save_root_file.filename", "raw_quality_report.root");
 
   cenv.SetValue("quality.frameal", 1);
 
@@ -181,9 +190,9 @@ void generate_json_report(TH2 *h, std::ofstream &report, bool first_plot)
   }
 
   int nsig = 6;
-//  h->GetZaxis()->SetRangeUser(TMath::Max(0., TMath::Max(mean - nsig/2 * rms, h->GetMinimum())),
-//                              TMath::Min(3 * mean, TMath::Min(mean + nsig * rms, h->GetMaximum())));
-  h->GetZaxis()->SetRangeUser(TMath::Max(mean - nsig/2 * rms, h->GetMinimum()),
+  //  h->GetZaxis()->SetRangeUser(TMath::Max(0., TMath::Max(mean - nsig/2 * rms, h->GetMinimum())),
+  //                              TMath::Min(3 * mean, TMath::Min(mean + nsig * rms, h->GetMaximum())));
+  h->GetZaxis()->SetRangeUser(TMath::Max(mean - nsig / 2 * rms, h->GetMinimum()),
                               TMath::Min(mean + nsig * rms, h->GetMaximum()));
 
   h->SetTitle(Form("%s: mean = %.2f  RMS = %.2f", h->GetTitle(), mean, rms));
@@ -211,7 +220,7 @@ TH1D *get_step_fft(TH1D *h)
 
   auto peaks = FindPeaksWithIntegral(h_fft, 5, 0.1, 2, h_fft->GetNbinsX() / 2); // 5-bin window
 
-  // Convert bin to frequency
+  // Convert frequency to step size
   double frequency = peaks[0].peak_position;
   float xmin = h->GetXaxis()->GetXmin();
   float xmax = h->GetXaxis()->GetXmax();
@@ -231,7 +240,7 @@ TH1D *get_step_fft(TH1D *h)
 
   TH1D *hstep = new TH1D(Form("hstep_%s", h->GetName()), "hstep", n, xmin, xmax);
 
-  if (0)
+  if (DO.interactive)
   {
     // Visualize the results
     TCanvas *c = new TCanvas(h->GetName(), "Step Size Estimation with FFT", 1200, 600);
@@ -380,6 +389,18 @@ void make_canvas(const char *nameo = "ccc")
   t->DrawText(0.25, 0.0001, Form("%s/%s    %s", gSystem->WorkingDirectory(), RES.filename.c_str(), time.AsString()));
   if (gROOT->IsBatch())
     cc->SaveAs(Form("%s.png", nameo));
+  if (ORF.save_root_file)
+  {
+    TFile *fout = new TFile(ORF.filename.c_str(), "RECREATE");
+    H.nseg_top->Write();
+    H.nseg_bot->Write();
+    H.thick_top->Write();
+    H.thick_bot->Write();
+    H.thick_base->Write();
+    H.glass->Write();
+    cc->Write();
+    fout->Close();
+  }
 }
 
 int make_report(const char *output_file)
@@ -656,9 +677,12 @@ int process_file(const char *input_file, const char *output_file)
   AREA.fraction = cenv.GetValue("quality.request.fraction", 0.9);
   AREA.areaR = (AREA.xmaxR - AREA.xminR) * (AREA.ymaxR - AREA.yminR);
 
-  define_steps(tree);
+  ORF.save_root_file = cenv.GetValue("quality.save_root_file", 0);
+  ORF.filename = cenv.GetValue("quality.save_root_file.filename", "raw_quality_report.root");
 
   P.prof = cenv.GetValue("quality.prof", 1);
+
+  define_steps(tree);
 
   make_histos(tree);
   if (P.prof)

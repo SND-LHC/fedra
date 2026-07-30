@@ -13,6 +13,14 @@ EdbSegmentCut::EdbSegmentCut(int xi, float var[10])
 }
 
 ///______________________________________________________________________________
+int EdbSegmentCut::PassCut(float x, float y, float tx, float ty, float puls)
+{
+  float var[5];
+  var[0]=x; var[1]=y; var[2]=tx; var[3]=ty; var[4]=puls;
+  return PassCut(var);
+}
+
+///______________________________________________________________________________
 int EdbSegmentCut::PassCut(float var[5])
 {
   if     (eXI==0)  return PassCutX(var);

@@ -17,6 +17,7 @@
 #include "TClonesArray.h"
 #include "EdbSegP.h"
 
+class EdbSegmentCut;
 class EdbAffine2D;
 class TIndexCell;
 class EdbVTA;
@@ -312,6 +313,8 @@ class EdbPattern : public EdbSegmentsBox {
   void  SetSegmentsPID();
   void  SetSegmentsScanID(EdbID id);
   EdbPattern *ExtractSubPattern(float min[5], float max[5], int MCevt=-1);
+  EdbPattern *ExtractSubPattern(EdbSegmentCut &cut, int MCEvt=-1);
+
   EdbPattern *ExtractSubPatternXY(float xmin, float xmax, float ymin, float ymax);
   Int_t       AddPattern(EdbPattern &p);
 

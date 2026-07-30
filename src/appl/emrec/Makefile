@@ -19,6 +19,7 @@ TARGET	=	$(BIN_DIR)/emlink$(ExeSuf)      \
 		$(BIN_DIR)/emvertex$(ExeSuf)  \
 		$(BIN_DIR)/emthickness$(ExeSuf) \
 		$(BIN_DIR)/emflipraw$(ExeSuf) \
+		$(BIN_DIR)/emrawbeammap$(ExeSuf) \
 		$(BIN_DIR)/emhts2raw$(ExeSuf) \
 		$(BIN_DIR)/emtang$(ExeSuf) \
 		$(BIN_DIR)/emdbl_tb$(ExeSuf) 

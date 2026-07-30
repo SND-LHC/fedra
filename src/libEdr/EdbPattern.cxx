@@ -14,6 +14,7 @@
 #include "EdbPattern.h"
 #include "EdbVertex.h"
 #include "EdbPhys.h"
+#include "EdbSegmentCut.h"
 #include "EdbLog.h"
 #include "vt++/CMatrix.hh"
 #include "vt++/VtVector.hh"
@@ -1590,6 +1591,33 @@ EdbPattern *EdbPattern::ExtractSubPatternXY(float xmin, float xmax, float ymin, 
 }
 
 //______________________________________________________________________________
+EdbPattern *EdbPattern::ExtractSubPattern(EdbSegmentCut &cut, int MCEvt)
+{
+  EdbPattern *pat = new EdbPattern( X(), Y(), Z() );
+  EdbSegP *s;
+  int nseg = N();
+
+  for(int i=0; i<nseg; i++) {
+    s = GetSegment(i);
+    
+    if (s->MCEvt()!=MCEvt && s->MCEvt()>0 && MCEvt>=0) continue;
+    // Do not continue not in case MCEvt was not specified at all.
+    // This allows backward compability.
+    
+    if(!cut.PassCut( s->X(),s->Y(),s->TX(),s->TY(),s->W() ) ) continue;
+
+    pat->AddSegment(*s);
+  }
+  pat->SetID(this->ID());
+  pat->SetPID(this->PID());
+  pat->eFlag   = this->eFlag;
+  pat->eSide   = this->eSide;
+  pat->eScanID = this->eScanID;
+  
+  return pat;
+}
+
+//______________________________________________________________________________
 EdbPattern *EdbPattern::ExtractSubPattern(float min[5], float max[5], int MCEvt)
 {
   //
@@ -1620,10 +1648,11 @@ EdbPattern *EdbPattern::ExtractSubPattern(float min[5], float max[5], int MCEvt)
 
     pat->AddSegment(*s);
   }
-  
-  // Set ID() and PID() to have consistent values of this pattern:
   pat->SetID(this->ID());
   pat->SetPID(this->PID());
+  pat->eFlag   = this->eFlag;
+  pat->eSide   = this->eSide;
+  pat->eScanID = this->eScanID;
   
   return pat;
 }

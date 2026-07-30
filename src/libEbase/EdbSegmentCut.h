@@ -21,6 +21,7 @@ class EdbSegmentCut : public TObject {
   int   XI() const {return eXI;}
   float Min(int i) const {return eMin[i];}
   float Max(int i) const {return eMax[i];}
+  int  PassCut( float x, float y, float tx, float ty, float puls );
   int  PassCut( float var[5] );
   int  PassCutX( float var[5] );
   int  PassCutI( float var[5] );
