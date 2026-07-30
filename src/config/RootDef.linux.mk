@@ -14,7 +14,7 @@ ROOTGLIBS     = $(shell root-config --glibs)
 # ifeq ($(ARCH),linux)
 # Linux with egcs
 CXX           = g++ 
-CXXFLAGS      = -g -O -w -fPIC -DUSE_ROOT
+CXXFLAGS      = -g -O2 -w -fPIC -DUSE_ROOT
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -shared
