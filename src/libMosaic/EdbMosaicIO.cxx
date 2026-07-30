@@ -9,35 +9,36 @@
 #include <TH2F.h>
 #include "EdbMosaicIO.h"
 #include "EdbLog.h"
+#include "EdbSegmentCut.h"
 
 ClassImp(EdbMosaicIO);
 
 //-----------------------------------------------------------------------
-void EdbMosaicIO::Init( const char *file, Option_t* option)
+void EdbMosaicIO::Init(const char *file, Option_t *option)
 {
-  eFile = TFile::Open( file, option );
-  if(!eFile || eFile->IsZombie())
-    Log(1, "EdbMosaicIO::Init", "Error: can not open file! %s",file);
+  eFile = TFile::Open(file, option);
+  if (!eFile || eFile->IsZombie())
+    Log(1, "EdbMosaicIO::Init", "Error: can not open file! %s", file);
 }
 
 //-----------------------------------------------------------------------
 std::string EdbMosaicIO::FileName(int brick, int plate, int major, int minor, const char *pref, const char *suff)
 {
-  TString s = Form("p%3.3d/%s%d.%d.%d.%d%s",plate,pref,brick,plate,major,minor,suff);
+  TString s = Form("p%3.3d/%s%d.%d.%d.%d%s", plate, pref, brick, plate, major, minor, suff);
   return std::string(s.Data());
 }
 
 //-----------------------------------------------------------------------
 void EdbMosaicIO::SaveFragment(EdbPattern &p)
 {
-  if(eFile) 
+  if (eFile)
   {
     eFile->cd();
-    Int_t bytes = p.Write( Form("p%d_%d_%d", p.Plate(), p.Side(), p.ID() ) );
-    if(bytes==0) 
-      Log(1,"EdbMosaicIO::SaveFragment","Error writing pattern p%d_%d_%d", p.Plate(), p.Side(), p.ID() );
-    if(bytes>1000000000||bytes<0) 
-      Log(1,"EdbMosaicIO::SaveFragment","Warning: fragment p%d_%d_%d serialized size %d exceeds 1 GB - reduce the fragment size!",
+    Int_t bytes = p.Write(Form("p%d_%d_%d", p.Plate(), p.Side(), p.ID()));
+    if (bytes == 0)
+      Log(1, "EdbMosaicIO::SaveFragment", "Error writing pattern p%d_%d_%d", p.Plate(), p.Side(), p.ID());
+    if (bytes > 1000000000 || bytes < 0)
+      Log(1, "EdbMosaicIO::SaveFragment", "Warning: fragment p%d_%d_%d serialized size %d exceeds 1 GB - reduce the fragment size!",
           p.Plate(), p.Side(), p.ID(), bytes);
   }
 }
@@ -45,98 +46,161 @@ void EdbMosaicIO::SaveFragment(EdbPattern &p)
 //-----------------------------------------------------------------------
 void EdbMosaicIO::SaveFragmentObj(TObject *ob, int plate, int side, int id, const char *pref)
 {
-  if(eFile) 
+  if (eFile)
   {
     eFile->cd();
-    ob->Write( Form("%s%d_%d_%d", pref, plate, side, id) );
+    ob->Write(Form("%s%d_%d_%d", pref, plate, side, id));
   }
 }
 
 //-----------------------------------------------------------------------
 void EdbMosaicIO::SaveSideObj(TObject *ob, int plate, int side, const char *pref)
 {
-  if(eFile) 
+  if (eFile)
   {
     eFile->cd();
-    ob->Write( Form("%s%d_%d", pref, plate, side) );
+    ob->Write(Form("%s%d_%d", pref, plate, side));
   }
 }
 
 //-----------------------------------------------------------------------
-EdbPattern *EdbMosaicIO::GetFragment(int plate, int side, int id, bool do_corr )
+EdbPattern *EdbMosaicIO::ApplyCuts(EdbPattern *p)
 {
-  EdbPattern *p=0;
+  if (!p)
+    return 0;
+  int side = p->Side();
+  Log(1, "EdbMosaicIO::ApplyCuts", "side = %d", side);
+
+  if (side < 0 || side > 2)
+    return p;
+  if (!eCuts[side])
+    return p;
+  if (eCuts[side]->GetEntries() < 1)
+    return p;
+  EdbSegmentCut &cut = *(dynamic_cast<EdbSegmentCut *>(eCuts[side]->At(0)));
+  EdbPattern *pnew = p->ExtractSubPattern(cut);
+  Log(1, "EdbMosaicIO::ApplyCuts", "%d -> %d", p->N(), pnew->N());
+  return pnew;
+}
+
+//-----------------------------------------------------------------------
+EdbPattern *EdbMosaicIO::GetFragment(int plate, int side, int id, bool do_corr)
+{
+  EdbPattern *p = 0, *pall = 0;
   std::unique_ptr<EdbLayer> mapside(GetCorrMap(plate, side));
   EdbLayer *l = nullptr;
-  if(mapside){
-    l = mapside->Map().GetLayer( id );
-  } else {
+  if (mapside)
+  {
+    l = mapside->Map().GetLayer(id);
+  }
+  else
+  {
     Log(1, "EdbMosaicIO::GetFragment", "Warning: no correction map found for plate %d side %d", plate, side);
   }
   //  char *name = Form("p%d_%d_%d", plate, side, id);
   std::string name = Form("p%d_%d_%d", plate, side, id);
-  Log(1,"EdbMosaicIO::GetFragment","%s",name.c_str());
-  if(eFile)
+  Log(1, "EdbMosaicIO::GetFragment", "%s", name.c_str());
+  if (eFile)
   {
-    TObject *obj = eFile->Get( name.c_str() );
-    if(obj)    p = (dynamic_cast<EdbPattern*>(obj));
-    if(p)
+    TObject *obj = eFile->Get(name.c_str());
+    if (obj)
+      pall = (dynamic_cast<EdbPattern *>(obj));
+
+    if (pall)
     {
-      p->SetSide(side);
-      p->SetID(id);
-      if(do_corr) 
-      if(l) 
-      {
-        p->Transform(    l->GetAffineXY());
-        p->TransformA(   l->GetAffineTXTY());
-        p->TransformShr( l->Shr() );
-        Log(3,"EdbMosaicIO::GetFragment","AffXY  : %s", l->GetAffineXY()->AsString() );
-        Log(3,"EdbMosaicIO::GetFragment","AffTXTY: %s", l->GetAffineTXTY()->AsString() );
-      }
+      pall->SetSide(side);
+      pall->SetID(id);
+      p = ApplyCuts(pall);
+      if (pall != 0 && pall != p) delete pall;
+      if (do_corr)
+        if (l)
+        {
+          p->Transform(l->GetAffineXY());
+          p->TransformA(l->GetAffineTXTY());
+          p->TransformShr(l->Shr());
+          Log(3, "EdbMosaicIO::GetFragment", "AffXY  : %s", l->GetAffineXY()->AsString());
+          Log(3, "EdbMosaicIO::GetFragment", "AffTXTY: %s", l->GetAffineTXTY()->AsString());
+        }
     }
     return p;
   }
-  else return 0;
+  else
+    return 0;
 }
 
 //-----------------------------------------------------------------------
 void EdbMosaicIO::SaveCorrMap(int plate, int side, EdbLayer &l)
 {
-  if(eFile)
+  if (eFile)
   {
     eFile->cd();
-    l.Write( Form("map_p%d_%d", plate,side ) );
-  } else Log(1,"EdbMosaicIO::SaveCorrMap","ERROR: file is not opened!");
+    l.Write(Form("map_p%d_%d", plate, side));
+  }
+  else
+    Log(1, "EdbMosaicIO::SaveCorrMap", "ERROR: file is not opened!");
 }
 
 //-----------------------------------------------------------------------
 void EdbMosaicIO::SaveCorrMap(int plate, int side, EdbLayer &l, const char *file)
 {
-  std::unique_ptr<TFile> f(TFile::Open(file,"UPDATE"));
-  if (!f || f->IsZombie())  Log(1,"EdbMosaicIO::SaveCorrMap","ERROR! can not open file %s", file);
-  else                   {f->cd();   l.Write( Form("map_p%d_%d", plate,side ) ); }
+  std::unique_ptr<TFile> f(TFile::Open(file, "UPDATE"));
+  if (!f || f->IsZombie())
+    Log(1, "EdbMosaicIO::SaveCorrMap", "ERROR! can not open file %s", file);
+  else
+  {
+    f->cd();
+    l.Write(Form("map_p%d_%d", plate, side));
+  }
 }
 
 //-----------------------------------------------------------------------
 EdbLayer *EdbMosaicIO::GetCorrMap(int plate, int side)
 {
-  if(eFile) 
-    return (EdbLayer *)(eFile->Get( Form("map_p%d_%d", plate, side) ));
-  else 
+  if (eFile)
+    return (EdbLayer *)(eFile->Get(Form("map_p%d_%d", plate, side)));
+  else
     return 0;
 }
 
 //-----------------------------------------------------------------------
 void EdbMosaicIO::DrawFragment(EdbPattern &p)
 {
-  TH2F *h2xy = new TH2F("hxy","hxy",1000, -10000, 10000, 1000, -10000,10000);
-  for(int i=0; i<p.N(); i++)
+  TH2F *h2xy = new TH2F("hxy", "hxy", 1000, -10000, 10000, 1000, -10000, 10000);
+  for (int i = 0; i < p.N(); i++)
   {
     EdbSegP *s = p.GetSegment(i);
-    h2xy->Fill( s->X(), s->Y() );
+    h2xy->Fill(s->X(), s->Y());
   }
-  TCanvas *c = new TCanvas("cdf","cdf",800,800);
-  //c->cd(1);
+  TCanvas *c = new TCanvas("cdf", "cdf", 800, 800);
+  // c->cd(1);
   h2xy->Draw("colz");
 }
 
+//______________________________________________________________________________
+void EdbMosaicIO::AddSegmentCut(int xi, const char *cutline)
+{
+  float var[10];
+  int onoff = -1;
+  if (sscanf(cutline, "%d %f %f %f %f %f %f %f %f %f %f", &onoff,
+             &var[0], &var[1], &var[2], &var[3], &var[4], &var[5], &var[6], &var[7], &var[8], &var[9]) == 11)
+    if (onoff > -1)
+    {
+      AddSegmentCut(1, xi, var);
+      AddSegmentCut(2, xi, var);
+    }
+}
+
+//______________________________________________________________________________
+void EdbMosaicIO::AddSegmentCut(int layer, int xi, float var[10])
+{
+  if (!eCuts[layer])
+    eCuts[layer] = new TObjArray();
+  eCuts[layer]->Add(new EdbSegmentCut(xi, var));
+}
+
+//______________________________________________________________________________
+void EdbMosaicIO::AddSegmentCut(int layer, int xi, float min[5], float max[5])
+{
+  float var[10] = {min[0], max[0], min[1], max[1], min[2], max[2], min[3], max[3], min[4], max[4]};
+  AddSegmentCut(layer, xi, var);
+}

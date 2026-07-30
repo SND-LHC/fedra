@@ -16,9 +16,10 @@ class EdbMosaicIO : public TObject {
   private:
 
     TFile *eFile;
+    TObjArray *eCuts[3]; // 0 - base, 1 - side1, 2 - side2
     
   public:
-   EdbMosaicIO(){ eFile=0; }
+   EdbMosaicIO(){ eFile=0; eCuts[0]=eCuts[1]=eCuts[2]=0; }
    virtual ~EdbMosaicIO(){ Close(); }
     
     void Init(const char *file, Option_t* option = "");
@@ -37,6 +38,11 @@ class EdbMosaicIO : public TObject {
 
     void DrawFragment(EdbPattern &p);
     void Close()  { if(eFile) {eFile->Close(); eFile=0;} }
+
+    void AddSegmentCut(int xi, const char *cutline);
+    void AddSegmentCut(int layer, int xi, float var[10]);
+    void AddSegmentCut(int layer, int xi, float min[5], float max[5]);
+    EdbPattern *ApplyCuts(EdbPattern *p);
 
     ClassDef(EdbMosaicIO,1)  //Mosaic IO
 };
