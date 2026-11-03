@@ -31,6 +31,7 @@ EdbTrackAssembler::~EdbTrackAssembler()
   SafeDelete(eHistProbBest);
   SafeDelete(eHistThetaBest);
   SafeDelete(eHistThetaAll);
+  SafeDelete(eProxyP);
 }
   
   //--------------------------------------------------------------------------------------
@@ -44,6 +45,9 @@ EdbTrackAssembler::~EdbTrackAssembler()
   eDZGapMax = 5000;
   eProbMin = 0.001;
   eCollisionsRate=0;
+  eProxyP = 0;
+  eProxyPmin = 0.1;
+  eProxyPmax = 5000.;
   
   eHistNcnd     = new TH1F("Ncnd","number of candidates after preliminary selection", 20,0.5,20.5);
   eHistProbBest = new TH1F("ProbBest","prob for best selected candidate", 250,0,1);
@@ -341,6 +345,18 @@ float EdbTrackAssembler::ProbSeg( EdbSegP &s1, EdbSegP &s2 )
     float chi = eFitter.Chi2PSeg( s1, s2, s, eCond, eCond );
     prob = (float)TMath::Prob( chi*chi, 4);
   }
+  else if(eDoUseMCS==4)
+  {
+    // as eDoUseMCS==1, but with the momentum proxy p(theta) of the track end instead of its P()
+    EdbTrackP* t = dynamic_cast<EdbTrackP*> (&s1);
+    EdbSegP* seg = t?(const_cast<EdbSegP*>(t->TrackEnd())):0;
+    if(seg && eProxyP) {
+      EdbSegP tmp(*seg);
+      float p = eProxyP->Eval( TMath::Max(seg->Theta(), (float)1e-5) );
+      tmp.SetP( TMath::Min( eProxyPmax, TMath::Max(eProxyPmin, p) ) );
+      prob = eFitter.ProbSegMCS(&tmp, &s2);
+    }
+  }
   else
   {
     EdbSegP s;
@@ -490,7 +506,7 @@ void EdbTrackAssembler::FitTracks()
     EdbTrackP *t = (EdbTrackP*)(eTracks.At(i));
     if(t->Flag()==-10) continue;
     int nseg=t->N();
-    t->FitTrackKFS(0,10000);
+    t->FitTrackKFS(0, eFitter.eX0);
         //fit.FitTrackLine(*t);
     if(nseg>1) RecalculateSegmentsProb(*t);
   }
@@ -605,6 +621,14 @@ void EdbScanTracking::TrackSetBT(EdbID idset, TEnv &env, Int_t ix, Int_t iy)
     etra.eCond.SetDegrad(        env.GetValue("fedra.track.Degrad"         , 4) );
     etra.SetRadLength(           env.GetValue("fedra.track.RadX0"          , 5810.) );
     etra.eDoUseMCS              = env.GetValue("fedra.track.do_use_mcs"    , 0 );
+    if(etra.eDoUseMCS==4) {    // momentum proxy p(theta) [GeV], x = theta [rad]
+      const char *fp = env.GetValue("fedra.track.ProxyP", "(x>=0.295)*1.47*pow(x/0.295,-1.73) + (x<0.295)*1.47*pow(x/0.295,-0.8)");
+      etra.eProxyP = new TF1("ProxyP", fp, 1e-5, 10.);
+      if(!etra.eProxyP->IsValid()) { Log(1,"EdbScanTracking::TrackSetBT","ERROR: invalid fedra.track.ProxyP: %s", fp); return; }
+      sscanf(env.GetValue("fedra.track.ProxyPRange", "0.1 5000"), "%f %f", &etra.eProxyPmin, &etra.eProxyPmax);
+      Log(3,"EdbScanTracking::TrackSetBT","momentum proxy p(theta) = %s, limited to [%g, %g] GeV: p(0.01) = %.3g, p(0.1) = %.3g, p(0.3) = %.3g",
+          fp, etra.eProxyPmin, etra.eProxyPmax, etra.eProxyP->Eval(0.01), etra.eProxyP->Eval(0.1), etra.eProxyP->Eval(0.3));
+    }
       
     etra.eDTmax                 = env.GetValue("fedra.track.DTmax"          ,     0.07 );
     etra.eDRmax                 = env.GetValue("fedra.track.DRmax"          ,    45.   );

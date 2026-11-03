@@ -9,6 +9,7 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 #include <TH3F.h>
+#include "TF1.h"
 #include "TEnv.h"
 #include "EdbScanProc.h"
 #include "EdbTrackFitter.h"
@@ -45,6 +46,8 @@ class EdbTrackAssembler: public TObject {
   float         eDZGapMax;     // maxgap acceptance for the fast preselection
   float         eProbMin;      // min acceptable probability for segments preselection
   int           eDoUseMCS;     //flag to use MultipleScattering addition for chi2 
+  TF1          *eProxyP;       // momentum proxy p(theta) for eDoUseMCS==4 (fedra.track.ProxyP)
+  float         eProxyPmin, eProxyPmax;  // the proxy is limited to [eProxyPmin, eProxyPmax] GeV
 
   int            eCollisionsRate;  //
   EdbScanCond    eCond;
